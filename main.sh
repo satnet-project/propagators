@@ -42,7 +42,7 @@ elif [ "$file_month" = "nov" ]; then
 elif [ "$file_month" = "dec" ]; then
         declare month=12
 else
-	echo "Wrong month"
+	echo "Invalid Month"
 fi
 
 
@@ -83,6 +83,7 @@ echo -e "Want to change it?"
 CHANGES="No Yes"
 select change in $CHANGES; do
 	if [ "$change" = "Yes" ]; then
+		# Absolut path because program need it.
 		rm ~/.predict/predict.qth
 		echo -e "New location: \c"
 		read -e NEW_LOCATION
@@ -104,37 +105,14 @@ select change in $CHANGES; do
 		break
 
 	else
-		echo "Wrong choosen."
+		echo "Invalid Selection."
 
 	fi
 done
 
-#echo "" 
-#echo "Metodo para agrupar los objetos..."
-#echo "================================================="
-
-#OPTIONS="Family Satellite"
-#select opt in $OPTIONS; do
-#	if [ "$opt" = "Family" ]; then
-#		echo -e "Family choosen.\n"
-#		MODE=1
-#		break
-
-#	elif [ "$opt" = "Satellite" ]; then
-#		echo -e "Satellite choosen.\n"
-#		MODE=2
-#		break
-
-#	else
-#		echo "Wrong choosen."
-#	fi
-#done
-
 MODE=1
 
-#echo "La simulacion puede empezar en el tiempo actual"
-#echo "o en un tiempo definido"
-echo "Start time?"
+echo "Specify simulation start time."
 echo "================================================="
 
 OPTIONSTIME="Now Another"
@@ -171,29 +149,29 @@ select opt_time in $OPTIONSTIME; do
         fi
 done
 
-echo "Introduzca el intervalo de actualizacion."
+echo "Set the simulation's interval."
 echo "================================================="
 
 
 OPTIONSINTERVAL="1hour 1day user_defined"
 select opt_interval in $OPTIONSINTERVAL; do
 	if [ "$opt_interval" = "1hour" ]; then
-		echo -e "Intervalo una hora.\n"
+		echo -e "1 hour time.\n"
 		END_TIME=`expr $DATE + 3600`
 		break
 
 	elif [ "$opt_interval" = "1day" ]; then
-		echo -e "Intervalo un dia.\n"
+		echo -e "1 day time.\n"
 		END_TIME=`expr $DATE + 86400`
 		break
 
 	elif [ "$opt_interval" = "user_defined" ]; then
-		echo -e "Introduzca un intervalo en segundos: \c"
+		echo -e "Set the simulation's range in seconds: \c"
 		read -e USER_INTERVAL
 		END_TIME=`expr $DATE + $USER_INTERVAL`
 		break
 	else
-		echo "Wrong choosen."
+		echo ">>> Invalid Selection"
 	fi
 done
 echo " "
@@ -260,46 +238,7 @@ then
 
 	cd ..
 
-elif [ "$MODE" == "2" ];
-then
-        echo "Choose a family!"
-	echo "================================================="
-        cd TLEs/
-
-        select d in *;do
-                FAMILY=$d
-                break
-        done
-        cd ..
-
-	LIST_SATELLITES=`awk '0 == (NR - 1) % 3' ~/TLEs/$FAMILY`
-
-	echo " "
-	echo "Choose a satellite!"
-        echo "================================================="
-
-	select s in $LIST_SATELLITES; do
-		# Para Python me interesa el indice
-		SATELLITE=$s
-		break
-	done
-
-
-	# predict data
-	predict -t ~/TLEs/$FAMILY -q ~/.predict/predict.qth -f $SATELLITE $DATE $END_TIME -o ~/$SATELLITE
-
-	mv $SATELLITE ~/sims/predict
-
-	# PyEphem data
-	python do_satellite.py ~/TLEs/$FAMILY $SATELLITE $DATE $END_TIME $REFRACTION
-
-        echo " "
-        echo "$SATELLITE satellite simulations done!"
-
-
 else
 	echo "Eleccion incorrecta"
 	
 fi
-
-
