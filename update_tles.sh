@@ -4,8 +4,11 @@ echo "Updating orbital elements!"
 
 cd TLEs/
 
-# Clean directory
-rm *
+if [ -f amateur.txt ]
+then
+	# Clean directory
+    rm *
+fi
 
 wget -qr www.celestrak.com/NORAD/elements/amateur.txt -O amateur.txt
 echo "amateur.txt updated!     [1/30]"
