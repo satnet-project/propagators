@@ -10,8 +10,6 @@ cd TLEs/
 # Check if amateur.txt exist
 if [ ! -f amateur.txt ]
 then
-	echo "Updating orbital elements database..."
-	
 	cd ..
 
 	chmod +x update_tles.sh
