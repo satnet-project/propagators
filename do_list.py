@@ -5,21 +5,20 @@
 # sys.argv[4] = END_TIME
 
 
-
 class Do_list:
 
 	def __init__(self):
 
 		import sys
 
-		abrir_tle = open(sys.argv[1], 'r')
-		lista_nombres_satelites = abrir_tle.readlines()
+		open_tle = open(sys.argv[1], 'r')
+		lista_nombres_satelites = open_tle.readlines()
 		lista_nombres_satelites = [item.rstrip('\n') for item in lista_nombres_satelites]
 
-		tamano_lista = len(lista_nombres_satelites)
-		y = tamano_lista/3
+		length_list = len(lista_nombres_satelites)
+		y = length_list/3
 
-		numeros_lista = map(self.devuelve_lista, range(y))
+		list_numbers = map(self.devuelve_lista, range(y))
 		
 		self.mostrar_lista_satelites = []
 		self.mostrar_lista_linea1 = []
@@ -28,12 +27,12 @@ class Do_list:
 		j = 1
 		k = 2
 
-		for i in range(len(numeros_lista)):
-			self.mostrar_lista_satelites.append(lista_nombres_satelites[numeros_lista[i]])
+		for i in range(len(list_numbers)):
+			self.mostrar_lista_satelites.append(lista_nombres_satelites[list_numbers[i]])
 			self.mostrar_lista_linea1.append(lista_nombres_satelites[j])
 			self.mostrar_lista_linea2.append(lista_nombres_satelites[k])
-			j = numeros_lista[i] + 4
-			k = numeros_lista[i] + 5				
+			j = list_numbers[i] + 4
+			k = list_numbers[i] + 5				
 			
 		# Funcion para sacar los valores de la clase
 		self.devuelve_valores()
@@ -68,7 +67,6 @@ class Solve_coordinates:
 
 		self.observer.horizon = '0'
 
-
 		# Provide data to pyephem_routine
 		for i in range(len(lista_elementos)):
 			self.pyephem_routine(lista_elementos[i], lista_prueba[i], lista_prueba2[i], i)
@@ -87,9 +85,9 @@ class Solve_coordinates:
 		start_time = int(sys.argv[2])
 		end_time = int(sys.argv[3])
 
-		iteraciones = end_time - start_time
+		iterations = end_time - start_time
 
-		iteraciones = iteraciones - 1
+		iterations = iterations - 1
 
 		n1 = (start_time + 2440587.5*86400)/86400 - 2415020
 
@@ -103,7 +101,7 @@ class Solve_coordinates:
 
 		self.output_data(satellite_name, start_time, alt1, az1)
 
-		for j in range(iteraciones):
+		for j in range(iterations):
 			time = ephem.Date(self.observer.date + ephem.second)
 			self.observer.date = time
 			# UNIX Time
@@ -121,9 +119,7 @@ class Solve_coordinates:
 
 			j = j + 1
 
-
                 i = i + 1
-
                 print "PyEphem - Simulation [%s/%d] done!" %(i, self.satellites_number)
 
 
@@ -132,7 +128,7 @@ class Solve_coordinates:
 		import os
 
                 directorio_script = os.getcwd()
-                os.chdir(directorio_script + '/PyEphem')
+                os.chdir(directorio_script + 'results/PyEphem')
 
 		create_file = open(name, 'a')
 		create_file.writelines("%d\t" % time)
@@ -154,7 +150,6 @@ if __name__ == '__main__':
 	do_list = Do_list()
 
 	# Time will be in UNIX units
-
 	solve_coordinates = Solve_coordinates(do_list.mostrar_lista_satelites, do_list.mostrar_lista_linea1, do_list.mostrar_lista_linea2)
 
 
