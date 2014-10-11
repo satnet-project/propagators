@@ -7,6 +7,19 @@ clear
 # Check last TLE's update
 cd TLEs/
 
+# Check if amateur.txt exist
+if [ ! -f amateur.txt ]
+then
+	echo "Updating orbital elements database..."
+	
+	cd ..
+
+	chmod +x update_tles.sh
+	./update_tles.sh
+    
+fi
+
+# Check file's date
 file_month=`ls -Ald amateur.txt | awk '{print $6}'`
 system_month=`date +"%m"`
 
@@ -20,7 +33,7 @@ if [ "$file_month" = "jan" ]; then
 elif [ "$file_month" = "feb" ]; then
 	declare month=2 
 elif [ "$file_month" = "mar" ]; then
-        declare month=3
+	declare month=3
 elif [ "$file_month" = "apr" ]; then
         declare month=4
 elif [ "$file_month" = "may" ]; then
@@ -32,7 +45,7 @@ elif [ "$file_month" = "jul" ]; then
 elif [ "$file_month" = "aug" ]; then
         declare month=8
 elif [ "$file_month" = "ago" ]; then
-	declare month=8
+		declare month=8
 elif [ "$file_month" = "sep" ]; then
         declare month=9
 elif [ "$file_month" = "oct" ]; then
