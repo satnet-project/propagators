@@ -110,8 +110,6 @@ select change in $CHANGES; do
 	fi
 done
 
-MODE=1
-
 echo "Specify simulation start time."
 echo "================================================="
 
@@ -177,68 +175,62 @@ done
 echo " "
 
 
-if [ "$MODE" == "1" ];
-then
-	echo "Choose a family!"
-	echo "================================================="
-	cd TLEs/
 
-	select d in *; do 
-		FAMILY=$d
-		break 
-	done
+echo "Choose a family!"
+echo "================================================="
+cd TLEs/
 
-	cp $FAMILY COPY$FAMILY
+select d in *; do 
+	FAMILY=$d
+	break 
+done
 
-	cd ..
+cp $FAMILY COPY$FAMILY
 
-	# Extract satellite names
-	python get_names.py $FAMILY
+cd ..
 
-	# Predict data
-	echo " "
-	echo "predict data"	
-	chmod +x do_list2.sh
-	./do_list2.sh ~/TLEs/$FAMILY $FAMILY $DATE $END_TIME
+# Extract satellite names
+python get_names.py $FAMILY
 
-	# PyEphem data
-	python do_list.py ~/TLEs/$FAMILY $DATE $END_TIME
+# Predict data
+echo " "
+echo "predict data"	
+chmod +x do_list2.sh
+./do_list2.sh ~/TLEs/$FAMILY $FAMILY $DATE $END_TIME
 
-	# pyorbital data
-	python do_list2.py ~/TLEs/$FAMILY $DATE $END_TIME
+# PyEphem data
+python do_list.py ~/TLEs/$FAMILY $DATE $END_TIME
 
-	# Orbitron data
-#	echo "Perfom Orbitron simulations"
+# pyorbital data
+python do_list2.py ~/TLEs/$FAMILY $DATE $END_TIME
+
+# Orbitron data
+echo "Perfom Orbitron simulations"
 #	wine "C:\\Program Files\Orbitron\Orbitron.exe"
 
-	# Request for STK data
-	echo "Perfom STK simulations"
+# Request for STK data
+echo "Perfom STK simulations"
 
-	echo " "
-	echo "$FAMILY family simulations done!"
+echo " "
+echo "$FAMILY family simulations done!"
 
-	python gui.py $FAMILY COPY$FAMILY
+python gui.py $FAMILY COPY$FAMILY
 
-	# Remove garbage
-	cd TLEs/
+# Remove garbage
+cd TLEs/
 
-	rm $FAMILY
-	rm xa*
+rm $FAMILY
+rm xa*
 
-	mv COPY$FAMILY $FAMILY
+mv COPY$FAMILY $FAMILY
 
-	cd ../predict
-	rm *
+cd ../predict
+rm *
 
-	cd ../PyEphem
-	rm *
+cd ../PyEphem
+rm *
 
-	cd ../pyorbital
-	rm *
+cd ../pyorbital
+rm *
 
-	cd ..
-
-else
-	echo "Eleccion incorrecta"
-	
-fi
+cd ..
