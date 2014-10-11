@@ -2,15 +2,21 @@
 
 DIR=$(pwd)
 
-#sudo apt-get update
-#sudo apt-get upgrade
+sudo apt-get update
+sudo apt-get upgrade
 
-#sudo apt-get install build-essential
-#sudo apt-get install python-dev
-#sudo apt-get install wine -y
-#sudo apt-get install python-pip -y
-#sudo pip install pyephem
-#sudo pip install pyorbital
+sudo apt-get install build-essential -y
+sudo apt-get install python-dev -y
+sudo apt-get install wine -y
+sudo apt-get install python-pip -y
+sudo apt-get install python-matplotlib
+sudo pip install pyephem
+sudo pip install pyorbital
+
+# Compile Predict
+cd predict-mod
+ls
+cd ..
 
 clear
 cd ~
@@ -83,7 +89,7 @@ echo $INSDIR
 cd $DIR
 
 echo "Creating directories"
-TEMPTLES="TLES"
+TEMPTLES="TLEs"
 mkdir ~/$INSDIR$TEMPTLES				# TLEs folder
 TEMPRESULTS="results"
 mkdir ~/$INSDIR$TEMPRESULTS
@@ -103,7 +109,7 @@ cp gui.py ~/$INSDIR						# UI
 cp configure_simulations.py ~/$INSDIR	# Auxiliary UI
 # Propagators 
 cp do_list.py ~/$INSDIR					# PyEphem script
-cp do_list2.py ~/$INSDIR		 		# PyOrbital script
+cp do_list2.py ~/$INSDIR				# PyOrbital script
 cp do_list2.sh ~/$INSDIR				# predict script
 # Auxiliary scripts
 cp get_elements.py ~/$INSDIR			# Get elements from TLE
