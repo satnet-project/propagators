@@ -65,17 +65,17 @@ class Get_names:
 
 		# pyorbital
 		os.chdir(directorio_script)
-		os.chdir(directorio_script + '/results/pyorbital')
+		os.chdir(directorio_script + '/results/PyOrbital')
 
 		create_file_pyorbital = open('temp', 'w')
 		create_file_pyorbital.writelines(["%s\n" % item for item in lista])
 
 		# Orbitron
-#		os.chdir(directorio_script)
-#		os.chdir(directorio_script + '/Orbitron/Output')
+		os.chdir(directorio_script)
+		os.chdir(directorio_script + '/results/Orbitron')
 		
-#		create_file_orbitron = open('temp', 'w')
-#		create_file_orbitron.writelines(["%s\n" % item for item in lista])
+		create_file_orbitron = open('temp', 'w')
+		create_file_orbitron.writelines(["%s\n" % item for item in lista])
 
 		os.chdir(directorio_script)
 
