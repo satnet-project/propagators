@@ -7,7 +7,26 @@ sudo apt-get upgrade
 
 sudo apt-get install build-essential -y
 sudo apt-get install python-dev -y
+
+echo "Orbitron's installation"
 sudo apt-get install wine -y
+if `wget -qr http://www.stoff.pl/orbitron/files/orbitron.exe -O orbitron.exe`; then
+	echo "Install Orbitron"
+else
+	if `wget -qr http://orbitron.fox07.de/orbitron.exe -O orbitron.exe`; then
+		echo "Install Orbitron"
+	else
+		if `wget -qr http://orbitron.dreddi.net/orbitron.exe -O orbitron.exe`; then
+			echo "Install Orbitron"
+		else
+			echo "Orbitron couldn't be downloaded"
+		fi
+	fi
+fi
+
+wine orbitron.exe
+	
+echo "Python's libraries"	 
 sudo apt-get install python-pip -y
 sudo apt-get install python-matplotlib
 sudo pip install pyephem
@@ -84,7 +103,7 @@ select opt in $OPT;do
 	fi
 done
 
-echo $INSDIR
+echo "Installation folder ~/$INSDIR"
 
 cd $DIR
 
