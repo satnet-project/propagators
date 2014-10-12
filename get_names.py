@@ -6,78 +6,64 @@ class Get_names:
 		import os
 		import sys
 
-		directorio_actual = os.getcwd()
-		print directorio_actual
-		from time import sleep
-		sleep(5)
+		current_dir = os.getcwd()
 
-		os.chdir(directorio_actual + '/TLEs')
+		os.chdir(current_dir + '/TLEs')
 
-		print os.getcwd()
-		
-		sleep(5)
+		open_tle = open(sys.argv[1], 'r')
+		names_list = open_tle.readlines()
+		names_list = [item.rstrip('\n') for item in names_list] 
 
-		print sys.argv[1]
-		
-		sleep(5)
+		os.chdir(current_dir)
 
-		abrir_tle = open(sys.argv[1], 'r')
-		lista_nombres_satelites = abrir_tle.readlines()
-		lista_nombres_satelites = [item.rstrip('\n') for item in lista_nombres_satelites] 
+		size_list = len(names_list)
+		y = size_list/3
 
-		os.chdir(directorio_actual)
+		list_numbers = map(self.return_list, range(y))
 
-		tamano_lista = len(lista_nombres_satelites)
-		y = tamano_lista/3
-
-		numeros_lista = map(self.devuelve_lista, range(y))
-
-		lista_satelites = []
+		satellites_list = []
 		i = 0
 
-		for i in range(len(numeros_lista)):
-			lista_satelites.append(lista_nombres_satelites[numeros_lista[i]])
+		for i in range(len(list_numbers)):
+			satellites_list.append(names_list[list_numbers[i]])
 
+		self.save_list(satellites_list)
 
-		self.save_list(lista_satelites)
-
-        def devuelve_lista(self, x):
+        def return_list(self, x):
                 return 3*x
 
-	def save_list(self, lista):
+	def save_list(self, list):
 
 		import os
-
-		directorio_script = os.getcwd()
+		current_dir = os.getcwd()
 
 		# PyEphem
-		os.chdir(directorio_script + '/results/PyEphem')
+		os.chdir(current_dir + '/results/PyEphem')
 
 		create_file_pyephem = open('temp', 'w')
-		create_file_pyephem.writelines(["%s\n" % item  for item in lista])
+		create_file_pyephem.writelines(["%s\n" % item  for item in list])
 
 		# predict
-		os.chdir(directorio_script)
-		os.chdir(directorio_script + '/results/predict')
+		os.chdir(current_dir + '/results/predict')
 
 		create_file_predict = open('temp', 'w')
-                create_file_predict.writelines(["%s\n" % item  for item in lista])
+		create_file_predict.writelines(["%s\n" % item  for item in list])
 
 		# pyorbital
-		os.chdir(directorio_script)
-		os.chdir(directorio_script + '/results/PyOrbital')
+		os.chdir(current_dir)
+		os.chdir(current_dir + '/results/PyOrbital')
 
 		create_file_pyorbital = open('temp', 'w')
-		create_file_pyorbital.writelines(["%s\n" % item for item in lista])
+		create_file_pyorbital.writelines(["%s\n" % item for item in list])
 
 		# Orbitron
-		os.chdir(directorio_script)
-		os.chdir(directorio_script + '/results/Orbitron')
+		os.chdir(current_dir)
+		os.chdir(current_dir + '/results/Orbitron')
 		
 		create_file_orbitron = open('temp', 'w')
-		create_file_orbitron.writelines(["%s\n" % item for item in lista])
+		create_file_orbitron.writelines(["%s\n" % item for item in list])
 
-		os.chdir(directorio_script)
+		os.chdir(current_dir)
 
 if __name__ == '__main__':
 	get_name = Get_names()
