@@ -123,6 +123,7 @@ select change in $CHANGES; do
 	fi
 done
 
+echo " "
 echo "Specify simulation start time."
 echo "================================================="
 
@@ -180,14 +181,12 @@ select opt_interval in $OPTIONSINTERVAL; do
 		echo -e "Set the simulation's range in seconds: \c"
 		read -e USER_INTERVAL
 		END_TIME=`expr $DATE + $USER_INTERVAL`
+		echo " "
 		break
 	else
 		echo ">>> Invalid Selection"
 	fi
 done
-echo " "
-
-
 
 echo "Choose a family!"
 echo "================================================="
@@ -205,11 +204,14 @@ cd ..
 # Extract satellite names
 python get_names.py $FAMILY
 
+echo "LA FAMILIA ES $FAMILY"
+
+
 # Predict data
 echo " "
 echo "predict data"	
 chmod +x do_list2.sh
-./do_list2.sh ~/TLEs/$FAMILY $FAMILY $DATE $END_TIME
+./do_list2.sh $FAMILY $DATE $END_TIME
 
 # PyEphem data
 python do_list.py ~/TLEs/$FAMILY $DATE $END_TIME
