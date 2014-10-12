@@ -17,6 +17,8 @@ then
     
 fi
 
+cd TLEs/
+
 # Check file's date
 file_month=`ls -Ald amateur.txt | awk '{print $6}'`
 system_month=`date +"%m"`
