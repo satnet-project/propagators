@@ -14,10 +14,10 @@ then
 
 	chmod +x update_tles.sh
 	./update_tles.sh
+	
+	cd TLEs/
     
 fi
-
-cd TLEs/
 
 # Check file's date
 file_month=`ls -Ald amateur.txt | awk '{print $6}'`
@@ -96,7 +96,7 @@ echo -e "Want to change it?"
 CHANGES="No Yes"
 select change in $CHANGES; do
 	if [ "$change" = "Yes" ]; then
-		# Absolut path because program need it.
+		# Absolut path because predict need it.
 		rm ~/.predict/predict.qth
 		echo -e "New location: \c"
 		read -e NEW_LOCATION
