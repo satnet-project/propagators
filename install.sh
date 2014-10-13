@@ -149,7 +149,7 @@ cp gui.py ~/$INSDIR						# UI
 cp configure_simulations.py ~/$INSDIR	# Auxiliary UI
 # Propagators 
 cp pyephem_sims.py ~/$INSDIR			# PyEphem script
-cp do_list2.py ~/$INSDIR				# PyOrbital script
+cp pyorbital_sims.py ~/$INSDIR			# PyOrbital script
 cp predict_sims.sh ~/$INSDIR			# predict script
 # Auxiliary scripts
 cp get_elements.py ~/$INSDIR			# Get elements from TLE

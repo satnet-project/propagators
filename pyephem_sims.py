@@ -135,15 +135,15 @@ class Solve_coordinates:
 			self.output_data(satellite_name, UnixTimeN, altN, azN)
 
 			j = j + 1
-			i = i + 1
-			print "PyEphem - Simulation [%s/%d] done!" %(i, self.satellites_number)
+		i = i + 1
+		print "PyEphem - Simulation [%s/%d] done!" %(i, self.satellites_number)
 
 	def output_data(self, name, time, alt, az):
 
 		import os
 
-		directorio_script = os.getcwd()
-		os.chdir(directorio_script + '/results/PyEphem')
+		script_dir = os.getcwd()
+		os.chdir(script_dir + '/results/PyEphem')
 
 		create_file = open(name, 'a')
 		create_file.writelines("%d\t" % time)
@@ -151,7 +151,7 @@ class Solve_coordinates:
 		create_file.writelines("%0.6f\n" % az)
 		create_file.close
 
-		os.chdir(directorio_script)
+		os.chdir(script_dir)
 
 	def get_location(self):
 		# Implementar una llamada al fichero de configuracion de predict

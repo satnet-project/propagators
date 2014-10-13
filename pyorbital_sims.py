@@ -29,14 +29,14 @@ class Do_list:
 		
 		file = actual_dir + '/TLEs/' + sys.argv[1]
 				
-		abrir_tle = open(file, 'r')
-		lista_nombres_satelites = abrir_tle.readlines()
+		open_tle = open(file, 'r')
+		lista_nombres_satelites = open_tle.readlines()
 		lista_nombres_satelites = [item.rstrip('\n') for item in lista_nombres_satelites]
 		
 		length_list = len(lista_nombres_satelites)
 		y = length_list/3
 
-		numeros_lista = map(self.devuelve_lista, range(y))
+		list_numbers = map(self.return_list, range(y))
 
 		self.mostrar_lista_satelites = []
 		self.mostrar_lista_linea1 = []
@@ -45,20 +45,20 @@ class Do_list:
 		j = 1
 		k = 2
 		
-		for i in range(len(numeros_lista)):
-			self.mostrar_lista_satelites.append(lista_nombres_satelites[numeros_lista[i]])
+		for i in range(len(list_numbers)):
+			self.mostrar_lista_satelites.append(lista_nombres_satelites[list_numbers[i]])
 			self.mostrar_lista_linea1.append(lista_nombres_satelites[j])
 			self.mostrar_lista_linea2.append(lista_nombres_satelites[k])
-			j = numeros_lista[i] + 4
-			k = numeros_lista[i] + 5
+			j = list_numbers[i] + 4
+			k = list_numbers[i] + 5
 			
-			self.devuelve_valores()
+			self.return_values()
 
-	def devuelve_lista(self, x):
+	def return_list(self, x):
 		
 		return 3*x
 
-	def devuelve_valores(self):
+	def return_values(self):
 		
 		return self.mostrar_lista_satelites
 		return self.mostrar_lista_linea1
@@ -93,8 +93,8 @@ class Solve_coordinates:
 		start_time = int(sys.argv[2])
 		end_time = int(sys.argv[3])
 
-		iteraciones = end_time - start_time
-		iteraciones = iteraciones - 1
+		iterations = end_time - start_time
+		iterations = iterations - 1
 		
 		time1 = datetime.datetime.fromtimestamp(start_time)
 
@@ -102,7 +102,7 @@ class Solve_coordinates:
 		self.output_data(satellite_name, start_time, alt1, az1)
 		n2 = start_time
 
-		for j in range(iteraciones):
+		for j in range(iterations):
 			import datetime
 			n2 = n2 + 1
                         
@@ -111,21 +111,22 @@ class Solve_coordinates:
 			azN, altN = satellite.get_observer_look(timeN, self.lon, self.lat, self.ele)
 			self.output_data(satellite_name, n2, altN, azN)
 			j = j + 1
-			i = i + 1
-			print "pyorbital - Simulation [%s/%d] done!" %(i, self.satellites_number)
+
+		i = i + 1
+		print "pyorbital - Simulation [%s/%d] done!" %(i, self.satellites_number)
 
 	def output_data(self, name, time, alt, az):
 
 		from os import getcwd, chdir
-		directorio_script = getcwd()
-		chdir(directorio_script + '/pyorbital')
+		script_dir = getcwd()
+		chdir(script_dir + '/results/PyOrbital')
 
 		create_file = open(name, 'a')
 		create_file.writelines("%d\t" % time)
 		create_file.writelines("%0.6f\t" % alt)
 		create_file.writelines("%0.6f\n" % az)
 		create_file.close
-		os.chdir(directorio_script)
+		chdir(script_dir)
 
 	def get_location(self):
 		
@@ -139,5 +140,5 @@ if __name__ == '__main__':
 	print "pyorbit data"
 	do_list = Do_list()
 
-        solve_coordinates = Solve_coordinates(do_list.mostrar_lista_satelites, do_list.mostrar_lista_linea1, do_list.mostrar_lista_linea2)
+	solve_coordinates = Solve_coordinates(do_list.mostrar_lista_satelites, do_list.mostrar_lista_linea1, do_list.mostrar_lista_linea2)
 
