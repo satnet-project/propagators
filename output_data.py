@@ -162,7 +162,7 @@ class Read_pyephem_data:
 		import os
 
 		# PyEphem data
-                os.chdir(directorio_script + '/PyEphem')
+		os.chdir(directorio_script + '/results/PyEphem')
 
 		self.files_pyephem = os.listdir(os.getcwd())
 		self.files_pyephem.remove('temp')
@@ -208,7 +208,7 @@ class Read_predict_data:
 
 		import os
 
-		os.chdir(directorio_script + '/predict')
+		os.chdir(directorio_script + '/results/predict')
 
 		self.files_predict = os.listdir(os.getcwd())
 		self.files_predict.remove('temp')
@@ -238,24 +238,22 @@ class Read_pyorbital_data:
 
 	def __init__(self, index_satellite):
 
-		import os
+		from os import chdir, getcwd, listdir
 
 		index_satellite = index_satellite + 1
-		directorio_script = os.getcwd()
+		directorio_script = getcwd()
 
 		# pyorbital routine
 		self.open_pyorbital(directorio_script, index_satellite)
 
-		os.chdir(directorio_script)
+		chdir(directorio_script)
 
-        def open_pyorbital(self, directorio_script, index_satellite):
+	def open_pyorbital(self, directorio_script, index_satellite):
 
-                import os
-
-                # pyorbital data
-                os.chdir(directorio_script + '/pyorbital')
+		# pyorbital data
+		chdir(directorio_script + '/results/pyorbital')
 		
-                self.files_pyorbital = os.listdir(os.getcwd())
+		self.files_pyorbital = listdir(getcwd())
 		self.files_pyorbital.remove('temp')
 		self.files_pyorbital.sort()
 
@@ -264,24 +262,24 @@ class Read_pyorbital_data:
 		else:
 			self.open_files_pyorbital(index_satellite)
 
-        def open_files_pyorbital(self, index_satellite):
+	def open_files_pyorbital(self, index_satellite):
 
-                for i in range(index_satellite):
-                        self.open_file_pyorbital(self.files_pyorbital[i])
+		for i in range(index_satellite):
+			self.open_file_pyorbital(self.files_pyorbital[i])
 
-        def open_file_pyorbital(self, name):
+	def open_file_pyorbital(self, name):
 
-                self.pyorbital_simulation_time = []
-                self.pyorbital_alt_satellite = []
-                self.pyorbital_az_satellite = []
+		self.pyorbital_simulation_time = []
+		self.pyorbital_alt_satellite = []
+		self.pyorbital_az_satellite = []
 
-                import csv
+		import csv
 
-                with open(name) as tsv:
-                        for line in csv.reader(tsv, delimiter = "\t"):
-                                self.pyorbital_simulation_time.append(line[0])
-                                self.pyorbital_alt_satellite.append(float(line[1]))
-                                self.pyorbital_az_satellite.append(float(line[2]))
+		with open(name) as tsv:
+			for line in csv.reader(tsv, delimiter = "\t"):
+				self.pyorbital_simulation_time.append(line[0])
+				self.pyorbital_alt_satellite.append(float(line[1]))
+				self.pyorbital_az_satellite.append(float(line[2]))
 
 
 class Read_data:
@@ -329,26 +327,26 @@ class Read_data:
 
 	def predict_minus_pyorbital(self):
 
-		print "1"
+		print "TO-DO"
 
 	def predict_minus_pyephem(self):
 
-		print "2"
+		print "TO-DO"
 
 	def pyorbital_minus_pyephem(self):
 
-		print "3"
+		print "TO-DO"
 
 	def pyorbital_minus_predict(self):
 
-		print "4"
+		print "TO-DO"
 
 	def open_pyephem(self):
 
 		import os
 
 		# PyEphem data
-                os.chdir(self.directorio_script + '/PyEphem')
+		os.chdir(self.directorio_script + '/results/PyEphem')
 
 		directorio_actual = os.getcwd()
 
@@ -367,7 +365,7 @@ class Read_data:
 		import os
 
 		# predict data
-		os.chdir(self.directorio_script + '/predict')
+		os.chdir(self.directorio_script + '/results/predict')
 
 		directorio_actual = os.getcwd()
 
@@ -381,16 +379,16 @@ class Read_data:
 		for i in range(self.index_predict):
 			self.open_file_predict(self.files_predict[i])
 
-        def open_pyorbital(self):
+	def open_pyorbital(self):
 
-                import os
+		from os import chdir, getcwd, listdir
 
-                # pyorbital data
-                os.chdir(self.directorio_script + '/pyorbital')
+		# pyorbital data
+		chdir(self.directorio_script + '/results/pyorbital')
 
-                directorio_actual = os.getcwd()
+		directorio_actual = getcwd()
 		
-                self.files_pyorbital = os.listdir(directorio_actual)
+		self.files_pyorbital = listdir(directorio_actual)
 		self.files_pyorbital.remove('temp')
 		self.files_pyorbital.sort()
 
@@ -399,10 +397,10 @@ class Read_data:
 		else:
 			self.open_files_pyorbital()
 
-        def open_files_pyorbital(self):
+	def open_files_pyorbital(self):
 
-                for i in range(self.index_satellite):
-                        self.open_file_pyorbital(self.files_pyorbital[i])
+		for i in range(self.index_satellite):
+			self.open_file_pyorbital(self.files_pyorbital[i])
 
 	def open_file_pyephem(self, name):
 	
@@ -429,25 +427,25 @@ class Read_data:
 
 		with open(name) as tsv:
 			for line in csv.reader(tsv, delimiter = "\t"):
-#				import datetime	
-#				date = datetime.datetime.fromtimestamp(int(line[0])).strftime('%Y-%m-%d %H:%M:%S')
+#			import datetime	
+#			date = datetime.datetime.fromtimestamp(int(line[0])).strftime('%Y-%m-%d %H:%M:%S')
 				self.predict_simulation_time.append(line[0])
 				self.predict_alt_satellite.append(float(line[1]))
 				self.predict_az_satellite.append(float(line[2]))
 
-        def open_file_pyorbital(self, name):
+	def open_file_pyorbital(self, name):
 
-                self.pyorbital_simulation_time = []
-                self.pyorbital_alt_satellite = []
-                self.pyorbital_az_satellite = []
+		self.pyorbital_simulation_time = []
+		self.pyorbital_alt_satellite = []
+		self.pyorbital_az_satellite = []
 
-                import csv
+		from csv import reader
 
-                with open(name) as tsv:
-                        for line in csv.reader(tsv, delimiter = "\t"):
-                                self.pyorbital_simulation_time.append(line[0])
-                                self.pyorbital_alt_satellite.append(float(line[1]))
-                                self.pyorbital_az_satellite.append(float(line[2]))
+		with open(name) as tsv:
+			for line in reader(tsv, delimiter = "\t"):
+				self.pyorbital_simulation_time.append(line[0])
+				self.pyorbital_alt_satellite.append(float(line[1]))
+				self.pyorbital_az_satellite.append(float(line[2]))
 
 #		minimo = min(enumerate(self.predict_alt_satellite), key=lambda x: abs(x[1]-0))
 
@@ -458,22 +456,22 @@ class Check_data:
 		index = index_satellite + 1
 		satellite_name = "SAT%s" %(index)
 
-		import os
-		self.directorio_actual = os.getcwd()
+		from os import getcwd, chdir
+		self.directorio_actual = getcwd()
 
 		self.check_predict(index_satellite, satellite_name)
 		self.check_pyephem(index_satellite, satellite_name)
 		self.check_pyorbital(index_satellite, satellite_name)
 		self.check_orbitron(index_satellite, sat_name)
 
-                os.chdir(self.directorio_actual)
+		chdir(self.directorio_actual)
 
 	def check_predict(self, index, satellite_name):
 
-		import os
-		os.chdir(self.directorio_actual + '/predict')
+		from os import chdir, listdir, getcwd
+		chdir(self.directorio_actual + '/results/predict')
 		
-		files = os.listdir(os.getcwd())
+		files = listdir(getcwd())
 
 		if satellite_name in files:
 			self.predict = 'yes'
@@ -482,22 +480,22 @@ class Check_data:
 
 	def check_pyephem(self, index, satellite_name):
 
-                import os
-                os.chdir(self.directorio_actual + '/PyEphem')
+		from os import chdir, listdir, getcwd
+		chdir(self.directorio_actual + '/results/PyEphem')
 
-                files = os.listdir(os.getcwd())
+		files = listdir(getcwd())
 
-                if satellite_name in files:
-                        self.pyephem = 'yes'
-                else:
-                        self.pyephem = 'no'
+		if satellite_name in files:
+			self.pyephem = 'yes'
+		else:
+			self.pyephem = 'no'
 
 	def check_pyorbital(self, index, satellite_name):
 
-                import os
-                os.chdir(self.directorio_actual + '/pyorbital')
+		from os import chdir, listdir, getcwd
+		chdir(self.directorio_actual + '/pyorbital')
 
-                files = os.listdir(os.getcwd())
+		files = listdir(getcwd())
 
 		if satellite_name in files:
 			self.pyorbital = 'yes'
