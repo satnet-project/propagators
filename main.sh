@@ -1,7 +1,27 @@
 #!/bin/bash
-# Script para realizar las simulaciones.
-# Contiene las llamadas necesarias para calcular los valores y mostrarlos
-# a continuacion por pantalla.
+
+################################################################################
+# Copyright 2014 Samuel Gongora Garcia (s.gongoragarcia@gmail.com)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+################################################################################
+# Author: s.gongoragarcia[at]gmail.com
+# Description: Comparison of the results obtained by using different propagators 
+# agains STK simulations.
+################################################################################
+
 
 clear
 # Check last TLE's update
@@ -204,24 +224,21 @@ cd ..
 # Extract satellite names
 python get_names.py $FAMILY
 
-echo "LA FAMILIA ES $FAMILY"
-
-
 # Predict data
 echo " "
 echo "predict data"	
-chmod +x do_list2.sh
-./do_list2.sh $FAMILY $DATE $END_TIME
+chmod +x predict_sims.sh
+./predict_sims.sh $FAMILY $DATE $END_TIME
 
 # PyEphem data
-python do_list.py ~/TLEs/$FAMILY $DATE $END_TIME
+python pyephem_sims.py $FAMILY $DATE $END_TIME
 
 # pyorbital data
-python do_list2.py ~/TLEs/$FAMILY $DATE $END_TIME
+python pyorbital_sims.py $FAMILY $DATE $END_TIME
 
 # Orbitron data
 echo "Perfom Orbitron simulations"
-#	wine "C:\\Program Files\Orbitron\Orbitron.exe"
+wine "C:\\Program Files\Orbitron\Orbitron.exe"
 
 # Request for STK data
 echo "Perfom STK simulations"
@@ -239,13 +256,15 @@ rm xa*
 
 mv COPY$FAMILY $FAMILY
 
-cd ../predict
+read -e 
+
+cd ../results/predict
 rm *
 
-cd ../PyEphem
+cd ../results/PyEphem
 rm *
 
-cd ../pyorbital
+cd ../results/pyorbital
 rm *
 
 cd ..

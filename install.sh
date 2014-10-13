@@ -1,5 +1,25 @@
 #!/bin/bash
 
+################################################################################
+# Copyright 2014 Samuel Gongora Garcia (s.gongoragarcia@gmail.com)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+################################################################################
+# Author: s.gongoragarcia[at]gmail.com
+################################################################################
+
 DIR=$(pwd)
 
 sudo apt-get update
@@ -25,8 +45,9 @@ else
 fi
 
 wine orbitron.exe
-	
-echo "Python's libraries"	 
+
+# Python libraries. May be missing some dependencies.
+echo "Python libraries"	 
 sudo apt-get install python-pip -y
 sudo apt-get install python-matplotlib
 sudo pip install pyephem
@@ -127,9 +148,9 @@ cp output_data.py ~/$INSDIR				# Output data to GUI
 cp gui.py ~/$INSDIR						# UI
 cp configure_simulations.py ~/$INSDIR	# Auxiliary UI
 # Propagators 
-cp do_list.py ~/$INSDIR					# PyEphem script
+cp pyephem_sims.py ~/$INSDIR			# PyEphem script
 cp do_list2.py ~/$INSDIR				# PyOrbital script
-cp do_list2.sh ~/$INSDIR				# predict script
+cp predict_sims.sh ~/$INSDIR			# predict script
 # Auxiliary scripts
 cp get_elements.py ~/$INSDIR			# Get elements from TLE
 cp get_names.py ~/$INSDIR				# Get satellite names from TLE file

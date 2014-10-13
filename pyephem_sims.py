@@ -1,8 +1,23 @@
-# Python
-# sys.argv[1] = FILE
-# sys.argv[2] = REFRACTION
-# sys.argv[3] = START_TIME
-# sys.argv[4] = END_TIME
+
+################################################################################
+# Copyright 2014 Samuel Gongora Garcia (s.gongoragarcia@gmail.com)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+################################################################################
+# Author: s.gongoragarcia[at]gmail.com
+################################################################################
 
 
 class Do_list:
@@ -10,40 +25,44 @@ class Do_list:
 	def __init__(self):
 
 		import sys
+		from os import getcwd
+		actual_dir = getcwd()
+		
+		file = actual_dir + '/TLEs/' + sys.argv[1]
 
-		open_tle = open(sys.argv[1], 'r')
-		lista_nombres_satelites = open_tle.readlines()
-		lista_nombres_satelites = [item.rstrip('\n') for item in lista_nombres_satelites]
+		open_tle = open(file, 'r')
+		satellite_list = open_tle.readlines()
+		satellite_list = [item.rstrip('\n') for item in satellite_list]
 
-		length_list = len(lista_nombres_satelites)
+		length_list = len(satellite_list)
 		y = length_list/3
 
-		list_numbers = map(self.devuelve_lista, range(y))
+		list_numbers = map(self.return_list, range(y))
 		
-		self.mostrar_lista_satelites = []
-		self.mostrar_lista_linea1 = []
-		self.mostrar_lista_linea2 = []
+		self.show_satellite_list = []
+		self.tle_first_line_list = []
+		self.tle_second_line_list = []
 		i = 0
 		j = 1
 		k = 2
 
 		for i in range(len(list_numbers)):
-			self.mostrar_lista_satelites.append(lista_nombres_satelites[list_numbers[i]])
-			self.mostrar_lista_linea1.append(lista_nombres_satelites[j])
-			self.mostrar_lista_linea2.append(lista_nombres_satelites[k])
+			self.show_satellite_list.append(satellite_list[list_numbers[i]])
+			self.tle_first_line_list.append(satellite_list[j])
+			self.tle_second_line_list.append(satellite_list[k])
 			j = list_numbers[i] + 4
 			k = list_numbers[i] + 5				
 			
 		# Funcion para sacar los valores de la clase
-		self.devuelve_valores()
+		self.return_values()
 
-	def devuelve_lista(self, x):
+	def return_list(self, x):
 		return 3*x
 
-	def devuelve_valores(self):
-		return self.mostrar_lista_satelites
-		return self.mostrar_lista_linea1
-		return self.mostrar_lista_linea2
+	def return_values(self):
+		return self.show_satellite_list
+		return self.tle_first_line_list
+		return self.tle_second_line_list
 
 class Solve_coordinates:
 
@@ -86,7 +105,6 @@ class Solve_coordinates:
 		end_time = int(sys.argv[3])
 
 		iterations = end_time - start_time
-
 		iterations = iterations - 1
 
 		n1 = (start_time + 2440587.5*86400)/86400 - 2415020
@@ -104,10 +122,9 @@ class Solve_coordinates:
 		for j in range(iterations):
 			time = ephem.Date(self.observer.date + ephem.second)
 			self.observer.date = time
+			
 			# UNIX Time
 			UnixTimeN = float(time)
-
-
 			UnixTimeN = int((UnixTimeN - 25567.5)*86400)
 
 			satellite.compute(self.observer)
@@ -118,17 +135,15 @@ class Solve_coordinates:
 			self.output_data(satellite_name, UnixTimeN, altN, azN)
 
 			j = j + 1
-
-                i = i + 1
-                print "PyEphem - Simulation [%s/%d] done!" %(i, self.satellites_number)
-
+			i = i + 1
+			print "PyEphem - Simulation [%s/%d] done!" %(i, self.satellites_number)
 
 	def output_data(self, name, time, alt, az):
 
 		import os
 
-                directorio_script = os.getcwd()
-                os.chdir(directorio_script + 'results/PyEphem')
+		directorio_script = os.getcwd()
+		os.chdir(directorio_script + '/results/PyEphem')
 
 		create_file = open(name, 'a')
 		create_file.writelines("%d\t" % time)
@@ -150,6 +165,6 @@ if __name__ == '__main__':
 	do_list = Do_list()
 
 	# Time will be in UNIX units
-	solve_coordinates = Solve_coordinates(do_list.mostrar_lista_satelites, do_list.mostrar_lista_linea1, do_list.mostrar_lista_linea2)
+	solve_coordinates = Solve_coordinates(do_list.show_satellite_list, do_list.tle_first_line_list, do_list.tle_second_line_list)
 
 
