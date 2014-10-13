@@ -1,45 +1,63 @@
 #!/bin/bash
 
+################################################################################
+# Copyright 2014 Samuel Gongora Garcia (s.gongoragarcia@gmail.com)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+################################################################################
+# Author: s.gongoragarcia[at]gmail.com
+################################################################################
+
 FILE=$1
-FAMILY=$2
-START_TIME=$3
-END_TIME=$4
+START_TIME=$2
+END_TIME=$3
 
 END_TIME=`expr $END_TIME - 1`
 
+SCRIPT_DIR=`pwd`
 
-# Obtener el numero total de lineas
+cd TLEs/
+
 lines=`wc $FILE | awk {'print $1'}`
 
-# Dividirlas entre tres
 sats_number=`expr $lines / 3`
-
 
 declare -i LIMIT=`expr $sats_number + 1`
 declare -i n1=1
 declare -i j1=1
 IDEN=SAT
 
-# Script que cambia los nombres de los archivos.
 until [ $n1 -eq $LIMIT ]
 do
-	export FAMILY
 	export n1
 	export j1
 	export IDEN
 
 	perl -pi -e 's/.*/$ENV{IDEN}$ENV{n1}/ if $. == $ENV{j1}' $FILE
 
-        j1=$[$n1 * 3]
-        j1=$[$j1 + 1]
-        n1=$[$n1 + 1]
+	j1=$[$n1 * 3]
+	j1=$[$j1 + 1]
+	n1=$[$n1 + 1]
 done	
 
 declare -i k=0
 declare -i n=0
 declare -i l=-1
 declare -i j=0
-#declare -i LIMIT2=`expr $sats_number + 1`
+
+cd ../
 
 until [ $n -eq $sats_number ]
 do
@@ -48,19 +66,15 @@ do
 	j=$[$l * 3]
 	j=$[$j + 1]
 
-	cd TLEs
+	cd TLEs/
 
-        # Divide el archivo de la familia en archivos de 24 satelites cada uno
-        split -l 72 $FILE
+	split -l 72 $FILE
 
-        # Cuenta los archivos disponibles con ese nombre
-        FILES_SPLITED="`ls x* | wc -l`"
+	FILES_SPLITED="`ls x* | wc -l`"
 
-	# Crea una lista para los nombres de los archivos
-        declare -a LIST_FILES_SPLITED
-        LIST_FILES_SPLITED=(`ls x*`)
+	declare -a LIST_FILES_SPLITED
+	LIST_FILES_SPLITED=(`ls x*`)
 
-	# Export both vars for Perl script
 	export j
 	export FAMILY
 	export n
@@ -68,9 +82,10 @@ do
 	SATELLITE="`awk 'NR==j2' j2="${j}" ${LIST_FILES_SPLITED[k]}`"
 	FILESPLITTED="${LIST_FILES_SPLITED[k]}"
 
-	predict -t $FILESPLITTED -f $SATELLITE $START_TIME $END_TIME -o ~/predict/$SATELLITE
-
-	cd ..
+	predict -t $FILESPLITTED -f $SATELLITE $START_TIME $END_TIME -o $SATELLITE
+	
+	cp $SATELLITE ../results/predict	
+	cd ../
 
 	m=$[$n + 1]
 
@@ -83,5 +98,4 @@ do
 		k=$[$k + 1]
 	fi
 
- 
 done
