@@ -84,10 +84,10 @@ class Get_name:
 
 	def __init__(self, index):
 
-		import os
-		directorio_actual = os.getcwd()
+		from os import getcwd, chdir
+		actual_dir = getcwd()
 
-		os.chdir(directorio_actual + '/predict')
+		chdir(actual_dir + '/results/predict')
 
 		open_temp = open('temp', 'r')
 		names_list = open_temp.readlines()
@@ -97,17 +97,17 @@ class Get_name:
 
 		self.name = names_list[index]
 
-		os.chdir(directorio_actual)
+		chdir(actual_dir)
 
 
 class Get_names:
 
 	def __init__(self):
 
-		import os
-		directorio_actual = os.getcwd()
+		from os import getcwd, chdir
+		actual_dir = getcwd()
 
-		os.chdir(directorio_actual + '/predict')
+		chdir(actual_dir + '/results/predict')
 
 		open_temp = open('temp', 'r')
 		names_list = open_temp.readlines()
@@ -117,20 +117,21 @@ class Get_names:
 
 		self.names_list = names_list
 
-		os.chdir(directorio_actual)
+		chdir(actual_dir)
 
 class Get_list_length:
 
 	def __init__(self):
-		import os
-		directorio_actual = os.getcwd()
+		
+		from os import getcwd, chdir
+		
+		actual_dir = getcwd()
+		chdir(actual_dir + '/results/predict')
 
-                os.chdir(directorio_actual + '/predict')
+		open_temp = open('temp', 'r')
+		names_list = open_temp.readlines()
 
-                open_temp = open('temp', 'r')
-                names_list = open_temp.readlines()
+		chdir(actual_dir)
 
-                os.chdir(directorio_actual)
-
-                self.length = len(names_list)
+		self.length = len(names_list)
 
