@@ -3,63 +3,57 @@ class Get_elements:
 	def __init__(self, file, index):
 	
 		self.index = index + 1
-		
 		file = str(file)
 
-		import os
+		from os import chdir, getcwd
+		actual_dir = getcwd()
+		chdir(actual_dir + '/TLEs')
 
-		directorio_actual = os.getcwd()
-		os.chdir(directorio_actual + '/TLEs')
+		open_tle = open(file, 'r')
+		lista_nombres_satelites = open_tle.readlines()
+		lista_nombres_satelites = [item.rstrip('\n') for item in lista_nombres_satelites]
 
-                abrir_tle = open(file, 'r')
-                lista_nombres_satelites = abrir_tle.readlines()
-                lista_nombres_satelites = [item.rstrip('\n') for item in lista_nombres_satelites]
+		chdir(actual_dir)
 
+		list_length = len(lista_nombres_satelites)
+		y = list_length/3
+		
+		numbers_list = map(self.devuelve_lista, range(y))
 
-		os.chdir(directorio_actual)
-
-                tamano_lista = len(lista_nombres_satelites)
-                y = tamano_lista/3
-
-                numeros_lista = map(self.devuelve_lista, range(y))
-
-                lista_satelites = []
+		lista_satelites = []
 		lista_linea1 = []
 		lista_linea2 = []
-                i = 0
-                j = 1
-                k = 2
+		i = 0
+		j = 1
+		k = 2
 
-                for i in range(len(numeros_lista)):
-                        lista_satelites.append(lista_nombres_satelites[numeros_lista[i]])
-                        lista_linea1.append(lista_nombres_satelites[j])
-                        lista_linea2.append(lista_nombres_satelites[k])
-                        j = numeros_lista[i] + 4
-                        k = numeros_lista[i] + 5
-
+		for i in range(len(numbers_list)):
+			lista_satelites.append(lista_nombres_satelites[numbers_list[i]])
+			lista_linea1.append(lista_nombres_satelites[j])
+			lista_linea2.append(lista_nombres_satelites[k])
+			j = numbers_list[i] + 4
+			k = numbers_list[i] + 5
 
 		self.solve_coordinates(lista_satelites, lista_linea1, lista_linea2)
 
-        def devuelve_lista(self, x):
-                return 3*x
+	def devuelve_lista(self, x):
+		return 3*x
 
 	def solve_coordinates(self, satellites, lines1, lines2):
 
-		import ephem
+		from ephem import Observer, degrees, now
+		self.observer = Observer()
+		(lon, lat, ele) = self.get_location()
 
-                self.observer = ephem.Observer()
-                self.get_location()
+		self.observer.lon = degrees(lon)
+		self.observer.lat = degrees(lat)
+		self.observer.elevation = ele
 
-                self.observer.lon = ephem.degrees(self.lon)
-                self.observer.lat = ephem.degrees(self.lat)
-                self.observer.elevation = self.ele
-
-                self.observer.date = ephem.now()
-                self.observer.epoch = ephem.now()
+		self.observer.date = now()
+		self.observer.epoch = now()
 		
-                for i in range(self.index):
-                        self.pyephem_routine(satellites[i], lines1[i], lines2[i])
-
+		for i in range(self.index):
+			self.pyephem_routine(satellites[i], lines1[i], lines2[i])
 
 	def pyephem_routine(self, name, line1, line2):
 		import ephem
@@ -68,17 +62,18 @@ class Get_elements:
 
 		# Inclinacion en grados.
 		self.inclination = satellite._inc
-		import math 
-		self.inclination = math.degrees(self.inclination)
+		from math import degrees 
+		self.inclination = degrees(self.inclination)
 		self.mean_motion = satellite._n
 		self.epoch = satellite._epoch
 
 	# No es relevante. Comprobar.
-        def get_location(self):
-                self.lon = '-2.314722'
-                self.lat = '36.832778'
-                self.ele = 20
+	def get_location(self):
+		lon = '-2.314722'
+		lat = '36.832778'
+		ele = 20
 
+		return lon, lat, ele
 
 class Get_name:
 

@@ -53,6 +53,9 @@ sudo apt-get install python-matplotlib
 sudo pip install pyephem
 sudo pip install pyorbital
 
+# Remove trash
+sudo apt-get autoremove -y
+
 # Compile Predict
 cd predict-mod
 ls
