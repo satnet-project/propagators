@@ -271,8 +271,10 @@ class Read_pyorbital_data:
 
 	def open_pyorbital(self, directorio_script, index_satellite):
 
+		from os import chdir, listdir, getcwd
+
 		# pyorbital data
-		chdir(directorio_script + '/results/pyorbital')
+		chdir(directorio_script + '/results/PyOrbital')
 		
 		self.files_pyorbital = listdir(getcwd())
 		self.files_pyorbital.remove('temp')
@@ -383,14 +385,14 @@ class Read_data:
 
 	def open_predict(self):
 
-		import os
+		from os import chdir, getcwd
 
 		# predict data
 		os.chdir(self.directorio_script + '/results/predict')
 
-		directorio_actual = os.getcwd()
+		actual_dir = os.getcwd()
 
-		self.files_predict = os.listdir(directorio_actual)
+		self.files_predict = os.listdir(actual_dir)
 		self.files_predict.remove('temp')
 		self.files_predict.sort()
 	
@@ -405,16 +407,16 @@ class Read_data:
 		from os import chdir, getcwd, listdir
 
 		# pyorbital data
-		chdir(self.directorio_script + '/results/pyorbital')
+		chdir(self.directorio_script + '/results/PyOrbital')
 
-		directorio_actual = getcwd()
+		actual_dir = getcwd()
 		
-		self.files_pyorbital = listdir(directorio_actual)
+		self.files_pyorbital = listdir(actual_dir)
 		self.files_pyorbital.remove('temp')
 		self.files_pyorbital.sort()
 
 		if not self.files_pyorbital:
-			print "lista vacia"
+			print "empty list"
 		else:
 			self.open_files_pyorbital()
 
@@ -514,7 +516,7 @@ class Check_data:
 	def check_pyorbital(self, index, satellite_name):
 
 		from os import chdir, listdir, getcwd
-		chdir(self.directorio_actual + '/pyorbital')
+		chdir(self.directorio_actual + '/results/PyOrbital')
 
 		files = listdir(getcwd())
 
