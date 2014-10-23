@@ -22,84 +22,97 @@
 # agains STK simulations.
 ################################################################################
 
+ACTUALDIR=`pwd`
+TLESDIR="/TLEs/"
 
-clear
-# Check last TLE's update
-cd TLEs/
-
-# Check if amateur.txt exist
-if [ ! -f amateur.txt ]
-then
-	cd ..
-
-	chmod +x update_tles.sh
-	./update_tles.sh
-	
+if [ ! -d $ACTUALDIR$TLESDIR ]; then
+	# If directory doesn't exist,
+	# create it.
+	mkdir TLEs/
 	cd TLEs/
-    
-fi
-
-# Check file's date
-file_month=`ls -Ald amateur.txt | awk '{print $6}'`
-system_month=`date +"%m"`
-
-file_day=`ls -Ald amateur.txt | awk '{print $7}'`
-system_day=`date +"%d"`
-
-cd ..
-
-if [ "$file_month" = "jan" ]; then
-	declare month=1
-elif [ "$file_month" = "feb" ]; then
-	declare month=2 
-elif [ "$file_month" = "mar" ]; then
-	declare month=3
-elif [ "$file_month" = "apr" ]; then
-        declare month=4
-elif [ "$file_month" = "may" ]; then
-        declare month=5
-elif [ "$file_month" = "jun" ]; then
-        declare month=6
-elif [ "$file_month" = "jul" ]; then
-        declare month=7
-elif [ "$file_month" = "aug" ]; then
-        declare month=8
-elif [ "$file_month" = "ago" ]; then
-		declare month=8
-elif [ "$file_month" = "sep" ]; then
-        declare month=9
-elif [ "$file_month" = "oct" ]; then
-        declare month=10
-elif [ "$file_month" = "nov" ]; then
-        declare month=11
-elif [ "$file_month" = "dec" ]; then
-        declare month=12
-else
-	echo "Invalid Month"
-fi
-
-
-if [ $month -lt $system_month ]; then
-
-	echo "Updating orbital elements database..."
-
 	chmod +x update_tles.sh
 	./update_tles.sh
 
-	echo "Database updated."
-else
-	if [ $file_day -lt $system_day ]; then
+elif [ -d $ACTUALDIR$TLESDIR ]; then
+	# If directory exist,
+	# check last TLE's update.
+	cd TLEs/
 
-		echo "Updating orbital elements database..."
+	# Check if amateur.txt exist
+	if [ ! -f amateur.txt ]; then
+		# amateur.txt doesn't exist.
+		# Update all data.
+		# TO-DO. Update only files needed.
+		cd ..
 
 		chmod +x update_tles.sh
 		./update_tles.sh
+	
+		cd TLEs/
+	
+	elif [ -f amateur.txt ]; then
+		# amateur.txt exist		
+		# Check file's date
+		file_month=`ls -Ald amateur.txt | awk '{print $6}'`
+		system_month=`date +"%m"`
 
-		echo "Database updated."
-	else
-		echo "Database updated."
+		file_day=`ls -Ald amateur.txt | awk '{print $7}'`
+		system_day=`date +"%d"`
+
+		cd ..
+
+		if [ "$file_month" = "jan" ]; then
+			declare month=1
+		elif [ "$file_month" = "feb" ]; then
+			declare month=2 
+		elif [ "$file_month" = "mar" ]; then
+			declare month=3
+		elif [ "$file_month" = "apr" ]; then
+        	declare month=4
+		elif [ "$file_month" = "may" ]; then
+        	declare month=5
+		elif [ "$file_month" = "jun" ]; then
+        	declare month=6
+		elif [ "$file_month" = "jul" ]; then
+        	declare month=7
+		elif [ "$file_month" = "aug" ]; then
+        	declare month=8
+		elif [ "$file_month" = "ago" ]; then
+			declare month=8
+		elif [ "$file_month" = "sep" ]; then
+        	declare month=9
+		elif [ "$file_month" = "oct" ]; then
+        	declare month=10
+		elif [ "$file_month" = "nov" ]; then
+        	declare month=11
+		elif [ "$file_month" = "dec" ]; then
+        	declare month=12
+		else
+			echo "Invalid Month"
+		fi
+
+
+		if [ $month -lt $system_month ]; then
+			chmod +x update_tles.sh
+			./update_tles.sh
+
+			echo "Database updated."
+		else
+			if [ $file_day -lt $system_day ]; then
+				chmod +x update_tles.sh
+				./update_tles.sh
+
+				echo "Database updated."
+			else
+				echo "Database updated."
+			fi
+		fi
+	
 	fi
+
 fi
+
+clear
 
 LOCATION=`awk 'NR==1' ~/.predict/predict.qth`
 LATITUDE=`awk 'NR==2' ~/.predict/predict.qth`
@@ -149,13 +162,12 @@ echo "================================================="
 
 OPTIONSTIME="Now Another"
 select opt_time in $OPTIONSTIME; do
-        if [ "$opt_time" = "Now" ]; then
-                echo -e "Simulation will start right now!\n"
+	if [ "$opt_time" = "Now" ]; then
+        echo -e "Simulation will start right now!\n"
 		# Unix time
 		DATE=`date +%s`
-                break
-
-        elif [ "$opt_time" = "Another" ]; then                
+		break
+	elif [ "$opt_time" = "Another" ]; then                
 		echo -e "The starting date and time should be entered now."
 
 		# Date
@@ -176,9 +188,9 @@ select opt_time in $OPTIONSTIME; do
      
 		echo -e "Time is: ...\n"           
 		break
-        else
-                echo "Wrong chosen"
-        fi
+	else
+		echo "Wrong chosen"
+	fi
 done
 
 echo "Set the simulation's interval."
@@ -210,7 +222,6 @@ done
 
 echo "Choose a family!"
 echo "================================================="
-cd TLEs/
 
 select d in *; do 
 	FAMILY=$d
