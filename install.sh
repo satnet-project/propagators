@@ -49,17 +49,19 @@ wine orbitron.exe
 # Python libraries. May be missing some dependencies.
 echo "Python libraries"	 
 sudo apt-get install python-pip -y
-sudo apt-get install python-matplotlib
+sudo apt-get install python-matplotlib -y
 sudo pip install pyephem
 sudo pip install pyorbital
 
-# Remove trash
-sudo apt-get autoremove -y
-
 # Compile Predict
+sudo apt-get install libncurses5-dev -y
+sudo apt-get install libncursesw5-dev -y
 cd predict-mod
 ls
 cd ..
+
+# Remove trash
+sudo apt-get autoremove
 
 clear
 cd ~
