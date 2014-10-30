@@ -126,7 +126,7 @@ char argc, *argv[];
 
 		/* Compile PREDICT... */
 
-		cc=system("cc -Wall -O3 -s -fomit-frame-pointer -lm -lncurses predict.c -o predict");
+		cc=system("cc -Wall -O3 -s -fomit-frame-pointer -lm -lncurses -pthread predict.c -o predict");
 
 		/* Create vocalizer.h */
 
