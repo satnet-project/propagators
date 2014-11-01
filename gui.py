@@ -86,20 +86,12 @@ class GUI:
 		# Check if data is available
 		if available_predict == 'yes':			
 			predict_alt = figure_predict.predict_alt_satellite
-			print "predict alt"
-			print len(predict_alt)
-			print "time"
-			print len(time)
 			self.a.plot(time, predict_alt, 'r', label="predict")
 		if available_pyephem == 'yes':
 			pyephem_alt = figure_pyephem.pyephem_alt_satellite
 			self.a.plot(time, pyephem_alt, 'b', label="PyEphem")
 		if available_pyorbital == 'yes':
-			print "time"
-			print len(time)
 			pyorbital_alt = figure_pyorbital.pyorbital_alt_satellite
-			print "pyorbital alt"
-			print len(pyorbital_alt)
 			self.a.plot(time, pyorbital_alt, 'y', label="pyorbital")
 		if available_orbitron == 'yes':
 			orbitron_alt = figure_orbitron.orbitron_alt_satellite
@@ -218,10 +210,6 @@ class GUI:
 		label_sims = tk.Label(data_frame, text = "Simulations availables")
 		label_sims.grid(column = 0, row = 2, columnspan = 2, rowspan = 1, sticky = tk.W)
 
-		from os import getcwd
-		print getcwd()
-
-
 		# Generate data
 		import scrolledlist
 		sims_availables = scrolledlist.ScrolledList(data_frame, width = 20, height = 3, callback = self.pick_simulation)
@@ -328,9 +316,7 @@ class GUI:
 
 		# Time
 		time = figure_pyephem.pyephem_simulation_time
-		orbitron_time = figure_orbitron.orbitron_time
-		STK_time = figure_STK.STK_simulation_time
-
+		
 		# Available 
 		actual_available = output_data.Check_data(self.index, object_name.name)
 		available_predict = actual_available.predict
@@ -339,10 +325,10 @@ class GUI:
 		available_orbitron = actual_available.orbitron
 
 		self.f.clf()
-                self.f.suptitle(object_name.name, fontsize=16)
+		self.f.suptitle(object_name.name, fontsize=16)
 
 		# Subplot a
-                self.a = self.f.add_subplot(211)
+		self.a = self.f.add_subplot(211)
 		if available_predict == 'yes':
 			predict_alt = figure_predict.predict_alt_satellite
 			self.a.plot(time, predict_alt, 'r', label="predict")
@@ -353,18 +339,20 @@ class GUI:
 			pyorbital_alt = figure_pyorbital.pyorbital_alt_satellite
 			self.a.plot(time, pyorbital_alt, 'y', label="pyorbital")
 		if available_orbitron == 'yes':
+			orbitron_time = figure_orbitron.orbitron_time
 			orbitron_alt = figure_orbitron.orbitron_alt_satellite
 			self.a.plot(orbitron_time, orbitron_alt, 'm', label="orbitron")
 
 		STK_alt = figure_STK.STK_alt_satellite
+		STK_time = figure_STK.STK_simulation_time
 		self.a.plot(STK_time, STK_alt, 'g', label ="STK")
 
-                self.a.legend(loc = 2, borderaxespad = 0., prop={'size':12})
-                self.a.set_ylabel("Degrees")
+		self.a.legend(loc = 2, borderaxespad = 0., prop={'size':12})
+		self.a.set_ylabel("Degrees")
 		self.a.grid(True)
 
 		# Subplot c
-                self.c = self.g.add_subplot(111)
+		self.c = self.g.add_subplot(111)
 		self.c.plot(time, difference_alt, label = "Difference")
 
 		self.c.legend(loc = 2, borderaxespad = 0., prop={'size':12})
@@ -449,8 +437,6 @@ class GUI:
 
 		# Time
 		time = figure_pyephem.pyephem_simulation_time
-		orbitron_time = figure_orbitron.orbitron_time
-		STK_time = figure_STK.STK_simulation_time
 
 		# Available
 		actual_available = output_data.Check_data(self.index, object_name.name)
@@ -474,10 +460,12 @@ class GUI:
 			pyorbital_alt = figure_pyorbital.pyorbital_alt_satellite
 			self.a.plot(time, pyorbital_alt, 'y', label="pyorbital")
 		if available_orbitron == 'yes':
+			orbitron_time = figure_orbitron.orbitron_time
 			orbitron_alt = figure_orbitron.orbitron_alt_satellite
 			self.a.plot(orbitron_time, orbitron_alt, 'm', label="Orbitron")
 
 		STK_alt = figure_STK.STK_alt_satellite
+		STK_time = figure_STK.STK_simulation_time
 		self.a.plot(STK_time, STK_alt, 'g', label ="STK")
 
 		self.a.set_ylabel("Degrees")

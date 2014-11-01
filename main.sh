@@ -266,8 +266,6 @@ echo "$FAMILY family simulations done!"
 
 python gui.py $FAMILY COPY$FAMILY $STK_FOLDER
 
-pwd
-
 # Remove garbage
 cd TLEs/
 
@@ -276,8 +274,6 @@ rm xa*
 rm SAT*
 
 mv COPY$FAMILY $FAMILY
-
-pwd
 
 cd ../results/predict
 rm *

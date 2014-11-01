@@ -75,11 +75,12 @@ class Solve_coordinates:
 		self.satellites_number = len(lista_elementos)
 
 		self.observer = ephem.Observer()
-		self.get_location()
+		
+		(lon, lat, ele) = self.get_location()
 
-		self.observer.lon = ephem.degrees(self.lon)
-		self.observer.lat = ephem.degrees(self.lat)
-		self.observer.elevation = self.ele
+		self.observer.lon = ephem.degrees(lon)
+		self.observer.lat = ephem.degrees(lat)
+		self.observer.elevation = ele
 
 		self.observer.date = ephem.now()
 		self.observer.epoch = ephem.now() 
@@ -155,9 +156,14 @@ class Solve_coordinates:
 
 	def get_location(self):
 		# Implementar una llamada al fichero de configuracion de predict
-		self.lon = '-8.712866' 
-		self.lat = '42.241433'
-		self.ele = 0
+		from os import getcwd
+		print getcwd()
+		
+		lon = '-8.712866' 
+		lat = '42.241433'
+		ele = 0
+
+		return lon, lat, ele
 
 if __name__ == '__main__':
 	print ""

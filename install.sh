@@ -31,20 +31,18 @@ sudo apt-get install python-dev -y
 echo "Orbitron's installation"
 sudo apt-get install wine -y
 if `wget -qr http://www.stoff.pl/orbitron/files/orbitron.exe -O orbitron.exe`; then
-	echo "Install Orbitron"
+	echo "Install Orbitron at default directory"
 else
 	if `wget -qr http://orbitron.fox07.de/orbitron.exe -O orbitron.exe`; then
-		echo "Install Orbitron"
+		echo "Install Orbitron at default directory"
 	else
 		if `wget -qr http://orbitron.dreddi.net/orbitron.exe -O orbitron.exe`; then
-			echo "Install Orbitron"
+			echo "Install Orbitron at default directory"
 		else
 			echo "Orbitron couldn't be downloaded"
 		fi
 	fi
 fi
-
-echo "Install wine at default directory"
 
 wine orbitron.exe
 
