@@ -24,17 +24,19 @@
 class Read_orbitron_data:
 
 	def __init__(self, index_satellite, sat_selected):
-
-		import os
-
-		index_satellite = index_satellite + 1
-		directorio_script = os.getcwd()
-		file = '/home/case/Orbitron/Output/output.txt'
 		
-		# Orbitron routine
-		self.open_file_orbitron(index_satellite, file, sat_selected)
+		file = '/home/case/Orbitron/Output/output.txt'
 
-		os.chdir(directorio_script)
+		import os.path
+		if os.path.exists(file):
+			from os import getcwd, chdir
+			index_satellite = index_satellite + 1
+			directorio_script = os.getcwd()
+		
+			# Orbitron routine
+			self.open_file_orbitron(index_satellite, file, sat_selected)
+
+			os.chdir(directorio_script)
 
 	def open_file_orbitron(self, index_satellite, file, sat_selected):
 
@@ -115,13 +117,12 @@ class Read_orbitron_data:
 
 class Read_STK_data:
 
-	def __init__(self, index_satellite):
+	def __init__(self, index_satellite, directorio_datos):
 
 		import os
 
 		index_satellite = index_satellite
 		directorio_script = os.getcwd()
-		directorio_datos = '/media/windows7share'
 		
 		# STK routine
 		self.open_STK(directorio_datos)
@@ -134,7 +135,7 @@ class Read_STK_data:
 		import os
 
 		# PyEphem data
-                os.chdir(directorio_datos)
+		os.chdir(directorio_datos)
 
 		self.files_STK = os.listdir(os.getcwd())
 		self.files_STK.sort()
@@ -385,14 +386,14 @@ class Read_data:
 
 	def open_predict(self):
 
-		from os import chdir, getcwd
+		from os import chdir, getcwd, listdir
 
 		# predict data
-		os.chdir(self.directorio_script + '/results/predict')
+		chdir(self.directorio_script + '/results/predict')
 
-		actual_dir = os.getcwd()
+		actual_dir = getcwd()
 
-		self.files_predict = os.listdir(actual_dir)
+		self.files_predict = listdir(actual_dir)
 		self.files_predict.remove('temp')
 		self.files_predict.sort()
 	
@@ -528,27 +529,32 @@ class Check_data:
 	def check_orbitron(self, index, actual_sat_name):
 		file = '/home/case/Orbitron/Output/output.txt'
 
-		open_file = open(file, 'r')
-		file_lines = open_file.readlines()
+		try:
+			open_file = open(file, 'r')
+			file_lines = open_file.readlines()
 
-		file_lines_converted = []
+			file_lines_converted = []
 
-		for i in range(len(file_lines)):
-			file_lines_converted.append(file_lines[i].rstrip('\r\n'))
+			for i in range(len(file_lines)):
+				file_lines_converted.append(file_lines[i].rstrip('\r\n'))
 
-		lineas_validas = []
-		for j in range(len(file_lines_converted)):
-			if file_lines_converted[j][0:4] == '2014':
-				lineas_validas.append(file_lines_converted[j])
+			lineas_validas = []
+			for j in range(len(file_lines_converted)):
+				if file_lines_converted[j][0:4] == '2014':
+					lineas_validas.append(file_lines_converted[j])
 
-		sats_name = []
-		for k in range(len(lineas_validas)):
-			sat_name = lineas_validas[k][20:36]
-			sat_name = sat_name.strip(' ')
+			sats_name = []
+			for k in range(len(lineas_validas)):
+				sat_name = lineas_validas[k][20:36]
+				sat_name = sat_name.strip(' ')
 
-			sats_name.append(sat_name)
+				sats_name.append(sat_name)
 		
-		if actual_sat_name in sats_name:
-			self.orbitron = 'yes'
-		else:
-			self.orbitron = 'no'	
+			if actual_sat_name in sats_name:
+				self.orbitron = 'yes'
+			else:
+				self.orbitron = 'no'
+					
+		# File not available
+		except IOError:
+			self.orbitron = 'no'

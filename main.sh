@@ -22,6 +22,8 @@
 # agains STK simulations.
 ################################################################################
 
+clear
+
 ACTUALDIR=`pwd`
 TLESDIR="/TLEs/"
 
@@ -48,7 +50,7 @@ elif [ -d $ACTUALDIR$TLESDIR ]; then
 		chmod +x update_tles.sh
 		./update_tles.sh
 	
-		cd TLEs/
+		#		cd TLEs/
 	
 	elif [ -f amateur.txt ]; then
 		# amateur.txt exist		
@@ -112,7 +114,7 @@ elif [ -d $ACTUALDIR$TLESDIR ]; then
 
 fi
 
-clear
+echo " "
 
 LOCATION=`awk 'NR==1' ~/.predict/predict.qth`
 LATITUDE=`awk 'NR==2' ~/.predict/predict.qth`
@@ -223,6 +225,8 @@ done
 echo "Choose a family!"
 echo "================================================="
 
+cd TLEs/
+
 select d in *; do 
 	FAMILY=$d
 	break 
@@ -248,34 +252,40 @@ python pyephem_sims.py $FAMILY $DATE $END_TIME
 python pyorbital_sims.py $FAMILY $DATE $END_TIME
 
 # Orbitron data
-echo "Perfom Orbitron simulations"
+echo -e "\nPerfom Orbitron simulations"
+echo -e "Parameters:\n"
+echo "Family $FAMILY"
 wine "C:\\Program Files\Orbitron\Orbitron.exe"
 
 # Request for STK data
 echo "Perfom STK simulations"
-
+echo -e "Introduce STK simulations folder: \c"
+read -e STK_FOLDER	
 echo " "
 echo "$FAMILY family simulations done!"
 
-python gui.py $FAMILY COPY$FAMILY
+python gui.py $FAMILY COPY$FAMILY $STK_FOLDER
+
+pwd
 
 # Remove garbage
 cd TLEs/
 
 rm $FAMILY
 rm xa*
+rm SAT*
 
 mv COPY$FAMILY $FAMILY
 
-read -e 
+pwd
 
 cd ../results/predict
 rm *
 
-cd ../results/PyEphem
+cd ../PyEphem
 rm *
 
-cd ../results/pyorbital
+cd ../PyOrbital
 rm *
 
 cd ..

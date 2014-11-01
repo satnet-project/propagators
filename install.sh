@@ -44,23 +44,28 @@ else
 	fi
 fi
 
+echo "Install wine at default directory"
+
 wine orbitron.exe
 
-# Python libraries. May be missing some dependencies.
+rm orbitron.exe
+
+# Python libraries.
 echo "Python libraries"	 
 sudo apt-get install python-pip -y
 sudo apt-get install python-matplotlib -y
 sudo pip install pyephem
 sudo pip install pyorbital
 
-# Compile Predict
+# Compile Predict.
 sudo apt-get install libncurses5-dev -y
 sudo apt-get install libncursesw5-dev -y
+	
 cd predict-mod
-ls
+sudo ./configure
 cd ..
 
-# Remove trash
+# Remove trash.
 sudo apt-get autoremove
 
 clear
@@ -152,6 +157,7 @@ cp main.sh ~/$INSDIR					# BASH script
 cp output_data.py ~/$INSDIR				# Output data to GUI
 cp gui.py ~/$INSDIR						# UI
 cp configure_simulations.py ~/$INSDIR	# Auxiliary UI
+cp scrolledlist.py ~/$INSDIR			# List
 # Propagators 
 cp pyephem_sims.py ~/$INSDIR			# PyEphem script
 cp pyorbital_sims.py ~/$INSDIR			# PyOrbital script
