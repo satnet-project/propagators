@@ -77,20 +77,20 @@ select D in */ ; do
 done
 
 echo " "
-OPT="Yes No"
+OPT="Yes No New_folder"
 echo "$D is all right?"
 
 select opt in $OPT;do
 	if [ "$opt" = "Yes" ]; then
-        cd "$D"
-        echo -e "Folder $D selected!"
-        INSDIR="$D"
+        	cd "$D"
+        	echo -e "Folder $D selected!"
+        	INSDIR="$D"
 		break
 
 	elif [ "$opt" = "No" ]; then     
-        cd "$D"
-        clear
-        echo "========================="
+        	cd "$D"
+        	clear
+        	echo "========================="
 		echo "= Please select folder: ="
 		echo "========================="
 		select SD in */ ; do 
@@ -107,7 +107,7 @@ select opt in $OPT;do
         		cd "$SD"
         		echo -e "Folder $SD selected!"
         		INSDIR="$D$SD"
-                break
+                	break
 
         	elif [ "$opt" = "No" ]; then     
         		cd "$D"
@@ -127,6 +127,11 @@ select opt in $OPT;do
 			fi
 		done
 		break
+	elif [ "$opt" = "New_folder" ]; then
+		echo "Name..."
+		read -e NEW_FOLDER
+		mkdir $NEW_FOLDER
+
 	else
 		echo ">>> Invalid Selection";
 	fi
