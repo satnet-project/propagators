@@ -22,6 +22,32 @@
 # agains STK simulations.
 ################################################################################
 
+cd TLEs/
+{
+	rm xa*
+	rm SAT*
+} &> /dev/null
+
+cd ../results/predict
+{
+	rm SAT*
+	rm temp
+} &> /dev/null
+
+cd ../PyEphem
+{
+	rm SAT*
+	rm temp
+} &> /dev/null
+
+cd ../PyOrbital
+{
+	rm SAT*
+	rm temp
+} &> /dev/null
+
+cd ../..
+
 clear
 
 ACTUALDIR=`pwd`
