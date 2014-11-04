@@ -185,8 +185,9 @@ select change in $CHANGES; do
 done
 
 echo " "
+echo "======================================================="
 echo "Specify simulation start time."
-echo "================================================="
+echo "======================================================="
 
 OPTIONSTIME="Now Another"
 select opt_time in $OPTIONSTIME; do
@@ -221,8 +222,9 @@ select opt_time in $OPTIONSTIME; do
 	fi
 done
 
+echo "======================================================="
 echo "Set the simulation's interval."
-echo "================================================="
+echo "======================================================="
 
 
 OPTIONSINTERVAL="1hour 1day user_defined"
@@ -248,8 +250,9 @@ select opt_interval in $OPTIONSINTERVAL; do
 	fi
 done
 
+echo "======================================================="
 echo "Choose a family!"
-echo "================================================="
+echo "======================================================="
 
 cd TLEs/
 

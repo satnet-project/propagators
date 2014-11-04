@@ -58,22 +58,15 @@ class GUI:
 		available_STK = 'no'
 
 		import output_data
-		actual_available = output_data.Check_data(self.index, object_name.name)
+		from sys import argv
+		actual_available = output_data.Check_data(self.index, object_name.name, argv[3])
 		available_predict = actual_available.predict
 		available_pyephem = actual_available.pyephem
 		available_pyorbital = actual_available.pyorbital
 		available_orbitron = actual_available.orbitron
+		available_STK = actual_available.STK
 
-		figure_predict = output_data.Read_predict_data(self.predict)
-		figure_pyephem = output_data.Read_pyephem_data(self.pyephem)
-		figure_pyorbital = output_data.Read_pyorbital_data(self.pyorbital)
-		from sys import argv
-		figure_STK = output_data.Read_STK_data(self.STK, argv[3])
-		figure_orbitron = output_data.Read_orbitron_data(self.orbitron, object_name.name)
-
-		# Time
-		time = figure_pyephem.pyephem_simulation_time		
-		STK_time = figure_STK.STK_simulation_time
+		# Comparation
 		figure = output_data.Read_data(self.pyephem, self.predict, self.pyorbital)
 		difference_alt, difference_az = figure.pyephem_minus_predict()
 
@@ -81,49 +74,54 @@ class GUI:
 		self.f = Figure(figsize=(6,7), dpi = 80)
 		self.f.suptitle(object_name.name, fontsize=16)
 
-		# Subplot altitude
+		# Subplots altitude & azimuth
 		self.a = self.f.add_subplot(211)
-		# Check if data is available
-		if available_predict == 'yes':			
-			predict_alt = figure_predict.predict_alt_satellite
-			self.a.plot(time, predict_alt, 'r', label="predict")
+		self.b = self.f.add_subplot(212)
+
+		# Check if data is available and print it
+
 		if available_pyephem == 'yes':
+			figure_pyephem = output_data.Read_pyephem_data(self.pyephem)
+			time = figure_pyephem.pyephem_simulation_time		
 			pyephem_alt = figure_pyephem.pyephem_alt_satellite
 			self.a.plot(time, pyephem_alt, 'b', label="PyEphem")
+			pyephem_az = figure_pyephem.pyephem_az_satellite
+			self.b.plot(time, pyephem_az, 'b', label="PyEphem")
+
+		if available_predict == 'yes':
+			figure_predict = output_data.Read_predict_data(self.predict)			
+			predict_alt = figure_predict.predict_alt_satellite
+			self.a.plot(time, predict_alt, 'r', label="predict")
+			predict_az = figure_predict.predict_az_satellite
+			self.b.plot(time, predict_az, 'r', label="predict")
+
 		if available_pyorbital == 'yes':
+			figure_pyorbital = output_data.Read_pyorbital_data(self.pyorbital)
 			pyorbital_alt = figure_pyorbital.pyorbital_alt_satellite
 			self.a.plot(time, pyorbital_alt, 'y', label="pyorbital")
+			pyorbital_az = figure_pyorbital.pyorbital_az_satellite
+			self.b.plot(time, pyorbital_az, 'y', label="pyorbital")
+
 		if available_orbitron == 'yes':
+			figure_orbitron = output_data.Read_orbitron_data(self.orbitron, object_name.name)
 			orbitron_alt = figure_orbitron.orbitron_alt_satellite
 			orbitron_time = figure_orbitron.orbitron_time
 			self.a.plot(orbitron_time, orbitron_alt, 'm', label="orbitron")
+			orbitron_az = figure_orbitron.orbitron_az_satellite
+			self.b.plot(orbitron_time, orbitron_az, 'm', label="orbitron")
 
-		STK_alt = figure_STK.STK_alt_satellite
-		self.a.plot(STK_time, STK_alt, 'g', label ="STK")
+		if available_STK == 'yes':
+			figure_STK = output_data.Read_STK_data(self.STK, argv[3])
+			STK_alt = figure_STK.STK_alt_satellite
+	                STK_time = figure_STK.STK_simulation_time
+			self.a.plot(STK_time, STK_alt, 'g', label ="STK")
+			STK_az = figure_STK.STK_az_satellite
+			self.b.plot(STK_time, STK_az, 'g', label ="STK")
 
 		self.a.legend(loc = 2, borderaxespad = 0., prop={'size':12})
 		self.a.set_ylabel("Degrees")
 		# Grid is on
 		self.a.grid(True)
-
-		# Subplot azimuth
-		self.b = self.f.add_subplot(212)
-		# Check if data is available
-		if available_predict == 'yes':
-			predict_az = figure_predict.predict_az_satellite
-			self.b.plot(time, predict_az, 'r', label="predict")
-		if available_pyephem == 'yes':
-			pyephem_az = figure_pyephem.pyephem_az_satellite
-			self.b.plot(time, pyephem_az, 'b', label="PyEphem")
-		if available_pyorbital == 'yes':
-			pyorbital_az = figure_pyorbital.pyorbital_az_satellite
-			self.b.plot(time, pyorbital_az, 'y', label="pyorbital")
-		if available_orbitron == 'yes':
-			orbitron_az = figure_orbitron.orbitron_az_satellite
-			self.b.plot(orbitron_time, orbitron_az, 'm', label="orbitron")
-
-		STK_az = figure_STK.STK_az_satellite
-		self.b.plot(STK_time, STK_az, 'g', label ="STK")
 
 		self.b.legend(loc = 2, borderaxespad = 0., prop={'size':12})
 		self.b.set_ylabel("Degrees")
@@ -194,18 +192,6 @@ class GUI:
 
 		file = tk.Label(data_frame, textvariable = self.file_name)
 		file.grid(column = 1, row = 1, columnspan = 1, rowspan = 1, sticky = tk.E)
-
-#		import os		
-#		directorio_actual = os.getcwd()
-		
-		# LOGO
-#		from PIL import Image, ImageTk
-#		image = Image.open(directorio_actual + '/LOGO.png')
-#		image = Image.open('/home/case/LOGO.png')
-#		logo = ImageTk.PhotoImage(image)
-
-#		label_logo = tk.Label(self.data_root, image = logo)
-#		label_logo.grid(column = 1, row = 0, columnspan = 1, rowspan = 1)
 
 		label_sims = tk.Label(data_frame, text = "Simulations availables")
 		label_sims.grid(column = 0, row = 2, columnspan = 2, rowspan = 1, sticky = tk.W)
@@ -283,7 +269,8 @@ class GUI:
 		object_name = get_elements.Get_name(self.index)
 
 		import output_data
-		available = output_data.Check_data(self.index, object_name.name) 		
+		from sys import argv
+		available = output_data.Check_data(self.index, object_name.name, argv[3]) 		
 
 		available_predict = available.predict
 		if available_predict == 'yes':
@@ -297,8 +284,9 @@ class GUI:
 		available_orbitron = available.orbitron
 		if available_orbitron == 'yes':
 			self.orbitron = self.orbitron + 1
-
-		self.STK = self.STK + 1
+		available_STK = available.STK
+		if available_STK == 'yes':
+			self.STK = self.STK + 1
 
 		self.a.clear()
 		self.b.clear()
@@ -307,83 +295,78 @@ class GUI:
 		figure = output_data.Read_data(self.pyephem, self.predict, self.pyorbital)
 		difference_alt, difference_az = figure.pyephem_minus_predict()
 
-		figure_predict = output_data.Read_predict_data(self.predict)
-		figure_pyephem = output_data.Read_pyephem_data(self.pyephem)
-		figure_pyorbital = output_data.Read_pyorbital_data(self.pyorbital)
-		from sys import argv
-		figure_STK = output_data.Read_STK_data(self.STK, argv[3])
 		figure_orbitron = output_data.Read_orbitron_data(self.orbitron, object_name.name)
 
-		# Time
-		time = figure_pyephem.pyephem_simulation_time
-		
-		# Available 
-		actual_available = output_data.Check_data(self.index, object_name.name)
+		# Available
+		actual_available = output_data.Check_data(self.index, object_name.name, argv[3])
 		available_predict = actual_available.predict
 		available_pyephem = actual_available.pyephem
 		available_pyorbital = actual_available.pyorbital
 		available_orbitron = actual_available.orbitron
+		available_STK = actual_available.STK
 
 		self.f.clf()
 		self.f.suptitle(object_name.name, fontsize=16)
 
 		# Subplot a
 		self.a = self.f.add_subplot(211)
-		if available_predict == 'yes':
-			predict_alt = figure_predict.predict_alt_satellite
-			self.a.plot(time, predict_alt, 'r', label="predict")
+		self.b = self.f.add_subplot(212)
+
+		# Check if data is available and print it
+
 		if available_pyephem == 'yes':
+			figure_pyephem = output_data.Read_pyephem_data(self.pyephem)
+			time = figure_pyephem.pyephem_simulation_time
 			pyephem_alt = figure_pyephem.pyephem_alt_satellite
 			self.a.plot(time, pyephem_alt, 'b', label="PyEphem")
+			pyephem_az = figure_pyephem.pyephem_az_satellite
+			self.b.plot(time, pyephem_az, 'b', label="PyEphem")
+
+		if available_predict == 'yes':
+			figure_predict = output_data.Read_predict_data(self.predict)
+			predict_alt = figure_predict.predict_alt_satellite
+			self.a.plot(time, predict_alt, 'r', label="predict")
+			predict_az = figure_predict.predict_az_satellite
+			self.b.plot(time, predict_az, 'r', label="predict")
+
 		if available_pyorbital == 'yes':
+			figure_pyorbital = output_data.Read_pyorbital_data(self.pyorbital)
 			pyorbital_alt = figure_pyorbital.pyorbital_alt_satellite
 			self.a.plot(time, pyorbital_alt, 'y', label="pyorbital")
+			pyorbital_az = figure_pyorbital.pyorbital_az_satellite
+			self.b.plot(time, pyorbital_az, 'y', label="pyorbital")
+
 		if available_orbitron == 'yes':
 			orbitron_time = figure_orbitron.orbitron_time
 			orbitron_alt = figure_orbitron.orbitron_alt_satellite
 			self.a.plot(orbitron_time, orbitron_alt, 'm', label="orbitron")
+			orbitron_az = figure_orbitron.orbitron_az_satellite
+			self.b.plot(orbitron_time, orbitron_az, 'm', label="orbitron")
 
-		STK_alt = figure_STK.STK_alt_satellite
-		STK_time = figure_STK.STK_simulation_time
-		self.a.plot(STK_time, STK_alt, 'g', label ="STK")
+		if available_STK == 'yes':
+			figure_STK = output_data.Read_STK_data(self.STK, argv[3])
+			STK_alt = figure_STK.STK_alt_satellite
+			STK_time = figure_STK.STK_simulation_time
+			self.a.plot(STK_time, STK_alt, 'g', label ="STK")
+			STK_az = figure_STK.STK_az_satellite
+			self.b.plot(STK_time, STK_az, 'g', label ="STK")
 
 		self.a.legend(loc = 2, borderaxespad = 0., prop={'size':12})
 		self.a.set_ylabel("Degrees")
 		self.a.grid(True)
 
-		# Subplot c
-		self.c = self.g.add_subplot(111)
-		self.c.plot(time, difference_alt, label = "Difference")
-
-		self.c.legend(loc = 2, borderaxespad = 0., prop={'size':12})
-
-		self.c.set_ylabel("Altitude - Degrees")
-
-		self.c.grid(True)
-
-		# Subplot c
-		self.b = self.f.add_subplot(212)
-		if available_predict == 'yes':
-			predict_az = figure_predict.predict_az_satellite
-			self.b.plot(time, predict_az, 'r', label="predict")
-		if available_pyephem == 'yes':
-			pyephem_az = figure_pyephem.pyephem_az_satellite
-			self.b.plot(time, pyephem_az, 'b', label="PyEphem")
-		if available_pyorbital == 'yes':
-			pyorbital_az = figure_pyorbital.pyorbital_az_satellite
-			self.b.plot(time, pyorbital_az, 'y', label="pyorbital")
-		if available_orbitron == 'yes':
-			orbitron_az = figure_orbitron.orbitron_az_satellite
-			self.b.plot(orbitron_time, orbitron_az, 'm', label="orbitron")
-
-		STK_az = figure_STK.STK_az_satellite
-		self.b.plot(STK_time, STK_az, 'g', label ="STK")
-
 		self.b.legend(loc = 2, borderaxespad = 0., prop={'size':12})
 		self.b.set_ylabel("Degrees")
 		self.b.grid(True)
-		
+
 		self.canvas.draw()
+
+		# Subplot c
+		self.c = self.g.add_subplot(111)
+		self.c.plot(time, difference_alt, label = "Difference")
+		self.c.legend(loc = 2, borderaxespad = 0., prop={'size':12})
+		self.c.set_ylabel("Altitude - Degrees")
+		self.c.grid(True)
 
 		# Check buttons state
 		if self.index == 0:
@@ -401,7 +384,8 @@ class GUI:
 		object_name = get_elements.Get_name(self.index)
 
 		import output_data
-		available = output_data.Check_data(self.index, object_name.name) 		
+		from sys import argv
+		available = output_data.Check_data(self.index, object_name.name, argv[3]) 		
 
 		available_predict = available.predict
 		if available_predict == 'yes':
@@ -415,8 +399,9 @@ class GUI:
 		available_orbitron = available.orbitron
 		if available_orbitron == 'yes':
 			self.orbitron = self.orbitron - 1
-
-		self.STK = self.STK - 1
+		available_STK = available.STK
+		if available_STK == 'yes':
+			self.STK = self.STK - 1
 
 		self.index = self.index - 1
 		
@@ -428,67 +413,66 @@ class GUI:
 		figure = output_data.Read_data(self.pyephem, self.predict, self.pyorbital)
 		difference_alt, difference_az = figure.pyephem_minus_predict()
 
-		figure_predict = output_data.Read_predict_data(self.predict)
-		figure_pyephem = output_data.Read_pyephem_data(self.pyephem)
-		figure_pyorbital = output_data.Read_pyorbital_data(self.pyorbital)
-		from sys import argv
-		figure_STK = output_data.Read_STK_data(self.STK, argv[3])
-		figure_orbitron = output_data.Read_orbitron_data(self.orbitron, object_name.name)
-
 		# Time
-		time = figure_pyephem.pyephem_simulation_time
+
 
 		# Available
-		actual_available = output_data.Check_data(self.index, object_name.name)
+		actual_available = output_data.Check_data(self.index, object_name.name, argv[3])
 		available_predict = actual_available.predict
 		available_pyephem = actual_available.pyephem
 		available_pyorbital = actual_available.pyorbital
 		available_orbitron = actual_available.orbitron
+		available_STK = actual_available.STK		
 
 		self.f.clf()
 		self.f.suptitle(object_name.name, fontsize=16)
 
 		# Subplot a
 		self.a = self.f.add_subplot(211)
-		if available_predict == 'yes':
-			predict_alt = figure_predict.predict_alt_satellite
-			self.a.plot(time, predict_alt, 'r', label="predict")
+		self.b = self.f.add_subplot(212)
+
+
 		if available_pyephem == 'yes':
+			figure_pyephem = output_data.Read_pyephem_data(self.pyephem)
+			time = figure_pyephem.pyephem_simulation_time
 			pyephem_alt = figure_pyephem.pyephem_alt_satellite
 			self.a.plot(time, pyephem_alt, 'b', label="PyEphem")
+			pyephem_az = figure_pyephem.pyephem_az_satellite
+			self.b.plot(time, pyephem_az, 'b', label="PyEphem")
+
+		if available_predict == 'yes':
+			figure_predict = output_data.Read_predict_data(self.predict)
+			predict_alt = figure_predict.predict_alt_satellite
+			self.a.plot(time, predict_alt, 'r', label="predict")
+			predict_az = figure_predict.predict_az_satellite
+			self.b.plot(time, predict_az, 'r', label="predict")
+
 		if available_pyorbital == 'yes':
+			figure_pyorbital = output_data.Read_pyorbital_data(self.pyorbital)
 			pyorbital_alt = figure_pyorbital.pyorbital_alt_satellite
 			self.a.plot(time, pyorbital_alt, 'y', label="pyorbital")
+			pyorbital_az = figure_pyorbital.pyorbital_az_satellite
+			self.b.plot(time, pyorbital_az, 'y', label="pyorbital")
+
 		if available_orbitron == 'yes':
+			figure_orbitron = output_data.Read_orbitron_data(self.orbitron, object_name.name)
 			orbitron_time = figure_orbitron.orbitron_time
 			orbitron_alt = figure_orbitron.orbitron_alt_satellite
 			self.a.plot(orbitron_time, orbitron_alt, 'm', label="Orbitron")
+			orbitron_az = figure_orbitron.orbitron_az_satellite
+			self.b.plot(orbitron_time, orbitron_az, 'm', label="orbitron")
 
-		STK_alt = figure_STK.STK_alt_satellite
-		STK_time = figure_STK.STK_simulation_time
-		self.a.plot(STK_time, STK_alt, 'g', label ="STK")
+		if available_STK == 'yes':
+			figure_STK = output_data.Read_STK_data(self.STK, argv[3])
+			STK_alt = figure_STK.STK_alt_satellite
+			STK_time = figure_STK.STK_simulation_time
+			self.a.plot(STK_time, STK_alt, 'g', label ="STK")
+			STK_az = figure_STK.STK_az_satellite
+			self.b.plot(STK_time, STK_az, 'g', label ="STK")
 
 		self.a.set_ylabel("Degrees")
 		self.a.legend(loc = 2, borderaxespad = 0., prop={'size':12})
 		self.a.grid(True)
-
-		# Subplot b
-		self.b = self.f.add_subplot(212)
-		if available_predict == 'yes':
-			predict_az = figure_predict.predict_az_satellite
-			self.b.plot(time, predict_az, 'r', label="predict")
-		if available_pyephem == 'yes':
-			pyephem_az = figure_pyephem.pyephem_az_satellite
-			self.b.plot(time, pyephem_az, 'b', label="PyEphem")
-		if available_pyorbital == 'yes':
-			pyorbital_az = figure_pyorbital.pyorbital_az_satellite
-			self.b.plot(time, pyorbital_az, 'y', label="pyorbital")
-		if available_orbitron == 'yes':
-			orbitron_az = figure_orbitron.orbitron_az_satellite
-			self.b.plot(orbitron_time, orbitron_az, 'm', label="orbitron")
-
-		STK_az = figure_STK.STK_az_satellite
-		self.b.plot(STK_time, STK_az, 'g', label ="STK")
 
 		self.b.legend(loc = 2, borderaxespad = 0., prop={'size':12})
 		self.b.set_ylabel("Degrees")
@@ -501,7 +485,6 @@ class GUI:
 		self.c.plot(time, difference_alt, label = "Difference")
 		self.c.legend(loc = 2, borderaxespad = 0., prop={'size':12})
 		self.c.set_ylabel("Altitude - Degrees")
-
 		self.c.grid(True)
 
 		# Check buttons state
@@ -516,7 +499,8 @@ class GUI:
 			self.next.configure(state = tk.NORMAL)
 
 	def sims_availables(self, available_predict, available_pyephem, available_pyorbital, available_orbitron, available_STK):
-		list_of_simulations = [ ]		
+		list_of_simulations = [ ]
+		print available_STK		
 		if available_STK == 'yes':
 			if available_predict == 'yes':
 				list_of_simulations.append("STK vs. predict")
@@ -532,7 +516,6 @@ class GUI:
 		self.list_of_simulations = list_of_simulations		
 
 	def pick_simulation(self, index):
-		print "hola"
 		print index
 		print self.list_of_simulations
 

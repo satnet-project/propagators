@@ -475,7 +475,7 @@ class Read_data:
 
 class Check_data:
 
-	def __init__(self, index_satellite, sat_name):
+	def __init__(self, index_satellite, sat_name, STK_folder):
 
 		index = index_satellite + 1
 		satellite_name = "SAT%s" %(index)
@@ -487,6 +487,7 @@ class Check_data:
 		self.check_pyephem(index_satellite, satellite_name)
 		self.check_pyorbital(index_satellite, satellite_name)
 		self.check_orbitron(index_satellite, sat_name)
+		self.check_STK(index_satellite, STK_folder)
 
 		chdir(self.directorio_actual)
 
@@ -558,3 +559,15 @@ class Check_data:
 		# File not available
 		except IOError:
 			self.orbitron = 'no'
+
+	def check_STK(self, index, STK_folder):
+		from os import listdir
+		
+		if index < len(listdir(STK_folder)):
+			self.STK = 'yes'
+			print index
+			print len(listdir(STK_folder))
+		else:
+			self.STK = 'no'
+			print index
+			print len(listdir(STK_folder))
