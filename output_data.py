@@ -339,8 +339,12 @@ class Read_data:
 		self.open_files_predict()
 
 		# Differences
-#		difference_alt = []
-#		difference_az = []
+		difference_alt = []
+		difference_az = []
+
+
+		# Compara los valores similares y sacar los indices
+
 
 #		for i in range(len(self.predict_simulation_time)):
 #			resta_alt = float(self.predict_alt_satellite[i]) - float(self.pyephem_alt_satellite[i])
@@ -349,7 +353,12 @@ class Read_data:
 #			resta_az = float(self.predict_az_satellite[i]) - float(self.pyephem_az_satellite[i])
 #			difference_az.append(resta_az)
 
-		return self.predict_alt_satellite, self.STK_alt_satellite
+
+		# Force mean to zero
+#		m = 0
+#		std = numpy.sqrt(numpy.mean((a-m)**2))
+
+#		return std_alt, std_az
 
 		from os import chdir
 		chdir(self.directorio_script)
@@ -367,8 +376,9 @@ class Read_data:
 		self.open_files_pyephem()
 
 		# Differences
-#		difference_alt = []
-#		difference_az = []
+		time_intersected = []
+
+		time_intersected = list(set(self.STK_simulation_time).intersection(self.pyephem_simulation_time))
 
 #		for i in range(len(self.predict_simulation_time)):
 #			resta_alt = float(self.predict_alt_satellite[i]) - float(self.pyephem_alt_satellite[i])
@@ -377,7 +387,15 @@ class Read_data:
 #			resta_az = float(self.predict_az_satellite[i]) - float(self.pyephem_az_satellite[i])
 #			difference_az.append(resta_az)
 
-		return self.pyephem_alt_satellite, self.STK_alt_satellite
+
+		# Force mean to zero
+#		m = 0
+		
+		# Standard deviation
+#		import numpy
+#		std = numpy.sqrt(numpy.mean((a-m)**2))
+
+#		return std_alt, std_az
 		
 		from os import chdir
 		chdir(self.directorio_script)

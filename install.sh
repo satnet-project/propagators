@@ -113,24 +113,37 @@ select opt in $OPT;do
         		cd "$D"
         		clear
         		echo "========================="
-				echo "= Please select folder: ="
-				echo "========================="
-				select SSD in */ ; do 
-					test -n "$SSD" && break; 
-					echo ">>> Invalid Selection"; 
-				done
-				INSDIR="$D$SD$SSD"
-				break
+			echo "= Please select folder: ="
+			echo "========================="
+			select SSD in */ ; do 
+				test -n "$SSD" && break; 
+				echo ">>> Invalid Selection"; 
+			done
+			INSDIR="$D$SD$SSD"
+			break
 				
-			else
-				echo ">>> Invalid Selection";
-			fi
+		else
+			echo ">>> Invalid Selection";
+		fi
 		done
 		break
+
 	elif [ "$opt" = "New_folder" ]; then
 		echo "Name..."
 		read -e NEW_FOLDER
 		mkdir $NEW_FOLDER
+        	
+		echo "========================="
+		echo "= Please select folder: ="
+		echo "========================="
+		select SD in */ ; do 
+			test -n "$SD" && break; 
+			echo ">>> Invalid Selection"; 
+		done
+
+		echo -e "Folder $SD selected!"
+		INSDIR="$D"
+		break
 
 	else
 		echo ">>> Invalid Selection";

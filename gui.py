@@ -530,6 +530,7 @@ class GUI:
 			from sys import argv
 			figure = Read_data(self.pyephem, self.predict, self.pyorbital, \
 			self.orbitron, self.object_name.name, self.STK, argv[3])
+			figure.STK_vs_PyEphem()
 
 		elif self.list_of_simulations[index][8:12] == "PyOr":
 			from output_data import Read_data
