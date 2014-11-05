@@ -141,10 +141,10 @@ class Solve_coordinates:
 
 	def output_data(self, name, time, alt, az):
 
-		import os
+		from os import getcwd, chdir
 
-		script_dir = os.getcwd()
-		os.chdir(script_dir + '/results/PyEphem')
+		script_dir = getcwd()
+		chdir(script_dir + '/results/PyEphem')
 
 		create_file = open(name, 'a')
 		create_file.writelines("%d\t" % time)
@@ -152,16 +152,20 @@ class Solve_coordinates:
 		create_file.writelines("%0.6f\n" % az)
 		create_file.close
 
-		os.chdir(script_dir)
+		chdir(script_dir)
 
 	def get_location(self):
-		# Implementar una llamada al fichero de configuracion de predict
-		from os import getcwd
-		print getcwd()
-		
-		lon = '-8.712866' 
-		lat = '42.241433'
-		ele = 0
+
+		from os import getenv
+
+		open_file = open(getenv("HOME") + '/.predict/predict.qth')
+		lines = open_file.readlines()
+		lines = [item.rstrip('\n') for item in lines]
+
+		site = lines[0]
+		lat = float(lines[1])
+		lon = float(lines[2])
+		ele = int(lines[3])
 
 		return lon, lat, ele
 

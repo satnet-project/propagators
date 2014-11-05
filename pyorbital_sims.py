@@ -98,7 +98,9 @@ class Solve_coordinates:
 		
 		time1 = datetime.datetime.fromtimestamp(start_time)
 
-		az1, alt1 = satellite.get_observer_look(time1, self.lon, self.lat, self.ele)
+		(lon, lat, ele) = self.get_location()
+
+		az1, alt1 = satellite.get_observer_look(time1, lon, lat, ele)
 		self.output_data(satellite_name, start_time, alt1, az1)
 		n2 = start_time
 
@@ -108,7 +110,7 @@ class Solve_coordinates:
                         
 			timeN = datetime.datetime.fromtimestamp(n2)
                         
-			azN, altN = satellite.get_observer_look(timeN, self.lon, self.lat, self.ele)
+			azN, altN = satellite.get_observer_look(timeN, lon, lat, ele)
 			self.output_data(satellite_name, n2, altN, azN)
 			j = j + 1
 
@@ -130,9 +132,18 @@ class Solve_coordinates:
 
 	def get_location(self):
 		
-		self.lon = -8.712866
-		self.lat = 42.241433
-		self.ele = 0
+		from os import getenv
+
+		open_file = open(getenv("HOME") + '/.predict/predict.qth')
+		lines = open_file.readlines()
+		lines = [item.rstrip('\n') for item in lines]
+
+		site = lines[0]
+		lat = float(lines[1])
+		lon = float(lines[2])
+		ele = int(lines[3])
+
+		return lon, lat, ele
 
 
 if __name__ == '__main__':
