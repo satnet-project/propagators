@@ -44,7 +44,7 @@ class GUI:
 
 		# Satellite name
 		import get_elements
-		object_name = get_elements.Get_name(self.index)
+		self.object_name = get_elements.Get_name(self.index)
 
 		import Tkinter as tk
 		from matplotlib.figure import Figure
@@ -59,7 +59,7 @@ class GUI:
 
 		import output_data
 		from sys import argv
-		actual_available = output_data.Check_data(self.index, object_name.name, argv[3])
+		actual_available = output_data.Check_data(self.index, self.object_name.name, argv[3])
 		available_predict = actual_available.predict
 		available_pyephem = actual_available.pyephem
 		available_pyorbital = actual_available.pyorbital
@@ -67,12 +67,12 @@ class GUI:
 		available_STK = actual_available.STK
 
 		# Comparation
-		figure = output_data.Read_data(self.pyephem, self.predict, self.pyorbital)
-		difference_alt, difference_az = figure.pyephem_minus_predict()
+		figure = output_data.Read_data(self.pyephem, self.predict, self.pyorbital, \
+		self.orbitron, self.object_name.name, self.STK, argv[3])
 
 		# Plot
 		self.f = Figure(figsize=(6,7), dpi = 80)
-		self.f.suptitle(object_name.name, fontsize=16)
+		self.f.suptitle(self.object_name.name, fontsize=16)
 
 		# Subplots altitude & azimuth
 		self.a = self.f.add_subplot(211)
@@ -103,7 +103,7 @@ class GUI:
 			self.b.plot(time, pyorbital_az, 'y', label="pyorbital")
 
 		if available_orbitron == 'yes':
-			figure_orbitron = output_data.Read_orbitron_data(self.orbitron, object_name.name)
+			figure_orbitron = output_data.Read_orbitron_data(self.orbitron, self.object_name.name)
 			orbitron_alt = figure_orbitron.orbitron_alt_satellite
 			orbitron_time = figure_orbitron.orbitron_time
 			self.a.plot(orbitron_time, orbitron_alt, 'm', label="orbitron")
@@ -148,11 +148,10 @@ class GUI:
 		
 		# Subplot c
 		self.c = self.g.add_subplot(111)
-		self.c.plot(time, difference_alt, label="difference")
-
-		self.c.legend(loc = 2, borderaxespad = 0., prop={'size':12})
-		self.c.set_ylabel("Altitude - Degrees")
-		self.c.grid(True)
+#		self.c.plot(time, difference_alt, label="difference")
+#		self.c.legend(loc = 2, borderaxespad = 0., prop={'size':12})
+#		self.c.set_ylabel("Altitude - Degrees")
+#		self.c.grid(True)
 
 		right_frame = tk.Frame(root, height = 330, width = 500, bd = 0)
 		right_frame.grid(column = 1, row = 0, columnspan = 1, rowspan = 1, padx = 5, pady = 5)
@@ -266,11 +265,11 @@ class GUI:
 		self.index = self.index + 1
 
 		import get_elements
-		object_name = get_elements.Get_name(self.index)
+		self.object_name = get_elements.Get_name(self.index)
 
 		import output_data
 		from sys import argv
-		available = output_data.Check_data(self.index, object_name.name, argv[3]) 		
+		available = output_data.Check_data(self.index, self.object_name.name, argv[3]) 		
 
 		available_predict = available.predict
 		if available_predict == 'yes':
@@ -292,13 +291,11 @@ class GUI:
 		self.b.clear()
 		self.c.clear()
 
-		figure = output_data.Read_data(self.pyephem, self.predict, self.pyorbital)
-		difference_alt, difference_az = figure.pyephem_minus_predict()
-
-		figure_orbitron = output_data.Read_orbitron_data(self.orbitron, object_name.name)
+		figure = output_data.Read_data(self.pyephem, self.predict, self.pyorbital, \
+		self.orbitron, self.object_name.name, self.STK, argv[3])
 
 		# Available
-		actual_available = output_data.Check_data(self.index, object_name.name, argv[3])
+		actual_available = output_data.Check_data(self.index, self.object_name.name, argv[3])
 		available_predict = actual_available.predict
 		available_pyephem = actual_available.pyephem
 		available_pyorbital = actual_available.pyorbital
@@ -306,7 +303,7 @@ class GUI:
 		available_STK = actual_available.STK
 
 		self.f.clf()
-		self.f.suptitle(object_name.name, fontsize=16)
+		self.f.suptitle(self.object_name.name, fontsize=16)
 
 		# Subplot a
 		self.a = self.f.add_subplot(211)
@@ -337,6 +334,8 @@ class GUI:
 			self.b.plot(time, pyorbital_az, 'y', label="pyorbital")
 
 		if available_orbitron == 'yes':
+			figure_orbitron = output_data.Read_orbitron_data(self.orbitron,\
+			self.object_name.name)
 			orbitron_time = figure_orbitron.orbitron_time
 			orbitron_alt = figure_orbitron.orbitron_alt_satellite
 			self.a.plot(orbitron_time, orbitron_alt, 'm', label="orbitron")
@@ -363,10 +362,10 @@ class GUI:
 
 		# Subplot c
 		self.c = self.g.add_subplot(111)
-		self.c.plot(time, difference_alt, label = "Difference")
-		self.c.legend(loc = 2, borderaxespad = 0., prop={'size':12})
-		self.c.set_ylabel("Altitude - Degrees")
-		self.c.grid(True)
+#		self.c.plot(time, difference_alt, label = "Difference")
+#		self.c.legend(loc = 2, borderaxespad = 0., prop={'size':12})
+#		self.c.set_ylabel("Altitude - Degrees")
+#		self.c.grid(True)
 
 		# Check buttons state
 		if self.index == 0:
@@ -380,12 +379,15 @@ class GUI:
 			self.next.configure(state = tk.NORMAL)		
 
 	def forward(self):
+
+		self.index = self.index - 1
+
 		import get_elements
-		object_name = get_elements.Get_name(self.index)
+		self.object_name = get_elements.Get_name(self.index)
 
 		import output_data
 		from sys import argv
-		available = output_data.Check_data(self.index, object_name.name, argv[3]) 		
+		available = output_data.Check_data(self.index, self.object_name.name, argv[3]) 		
 
 		available_predict = available.predict
 		if available_predict == 'yes':
@@ -403,21 +405,17 @@ class GUI:
 		if available_STK == 'yes':
 			self.STK = self.STK - 1
 
-		self.index = self.index - 1
-		
 		self.a.clear()
 		self.b.clear()
 		self.c.clear()
 
 		import output_data
-		figure = output_data.Read_data(self.pyephem, self.predict, self.pyorbital)
-		difference_alt, difference_az = figure.pyephem_minus_predict()
-
-		# Time
+		figure = output_data.Read_data(self.pyephem, self.predict, self.pyorbital, \
+		self.orbitron, self.object_name.name, self.STK, argv[3])
 
 
 		# Available
-		actual_available = output_data.Check_data(self.index, object_name.name, argv[3])
+		actual_available = output_data.Check_data(self.index, self.object_name.name, argv[3])
 		available_predict = actual_available.predict
 		available_pyephem = actual_available.pyephem
 		available_pyorbital = actual_available.pyorbital
@@ -425,7 +423,7 @@ class GUI:
 		available_STK = actual_available.STK		
 
 		self.f.clf()
-		self.f.suptitle(object_name.name, fontsize=16)
+		self.f.suptitle(self.object_name.name, fontsize=16)
 
 		# Subplot a
 		self.a = self.f.add_subplot(211)
@@ -455,7 +453,8 @@ class GUI:
 			self.b.plot(time, pyorbital_az, 'y', label="pyorbital")
 
 		if available_orbitron == 'yes':
-			figure_orbitron = output_data.Read_orbitron_data(self.orbitron, object_name.name)
+			figure_orbitron = output_data.Read_orbitron_data(self.orbitron,\
+			self.object_name.name)
 			orbitron_time = figure_orbitron.orbitron_time
 			orbitron_alt = figure_orbitron.orbitron_alt_satellite
 			self.a.plot(orbitron_time, orbitron_alt, 'm', label="Orbitron")
@@ -482,10 +481,10 @@ class GUI:
 
 		# Subplot c
 		self.c = self.f.add_subplot(111)
-		self.c.plot(time, difference_alt, label = "Difference")
-		self.c.legend(loc = 2, borderaxespad = 0., prop={'size':12})
-		self.c.set_ylabel("Altitude - Degrees")
-		self.c.grid(True)
+#		self.c.plot(time, difference_alt, label = "Difference")
+#		self.c.legend(loc = 2, borderaxespad = 0., prop={'size':12})
+#		self.c.set_ylabel("Altitude - Degrees")
+#		self.c.grid(True)
 
 		# Check buttons state
 		if self.index == 0:
@@ -516,8 +515,33 @@ class GUI:
 		self.list_of_simulations = list_of_simulations		
 
 	def pick_simulation(self, index):
-		print index
-		print self.list_of_simulations
+
+		if self.list_of_simulations[index][8:12] == "pred":
+			from output_data import Read_data
+			from sys import argv
+			figure = Read_data(self.pyephem, self.predict, self.pyorbital, \
+			self.orbitron, self.object_name.name, self.STK, argv[3])
+			predict, STK = figure.STK_vs_predict()
+			print predict
+			print STK		
+
+		elif self.list_of_simulations[index][8:12] == "PyEp":
+			from output_data import Read_data
+			from sys import argv
+			figure = Read_data(self.pyephem, self.predict, self.pyorbital, \
+			self.orbitron, self.object_name.name, self.STK, argv[3])
+
+		elif self.list_of_simulations[index][8:12] == "PyOr":
+			from output_data import Read_data
+			from sys import argv
+			figure = Read_data(self.pyephem, self.predict, self.pyorbital, \
+			self.orbitron, self.object_name.name, self.STK, argv[3])
+
+		elif self.list_of_simulations[index][8:12] == "Orbi":
+			from output_data import Read_data
+			from sys import argv
+			figure = Read_data(self.pyephem, self.predict, self.pyorbital, \
+			self.orbitron, self.object_name.name, self.STK, argv[3])
 
 	def redo_simulations(self):
 		import configure_simulations
@@ -528,8 +552,6 @@ class GUI:
 
 
 if __name__ == '__main__':
-	from sys import argv
-	print argv[3]
 	import Tkinter as tk
 	root = tk.Tk()
 	interfaz = GUI()
