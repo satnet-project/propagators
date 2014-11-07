@@ -119,28 +119,30 @@ class Read_STK_data:
 
 	def __init__(self, index_satellite, directorio_datos):
 
-		import os
+		from os import getcwd, chdir
 
 		index_satellite = index_satellite
-		directorio_script = os.getcwd()
+		directorio_script = getcwd()
 		
 		# STK routine
 		self.open_STK(directorio_datos)
 		self.open_files_STK(index_satellite)
 
-		os.chdir(directorio_script)
+		chdir(directorio_script)
 
 	def open_STK(self, directorio_datos):
 
-		import os
+		from os import chdir, getcwd, listdir
 
-		# PyEphem data
-		os.chdir(directorio_datos)
+		chdir(directorio_datos)
 
-		self.files_STK = os.listdir(os.getcwd())
+		# Aqui es donde se genera la lista. Es donde tengo que cambiar los
+		# nombres por indices
+		self.files_STK = listdir(getcwd())
 		self.files_STK.sort()
 
 	def open_files_STK(self, index_satellite):
+
 		self.open_file_STK(self.files_STK[index_satellite])
 
 	def open_file_STK(self, name):
@@ -342,60 +344,91 @@ class Read_data:
 		difference_alt = []
 		difference_az = []
 
+		i = 0
 
-		# Compara los valores similares y sacar los indices
+		for i in range(len(time_intersected)):
 
+			difference_alt = \
+			float(self.predict_alt_satellite[self.predict_simulation_time.index(time_intersected[i])]) - \
+			float(self.STK_alt_satellite[self.STK_simulation_time.index(time_intersected[i])])
 
-#		for i in range(len(self.predict_simulation_time)):
-#			resta_alt = float(self.predict_alt_satellite[i]) - float(self.pyephem_alt_satellite[i])
-#			difference_alt.append(resta_alt)
-#
-#			resta_az = float(self.predict_az_satellite[i]) - float(self.pyephem_az_satellite[i])
-#			difference_az.append(resta_az)
+			list_alt.append(difference_alt)
 
+			difference_az = \
+			float(self.predict_az_satellite[self.predict_simulation_time.index(time_intersected[i])]) - \
+			float(self.STK_az_satellite[self.STK_simulation_time.index(time_intersected[i])])
+
+			list_az.append(difference_az)
+
+			i = i + 1
 
 		# Force mean to zero
-#		m = 0
-#		std = numpy.sqrt(numpy.mean((a-m)**2))
+		m = 0
 
-#		return std_alt, std_az
+		import numpy
+		alt = numpy.asarray(list_alt)
+		az = numpy.asarray(list_az)
+		
+		# Standard deviation
+		std_alt = numpy.sqrt(numpy.mean((alt-m)**2))
+		std_az = numpy.sqrt(numpy.mean((az-m)**2))
 
+		return std_alt, std_az
+		
 		from os import chdir
 		chdir(self.directorio_script)
 
 	def STK_vs_PyEphem(self):
 
+		from os import getcwd, chdir
+
 		# STK routine
-		directorio_script = os.getcwd()
+		directorio_script = getcwd()
 		self.open_STK(self.STK_dir)
 		self.open_files_STK(self.index_STK)	
-		os.chdir(directorio_script)
+		chdir(directorio_script)
 
 		# Pyephem routine
 		self.open_pyephem()
 		self.open_files_pyephem()
 
 		# Differences
-		time_intersected = []
+		list_alt = []
+		list_az = []
 
+		time_intersected = []
 		time_intersected = list(set(self.STK_simulation_time).intersection(self.pyephem_simulation_time))
 
-#		for i in range(len(self.predict_simulation_time)):
-#			resta_alt = float(self.predict_alt_satellite[i]) - float(self.pyephem_alt_satellite[i])
-#			difference_alt.append(resta_alt)
+		i = 0
 
-#			resta_az = float(self.predict_az_satellite[i]) - float(self.pyephem_az_satellite[i])
-#			difference_az.append(resta_az)
+		for i in range(len(time_intersected)):
 
+			difference_alt = \
+			float(self.pyephem_alt_satellite[self.pyephem_simulation_time.index(time_intersected[i])]) - \
+			float(self.STK_alt_satellite[self.STK_simulation_time.index(time_intersected[i])])
+
+			list_alt.append(difference_alt)
+
+			difference_az = \
+			float(self.pyephem_az_satellite[self.pyephem_simulation_time.index(time_intersected[i])]) - \
+			float(self.STK_az_satellite[self.STK_simulation_time.index(time_intersected[i])])
+
+			list_az.append(difference_az)
+
+			i = i + 1
 
 		# Force mean to zero
-#		m = 0
+		m = 0
+
+		import numpy
+		alt = numpy.asarray(list_alt)
+		az = numpy.asarray(list_az)
 		
 		# Standard deviation
-#		import numpy
-#		std = numpy.sqrt(numpy.mean((a-m)**2))
+		std_alt = numpy.sqrt(numpy.mean((alt-m)**2))
+		std_az = numpy.sqrt(numpy.mean((az-m)**2))
 
-#		return std_alt, std_az
+		return std_alt, std_az
 		
 		from os import chdir
 		chdir(self.directorio_script)
@@ -412,18 +445,43 @@ class Read_data:
 		self.open_pyorbital()
 
 		# Differences
-#		difference_alt = []
-#		difference_az = []
+		list_alt = []
+		list_az = []
 
-#		for i in range(len(self.predict_simulation_time)):
-#			resta_alt = float(self.predict_alt_satellite[i]) - float(self.pyephem_alt_satellite[i])
-#			difference_alt.append(resta_alt)
+		time_intersected = []
+		time_intersected = list(set(self.STK_simulation_time).intersection(self.pyorbital_simulation_time))
 
-#			resta_az = float(self.predict_az_satellite[i]) - float(self.pyephem_az_satellite[i])
-#			difference_az.append(resta_az)
+		i = 0
+
+		for i in range(len(time_intersected)):
 		
-#		return (difference_alt, difference_az)
+			difference_alt = \
+			float(self.pyorbital_alt_satellite[self.pyorbital_simulation_time.index(time_intersected[i])]) -\
+			float(self.STK_alt_satellite[self.STK_simulation_time.index(time_intersected[i])])
 
+			list_alt.append(difference_alt)
+
+			difference_az = \
+			float(self.pyorbital_az_satellite[self.pyorbital_simulation_time.index(time_intersected[i])]) - \
+			float(self.STK_az_satellite[self.STK_simulation_time.index(time_intersected[i])])
+
+			list_az.append(difference_az)
+
+			i = i + 1
+
+		# Force mean to zero
+		m = 0
+
+		import numpy
+		alt = numpy.asarray(list_alt)
+		az = numpy.asarray(list_az)
+		
+		# Standard deviation
+		std_alt = numpy.sqrt(numpy.mean((alt-m)**2))
+		std_az = numpy.sqrt(numpy.mean((az-m)**2))
+
+		return std_alt, std_az
+		
 		from os import chdir
 		chdir(self.directorio_script)
 
@@ -444,32 +502,51 @@ class Read_data:
 			os.chdir(directorio_script)
 
 		# Differences
-#		difference_alt = []
-#		difference_az = []
+		list_alt = []
+		list_az = []
 
-#		for i in range(len(self.predict_simulation_time)):
-#			resta_alt = float(self.predict_alt_satellite[i]) - float(self.pyephem_alt_satellite[i])
-#			difference_alt.append(resta_alt)
+		time_intersected = []
+		time_intersected = list(set(self.STK_simulation_time).intersection(self.orbitron_time))
 
-#			resta_az = float(self.predict_az_satellite[i]) - float(self.pyephem_az_satellite[i])
-#			difference_az.append(resta_az)
+		for i in range(len(time_intersected)):
 		
-#		return (difference_alt, difference_az)
+			difference_alt = \
+			float(self.orbitron_alt_satellite[self.orbitron_time.index(time_intersected[i])]) -\
+			float(self.STK_alt_satellite[self.STK_simulation_time.index(time_intersected[i])])
 
+			list_alt.append(difference_alt)
+
+			difference_az = \
+			float(self.orbitron_az_satellite[self.orbitron_time.index(time_intersected[i])]) - \
+			float(self.STK_az_satellite[self.STK_simulation_time.index(time_intersected[i])])
+
+			list_az.append(difference_az)
+
+		# Force mean to zero
+		m = 0
+
+		import numpy
+		alt = numpy.asarray(list_alt)
+		az = numpy.asarray(list_az)
+		
+		# Standard deviation
+		std_alt = numpy.sqrt(numpy.mean((alt-m)**2))
+		std_az = numpy.sqrt(numpy.mean((az-m)**2))
+
+		return std_alt, std_az
+		
 		from os import chdir
 		chdir(self.directorio_script)
 
 	# PyEphem data	
 	def open_pyephem(self):
 
-		import os
+		from os import chdir, getcwd, listdir
 
 		# PyEphem data
-		os.chdir(self.directorio_script + '/results/PyEphem')
+		chdir(self.directorio_script + '/results/PyEphem')
 
-		directorio_actual = os.getcwd()
-
-		self.files_pyephem = os.listdir(directorio_actual)
+		self.files_pyephem = listdir(getcwd())
 		self.files_pyephem.remove('temp')
 		self.files_pyephem.sort()
 	
@@ -499,9 +576,7 @@ class Read_data:
 		from os import chdir, getcwd, listdir
 		chdir(self.directorio_script + '/results/predict')
 
-		actual_dir = getcwd()
-
-		self.files_predict = listdir(actual_dir)
+		self.files_predict = listdir(getcwd())
 		self.files_predict.remove('temp')
 		self.files_predict.sort()
 	
@@ -530,10 +605,8 @@ class Read_data:
 
 		from os import chdir, getcwd, listdir
 		chdir(self.directorio_script + '/results/PyOrbital')
-
-		actual_dir = getcwd()
 		
-		self.files_pyorbital = listdir(actual_dir)
+		self.files_pyorbital = listdir(getcwd())
 		self.files_pyorbital.remove('temp')
 		self.files_pyorbital.sort()
 

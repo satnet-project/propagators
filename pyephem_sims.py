@@ -66,13 +66,13 @@ class Do_list:
 
 class Solve_coordinates:
 
-	def __init__(self, lista_elementos, lista_prueba, lista_prueba2):
+	def __init__(self, satellites_name, lista_prueba, lista_prueba2):
 	
 		import ephem
 		import sys
 		import os
 
-		self.satellites_number = len(lista_elementos)
+		self.satellites_number = len(satellites_name)
 
 		self.observer = ephem.Observer()
 		
@@ -88,8 +88,8 @@ class Solve_coordinates:
 		self.observer.horizon = '0'
 
 		# Provide data to pyephem_routine
-		for i in range(len(lista_elementos)):
-			self.pyephem_routine(lista_elementos[i], lista_prueba[i], lista_prueba2[i], i)
+		for i in range(len(satellites_name)):
+			self.pyephem_routine(satellites_name[i], lista_prueba[i], lista_prueba2[i], i)
 			i = i + 1
 		
 
@@ -163,8 +163,8 @@ class Solve_coordinates:
 		lines = [item.rstrip('\n') for item in lines]
 
 		site = lines[0]
-		lat = float(lines[1])
-		lon = float(lines[2])
+		lat = lines[1]
+		lon = lines[2]
 		ele = int(lines[3])
 
 		return lon, lat, ele

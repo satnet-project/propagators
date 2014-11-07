@@ -167,6 +167,13 @@ class GUI:
 		data_frame.columnconfigure(1, minsize = 110)
 		data_frame.columnconfigure(2, minsize = 110)
 		data_frame.columnconfigure(3, minsize = 110)
+		data_frame.rowconfigure(0, minsize = 30)
+		data_frame.rowconfigure(1, minsize = 30)
+		data_frame.rowconfigure(2, minsize = 30)
+		data_frame.rowconfigure(3, minsize = 30)
+		data_frame.rowconfigure(4, minsize = 30)
+		data_frame.rowconfigure(5, minsize = 30)
+
 		data_frame.grid_propagate(0)
 
 		# Name
@@ -181,6 +188,17 @@ class GUI:
 		name = tk.Label(data_frame, textvariable = self.text_name)
 		name.grid(column = 1, row = 0, columnspan = 1, rowspan = 1, sticky = tk.E)
 
+		# Inclination
+		elements = get_elements.Get_elements(sys.argv[1], self.index)
+		label_incl = tk.Label(data_frame, text="Inclination")
+		label_incl.grid(column = 2, row = 0, columnspan = 1, rowspan = 1, sticky = tk.W)
+		
+		self.text_incl = tk.DoubleVar()
+		self.text_incl.set(elements.inclination)
+
+		incl = tk.Label(data_frame, textvariable = self.text_incl)
+		incl.grid(column = 3, row = 0, columnspan = 1, rowspan = 1, sticky = tk.E)
+
 		# File
 		file_name = tk.Label(data_frame, text="File")
 		file_name.grid(column = 0, row = 1, columnspan = 1, rowspan = 1, sticky = tk.W)
@@ -189,8 +207,18 @@ class GUI:
 		self.file_name = tk.StringVar()
 		self.file_name.set(sys.argv[1])
 
-		file = tk.Label(data_frame, textvariable = self.file_name)
-		file.grid(column = 1, row = 1, columnspan = 1, rowspan = 1, sticky = tk.E)
+		file_ = tk.Label(data_frame, textvariable = self.file_name)
+		file_.grid(column = 1, row = 1, columnspan = 1, rowspan = 1, sticky = tk.E)
+
+		# Mean motion
+		label_motion = tk.Label(data_frame, text = "Mean motion")
+		label_motion.grid(column = 2, row = 1, columnspan = 1, rowspan = 1, sticky = tk.W)
+
+		self.text_motion = tk.DoubleVar()
+		self.text_motion.set(elements.mean_motion)
+
+		motion = tk.Label(data_frame, textvariable = self.text_motion)
+		motion.grid(column = 3, row = 1, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		label_sims = tk.Label(data_frame, text = "Simulations availables")
 		label_sims.grid(column = 0, row = 2, columnspan = 2, rowspan = 1, sticky = tk.W)
@@ -206,35 +234,23 @@ class GUI:
 		for i in range(len(self.list_of_simulations)):
 			sims_availables.append(self.list_of_simulations[i])
 
+		# STD
 		label_std = tk.Label(data_frame, text = "Standard desviation")
-		label_std.grid(column = 0, row = 4, columnspan = 2, rowspan = 1, sticky = tk.W)
+		label_std.grid(column = 2, row = 2, columnspan = 1, rowspan = 1, sticky = tk.W)
 
-		# StringVar para la desviacion
+		std_button = tk.Button(data_frame, text = "Get data", command = self.std_simulations)
+		std_button(column = 3, row = 2, columnspan = 1, rowspan = 1, sticky = tk.E)
+
+
+#		self.text_std = tk.DoubleVar()
+#		self.text_std.set("")
+
+#		std = tk.Label(data_frame, textvariable = self.text_std)
+#		std.grid(column = 2, row = 4, columnspan = 1, rowspan = 1, sticky = tk.E)
 		
 		# Boton para realizar de nuevo las simulaciones
 		redo = tk.Button(data_frame, text = "Redo sims", command = self.redo_simulations)
 		redo.grid(column = 3, row = 5, columnspan = 1, rowspan = 1, sticky = tk.W)
-
-		# Inclination
-		elements = get_elements.Get_elements(sys.argv[1], self.index)
-		label_incl = tk.Label(data_frame, text="Inclination")
-		label_incl.grid(column = 2, row = 0, columnspan = 1, rowspan = 1, sticky = tk.W)
-		
-		self.text_incl = tk.DoubleVar()
-		self.text_incl.set(elements.inclination)
-
-		incl = tk.Label(data_frame, textvariable = self.text_incl)
-		incl.grid(column = 3, row = 0, columnspan = 1, rowspan = 1, sticky = tk.E)
-
-		# Mean motion
-		label_motion = tk.Label(data_frame, text = "Mean motion")
-		label_motion.grid(column = 2, row = 1, columnspan = 1, rowspan = 1, sticky = tk.W)
-
-		self.text_motion = tk.DoubleVar()
-		self.text_motion.set(elements.mean_motion)
-
-		motion = tk.Label(data_frame, textvariable = self.text_motion)
-		motion.grid(column = 3, row = 1, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		# Control frame
 		control_frame = tk.LabelFrame(root, text = "Controls", height = 55, width = 500, padx = 5, pady = 5)
@@ -434,7 +450,9 @@ class GUI:
 			figure_pyephem = output_data.Read_pyephem_data(self.pyephem)
 			time = figure_pyephem.pyephem_simulation_time
 			pyephem_alt = figure_pyephem.pyephem_alt_satellite
-			self.a.plot(time, pyephem_alt, 'b', label="PyEphem")
+			self.a.set_ydata(pyephem_alt)
+			self.a.set_xdata(time)
+#			self.a.plot(time, pyephem_alt, 'b', label="PyEphem")
 			pyephem_az = figure_pyephem.pyephem_az_satellite
 			self.b.plot(time, pyephem_az, 'b', label="PyEphem")
 
@@ -498,8 +516,8 @@ class GUI:
 			self.next.configure(state = tk.NORMAL)
 
 	def sims_availables(self, available_predict, available_pyephem, available_pyorbital, available_orbitron, available_STK):
+
 		list_of_simulations = [ ]
-		print available_STK		
 		if available_STK == 'yes':
 			if available_predict == 'yes':
 				list_of_simulations.append("STK vs. predict")
@@ -516,21 +534,17 @@ class GUI:
 
 	def pick_simulation(self, index):
 
-		if self.list_of_simulations[index][8:12] == "pred":
+	if self.list_of_simulations[index][8:12] == "pred":
 			from output_data import Read_data
 			from sys import argv
 			figure = Read_data(self.pyephem, self.predict, self.pyorbital, \
 			self.orbitron, self.object_name.name, self.STK, argv[3])
-			predict, STK = figure.STK_vs_predict()
-			print predict
-			print STK		
-
+	
 		elif self.list_of_simulations[index][8:12] == "PyEp":
 			from output_data import Read_data
 			from sys import argv
 			figure = Read_data(self.pyephem, self.predict, self.pyorbital, \
 			self.orbitron, self.object_name.name, self.STK, argv[3])
-			figure.STK_vs_PyEphem()
 
 		elif self.list_of_simulations[index][8:12] == "PyOr":
 			from output_data import Read_data
@@ -547,6 +561,41 @@ class GUI:
 	def redo_simulations(self):
 		import configure_simulations
 		redo_simulations = configure_simulations.Window()
+
+	def std_simulations(self):
+
+		from output_data import Read_data
+		from sys import argv
+		
+		# pyephem data
+		figure_pyephem = Read_data(self.pyephem, self.predict, self.pyorbital, \
+		self.orbitron, self.object_name.name, self.STK, argv[3])
+		(std_pyephem_alt, std_pyephem_az) = figure_pyephem.STK_vs_predict()
+
+		# Show data
+
+		# predict data		
+		figure_predict = Read_data(self.pyephem, self.predict, self.pyorbital, \
+		self.orbitron, self.object_name.name, self.STK, argv[3])
+		(std_predict_alt, std_predict_az) = figure_predict.STK_vs_PyEphem()
+
+		# Show data
+		self.text_std.set(std_alt)
+		self.text_std_pyephem_at
+
+		# pyorbital data
+		figure_pyorbital = Read_data(self.pyephem, self.predict, self.pyorbital, \
+		self.orbitron, self.object_name.name, self.STK, argv[3])
+		(std_orbital_alt, std_pyorbital_az) = figure_pyorbital.STK_vs_PyOrbital()
+
+		# Show data
+
+		# orbitron data
+		figure_orbitron = Read_data(self.pyephem, self.predict, self.pyorbital, \
+		self.orbitron, self.object_name.name, self.STK, argv[3])
+		(std_orbitron_alt, std_orbitron_az) = figure_orbitron.STK_vs_Orbitron()
+
+		# Show data
 	
 	def _quit(self):
 		root.quit()     # stops mainloop

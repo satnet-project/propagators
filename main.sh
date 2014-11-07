@@ -24,6 +24,7 @@
 
 cd TLEs/
 {
+	rm COPY*
 	rm xa*
 	rm SAT*
 } &> /dev/null
