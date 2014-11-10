@@ -122,13 +122,13 @@ class Read_STK_data:
 		from os import getcwd, chdir
 
 		index_satellite = index_satellite
-		directorio_script = getcwd()
+		script_dir = getcwd()
 		
 		# STK routine
 		self.open_STK(directorio_datos)
-		self.open_files_STK(index_satellite)
+		self.open_files_STK(index_satellite, script_dir)
 
-		chdir(directorio_script)
+		chdir(script_dir)
 
 	def open_STK(self, directorio_datos):
 
@@ -136,14 +136,30 @@ class Read_STK_data:
 
 		chdir(directorio_datos)
 
-		# Aqui es donde se genera la lista. Es donde tengo que cambiar los
-		# nombres por indices
 		self.files_STK = listdir(getcwd())
 		self.files_STK.sort()
 
-	def open_files_STK(self, index_satellite):
+	def open_files_STK(self, index_satellite, script_dir):
 
-		self.open_file_STK(self.files_STK[index_satellite])
+		open_file = open(script_dir + '/results/PyEphem/temp')
+		copy_names = open_file.readlines()
+		copy_names = [item.rstrip('\n\r') for item in copy_names]
+		copy_names = [item.strip() for item in copy_names]
+
+		satellite = copy_names[index_satellite].replace (" ", "_")
+
+		print satellite
+		print copy_names[index_satellite]
+
+		i = 0
+
+		for i in range(len(copy_names)):
+			if satellite in self.files_STK[i]:
+				name = self.files_STK[i]
+
+			i = i + 1
+
+		self.open_file_STK(name)
 
 	def open_file_STK(self, name):
 	
@@ -326,37 +342,41 @@ class Read_data:
 
 		from os import getcwd
 		self.directorio_script = getcwd()
-	
+
+
 	def STK_vs_predict(self):
 
 		# STK routine
 		from os import getcwd, chdir
 		directorio_script = getcwd()
 		self.open_STK(self.STK_dir)
-		self.open_files_STK(self.index_STK)	
+		self.open_files_STK(self.index_STK, directorio_script)	
 		chdir(directorio_script)
 
 		# predict routine
-		self.open_predict()
+		self.open_predict(directorio_script)
 		self.open_files_predict()
-
+		
 		# Differences
-		difference_alt = []
-		difference_az = []
+		list_alt = []
+		list_az = []
+
+		time_intersected_predict = []
+		time_intersected_predict = list(set(self.STK_simulation_time).intersection(self.predict_simulation_time))
 
 		i = 0
 
-		for i in range(len(time_intersected)):
+		for i in range(len(time_intersected_predict)):
 
 			difference_alt = \
-			float(self.predict_alt_satellite[self.predict_simulation_time.index(time_intersected[i])]) - \
-			float(self.STK_alt_satellite[self.STK_simulation_time.index(time_intersected[i])])
+			float(self.predict_alt_satellite[self.predict_simulation_time.index(time_intersected_predict[i])]) - \
+			float(self.STK_alt_satellite[self.STK_simulation_time.index(time_intersected_predict[i])])
 
 			list_alt.append(difference_alt)
 
 			difference_az = \
-			float(self.predict_az_satellite[self.predict_simulation_time.index(time_intersected[i])]) - \
-			float(self.STK_az_satellite[self.STK_simulation_time.index(time_intersected[i])])
+			float(self.predict_az_satellite[self.predict_simulation_time.index(time_intersected_predict[i])]) - \
+			float(self.STK_az_satellite[self.STK_simulation_time.index(time_intersected_predict[i])])
 
 			list_az.append(difference_az)
 
@@ -379,14 +399,6 @@ class Read_data:
 		chdir(self.directorio_script)
 
 	def STK_vs_PyEphem(self):
-
-		from os import getcwd, chdir
-
-		# STK routine
-		directorio_script = getcwd()
-		self.open_STK(self.STK_dir)
-		self.open_files_STK(self.index_STK)	
-		chdir(directorio_script)
 
 		# Pyephem routine
 		self.open_pyephem()
@@ -435,11 +447,6 @@ class Read_data:
 
 	def STK_vs_PyOrbital(self):
 
-		# STK routine
-		directorio_script = os.getcwd()
-		self.open_STK(self.STK_dir)
-		self.open_files_STK(self.index_STK)	
-		os.chdir(directorio_script)
 
 		# pyorbital routine
 		self.open_pyorbital()
@@ -487,19 +494,14 @@ class Read_data:
 
 	def STK_vs_Orbitron(self):
 
-		# STK routine
-		directorio_script = os.getcwd()
-		self.open_STK(self.STK_dir)
-		self.open_files_STK(self.index_STK)	
-		os.chdir(directorio_script)
+		from os import getcwd, chdir
 
 		# Orbitron routine
 		import os.path
 		if os.path.exists(self.file):
-			from os import getcwd, chdir
-			directorio_script = os.getcwd()
+			directorio_script = getcwd()
 			self.open_file_orbitron(self.index_orbitron, self.file, self.sat_selected)
-			os.chdir(directorio_script)
+			chdir(directorio_script)
 
 		# Differences
 		list_alt = []
@@ -534,7 +536,7 @@ class Read_data:
 		std_az = numpy.sqrt(numpy.mean((az-m)**2))
 
 		return std_alt, std_az
-		
+
 		from os import chdir
 		chdir(self.directorio_script)
 
@@ -571,10 +573,10 @@ class Read_data:
 				self.pyephem_az_satellite.append(float(line[2]))
 
 	# predict data
-	def open_predict(self):
+	def open_predict(self, script_dir):
 
 		from os import chdir, getcwd, listdir
-		chdir(self.directorio_script + '/results/predict')
+		chdir(script_dir + '/results/predict')
 
 		self.files_predict = listdir(getcwd())
 		self.files_predict.remove('temp')
@@ -596,7 +598,7 @@ class Read_data:
 
 		with open(name) as tsv:
 			for line in csv.reader(tsv, delimiter = "\t"):
-				self.predict_simulation_time.append(line[0])
+				self.predict_simulation_time.append(int(line[0]))
 				self.predict_alt_satellite.append(float(line[1]))
 				self.predict_az_satellite.append(float(line[2]))
 
@@ -615,9 +617,11 @@ class Read_data:
 		else:
 			self.open_files_pyorbital()
 
+		chdir(self.directorio_script)
+
 	def open_files_pyorbital(self):
 
-		for i in range(self.index_satellite):
+		for i in range(self.index_pyorbital):
 			self.open_file_pyorbital(self.files_pyorbital[i])
 
 	def open_file_pyorbital(self, name):
@@ -630,7 +634,7 @@ class Read_data:
 
 		with open(name) as tsv:
 			for line in reader(tsv, delimiter = "\t"):
-				self.pyorbital_simulation_time.append(line[0])
+				self.pyorbital_simulation_time.append(int(line[0]))
 				self.pyorbital_alt_satellite.append(float(line[1]))
 				self.pyorbital_az_satellite.append(float(line[2]))
 
@@ -682,11 +686,15 @@ class Read_data:
 				second = self.lineas_validas[i][17:19]
 
 				unix_time = self.local_to_unix(year, month, day, hour, minute, second)
+				unix_time = int(unix_time)
 
 				az = self.lineas_validas[i][41:46]
 				alt = self.lineas_validas[i][47:51]
 				alt = alt.strip(' ')
 				az = az.strip(' ')
+
+				az = float(az)
+				alt = float(alt)
 
 				self.orbitron_time.append(unix_time)
 				self.orbitron_az_satellite.append(az)
@@ -708,18 +716,34 @@ class Read_data:
 
 		return unix_time
 
-	# STK data
+
 	def open_STK(self, directorio_datos):
 
-		from os import listdir, getcwd, chdir
-		
+		from os import chdir, getcwd, listdir
+
 		chdir(directorio_datos)
 
 		self.files_STK = listdir(getcwd())
 		self.files_STK.sort()
 
-	def open_files_STK(self, index_satellite):
-		self.open_file_STK(self.files_STK[index_satellite])
+	def open_files_STK(self, index_satellite, script_dir):
+
+		open_file = open(script_dir + '/results/PyEphem/temp')
+		copy_names = open_file.readlines()
+		copy_names = [item.rstrip('\n\r') for item in copy_names]
+		copy_names = [item.strip() for item in copy_names]
+
+		satellite = copy_names[index_satellite].replace (" ", "_")
+
+		i = 0
+
+		for i in range(len(copy_names)):
+			if satellite in self.files_STK[i]:
+				name = self.files_STK[i]
+
+			i = i + 1
+
+		self.open_file_STK(name)
 
 	def open_file_STK(self, name):
 	
@@ -731,6 +755,7 @@ class Read_data:
 		with open(name, 'rb') as open_file:
 			reader = csv.reader(open_file)
 			for row in reader:
+				# Tengo que comprobar si la linea esta vacia
 				try:
 					valor = int((float(row[0]) - 2440587.5)*86400)
 					self.STK_simulation_time.append(valor)

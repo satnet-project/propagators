@@ -66,10 +66,6 @@ class GUI:
 		available_orbitron = actual_available.orbitron
 		available_STK = actual_available.STK
 
-		# Comparation
-		figure = output_data.Read_data(self.pyephem, self.predict, self.pyorbital, \
-		self.orbitron, self.object_name.name, self.STK, argv[3])
-
 		# Plot
 		self.f = Figure(figsize=(6,7), dpi = 80)
 		self.f.suptitle(self.object_name.name, fontsize=16)
@@ -84,39 +80,44 @@ class GUI:
 			figure_pyephem = output_data.Read_pyephem_data(self.pyephem)
 			time = figure_pyephem.pyephem_simulation_time		
 			pyephem_alt = figure_pyephem.pyephem_alt_satellite
-			self.a.plot(time, pyephem_alt, 'b', label="PyEphem")
+			self.plot_pyephem_alt, = self.a.plot(time, pyephem_alt, 'b', label="PyEphem")
+
 			pyephem_az = figure_pyephem.pyephem_az_satellite
-			self.b.plot(time, pyephem_az, 'b', label="PyEphem")
+			self.plot_pyephem_az, = self.b.plot(time, pyephem_az, 'b', label="PyEphem")
 
 		if available_predict == 'yes':
-			figure_predict = output_data.Read_predict_data(self.predict)			
+			figure_predict = output_data.Read_predict_data(self.predict)
 			predict_alt = figure_predict.predict_alt_satellite
-			self.a.plot(time, predict_alt, 'r', label="predict")
+			self.plot_predict_alt, = self.a.plot(time, predict_alt, 'r', label="predict")
+
 			predict_az = figure_predict.predict_az_satellite
-			self.b.plot(time, predict_az, 'r', label="predict")
+			self.plot_predict_az, = self.b.plot(time, predict_az, 'r', label="predict")
 
 		if available_pyorbital == 'yes':
 			figure_pyorbital = output_data.Read_pyorbital_data(self.pyorbital)
 			pyorbital_alt = figure_pyorbital.pyorbital_alt_satellite
-			self.a.plot(time, pyorbital_alt, 'y', label="pyorbital")
+			self.plot_pyorbital_alt, = self.a.plot(time, pyorbital_alt, 'y', label="pyorbital")
+
 			pyorbital_az = figure_pyorbital.pyorbital_az_satellite
-			self.b.plot(time, pyorbital_az, 'y', label="pyorbital")
+			self.plot_pyorbital_az, = self.b.plot(time, pyorbital_az, 'y', label="pyorbital")
 
 		if available_orbitron == 'yes':
 			figure_orbitron = output_data.Read_orbitron_data(self.orbitron, self.object_name.name)
 			orbitron_alt = figure_orbitron.orbitron_alt_satellite
 			orbitron_time = figure_orbitron.orbitron_time
-			self.a.plot(orbitron_time, orbitron_alt, 'm', label="orbitron")
+			self.plot_orbitron_alt, = self.a.plot(orbitron_time, orbitron_alt, 'm', label="orbitron")
+
 			orbitron_az = figure_orbitron.orbitron_az_satellite
-			self.b.plot(orbitron_time, orbitron_az, 'm', label="orbitron")
+			self.plot_orbitron_az, = self.b.plot(orbitron_time, orbitron_az, 'm', label="orbitron")
 
 		if available_STK == 'yes':
 			figure_STK = output_data.Read_STK_data(self.STK, argv[3])
 			STK_alt = figure_STK.STK_alt_satellite
-	                STK_time = figure_STK.STK_simulation_time
-			self.a.plot(STK_time, STK_alt, 'g', label ="STK")
+			STK_time = figure_STK.STK_simulation_time
+			self.plot_STK_alt, = self.a.plot(STK_time, STK_alt, 'g', label ="STK")
+
 			STK_az = figure_STK.STK_az_satellite
-			self.b.plot(STK_time, STK_az, 'g', label ="STK")
+			self.plot_STK_az, = self.b.plot(STK_time, STK_az, 'g', label ="STK")
 
 		self.a.legend(loc = 2, borderaxespad = 0., prop={'size':12})
 		self.a.set_ylabel("Degrees")
@@ -148,10 +149,6 @@ class GUI:
 		
 		# Subplot c
 		self.c = self.g.add_subplot(111)
-#		self.c.plot(time, difference_alt, label="difference")
-#		self.c.legend(loc = 2, borderaxespad = 0., prop={'size':12})
-#		self.c.set_ylabel("Altitude - Degrees")
-#		self.c.grid(True)
 
 		right_frame = tk.Frame(root, height = 330, width = 500, bd = 0)
 		right_frame.grid(column = 1, row = 0, columnspan = 1, rowspan = 1, padx = 5, pady = 5)
@@ -164,15 +161,17 @@ class GUI:
 		data_frame = tk.LabelFrame(root, text = "Data", height = 215, width = 500, padx = 5, pady = 5)
 		data_frame.grid(column = 1, row = 1, columnspan = 1, rowspan = 1)
 		data_frame.columnconfigure(0, minsize = 110)
-		data_frame.columnconfigure(1, minsize = 110)
+		data_frame.columnconfigure(1, minsize = 65)
 		data_frame.columnconfigure(2, minsize = 110)
 		data_frame.columnconfigure(3, minsize = 110)
-		data_frame.rowconfigure(0, minsize = 30)
-		data_frame.rowconfigure(1, minsize = 30)
-		data_frame.rowconfigure(2, minsize = 30)
-		data_frame.rowconfigure(3, minsize = 30)
-		data_frame.rowconfigure(4, minsize = 30)
-		data_frame.rowconfigure(5, minsize = 30)
+		data_frame.rowconfigure(0, minsize = 25)
+		data_frame.rowconfigure(1, minsize = 25)
+		data_frame.rowconfigure(2, minsize = 20)
+		data_frame.rowconfigure(3, minsize = 20)
+		data_frame.rowconfigure(4, minsize = 20)
+		data_frame.rowconfigure(5, minsize = 20)
+		data_frame.rowconfigure(6, minsize = 20)
+		data_frame.rowconfigure(7, minsize = 20)
 
 		data_frame.grid_propagate(0)
 
@@ -189,7 +188,8 @@ class GUI:
 		name.grid(column = 1, row = 0, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		# Inclination
-		elements = get_elements.Get_elements(sys.argv[1], self.index)
+		from sys import argv
+		elements = get_elements.Get_elements(argv[1], self.index)
 		label_incl = tk.Label(data_frame, text="Inclination")
 		label_incl.grid(column = 2, row = 0, columnspan = 1, rowspan = 1, sticky = tk.W)
 		
@@ -203,9 +203,8 @@ class GUI:
 		file_name = tk.Label(data_frame, text="File")
 		file_name.grid(column = 0, row = 1, columnspan = 1, rowspan = 1, sticky = tk.W)
 
-		import sys
 		self.file_name = tk.StringVar()
-		self.file_name.set(sys.argv[1])
+		self.file_name.set(argv[1])
 
 		file_ = tk.Label(data_frame, textvariable = self.file_name)
 		file_.grid(column = 1, row = 1, columnspan = 1, rowspan = 1, sticky = tk.E)
@@ -225,8 +224,8 @@ class GUI:
 
 		# Generate data
 		import scrolledlist
-		sims_availables = scrolledlist.ScrolledList(data_frame, width = 20, height = 3, callback = self.pick_simulation)
-		sims_availables.grid(column = 0, row = 3, columnspan = 3, rowspan = 1, sticky = tk.W)
+		sims_availables = scrolledlist.ScrolledList(data_frame, width = 16, height = 3, callback = self.pick_simulation)
+		sims_availables.grid(column = 0, row = 3, columnspan = 1, rowspan = 3, sticky = tk.W)
 
 		# Generate list of simulations
 		self.sims_availables(available_predict, available_pyephem, available_pyorbital, available_orbitron, available_STK)
@@ -239,30 +238,100 @@ class GUI:
 		label_std.grid(column = 2, row = 2, columnspan = 1, rowspan = 1, sticky = tk.W)
 
 		std_button = tk.Button(data_frame, text = "Get data", command = self.std_simulations)
-		std_button(column = 3, row = 2, columnspan = 1, rowspan = 1, sticky = tk.E)
+		std_button.grid(column = 3, row = 2, columnspan = 1, rowspan = 1, sticky = tk.E)
 
+		label_std_alt = tk.Label(data_frame, text = "Altitude")
+		label_std_alt.grid(column = 2, row = 3, columnspan = 1, rowspan = 1, sticky = tk.E)
 
-#		self.text_std = tk.DoubleVar()
-#		self.text_std.set("")
+		label_std_az = tk.Label(data_frame, text = "Azimuth")
+		label_std_az.grid(column = 3, row = 3, columnspan = 1, rowspan = 1, sticky = tk.E)
 
-#		std = tk.Label(data_frame, textvariable = self.text_std)
-#		std.grid(column = 2, row = 4, columnspan = 1, rowspan = 1, sticky = tk.E)
-		
+		# PyEphem STD
+		text_std_pyephem = tk.Label(data_frame, text = "PyEphem")
+		text_std_pyephem.grid(column = 1, row = 4, columnspan = 1, rowspan = 1, sticky = tk.E)
+
+		self.text_std_pyephem_alt = tk.DoubleVar()
+		self.text_std_pyephem_alt.set("PyEphem alt.")
+
+		std_pyephem_alt = tk.Label(data_frame, textvariable = self.text_std_pyephem_alt)
+		std_pyephem_alt.grid(column = 2, row = 4, columnspan = 1, rowspan = 1, sticky = tk.E)
+
+		self.text_std_pyephem_az = tk.DoubleVar()
+		self.text_std_pyephem_az.set("PyePhem az.")
+
+		std_pyephem_az = tk.Label(data_frame, textvariable = self.text_std_pyephem_az)
+		std_pyephem_az.grid(column = 3, row = 4, columnspan = 1, rowspan = 1, sticky = tk.E)
+
+		# predict STD
+		text_std_predict = tk.Label(data_frame, text = "predict")
+		text_std_predict.grid(column = 1, row = 5, columnspan = 1, rowspan = 1, sticky = tk.E)
+
+		self.text_std_predict_alt = tk.DoubleVar()
+		self.text_std_predict_alt.set("predict alt.")
+
+		std_predict_alt = tk.Label(data_frame, textvariable = self.text_std_predict_alt)
+		std_predict_alt.grid(column = 2, row = 5, columnspan = 1, rowspan = 1, sticky = tk.E)
+
+		self.text_std_predict_az = tk.DoubleVar()
+		self.text_std_predict_az.set("predict az.")
+
+		std_predict_az = tk.Label(data_frame, textvariable = self.text_std_predict_az)
+		std_predict_az.grid(column = 3, row = 5, columnspan = 1, rowspan = 1, sticky = tk.E)
+
 		# Boton para realizar de nuevo las simulaciones
 		redo = tk.Button(data_frame, text = "Redo sims", command = self.redo_simulations)
-		redo.grid(column = 3, row = 5, columnspan = 1, rowspan = 1, sticky = tk.W)
+		redo.grid(column = 0, row = 6, columnspan = 1, rowspan = 2, sticky = tk.W)
+
+		# PyOrbital STD
+		text_std_pyorbital = tk.Label(data_frame, text = "PyOrbital")
+		text_std_pyorbital.grid(column = 1, row = 6, columnspan = 1, rowspan = 1, sticky = tk.E)
+
+		self.text_std_pyorbital_alt = tk.DoubleVar()
+		self.text_std_pyorbital_alt.set("PyOrbital alt.")
+
+		std_pyorbital_alt = tk.Label(data_frame, textvariable = self.text_std_pyorbital_alt)
+		std_pyorbital_alt.grid(column = 2, row = 6, columnspan = 1, rowspan = 1, sticky = tk.E)
+
+		self.text_std_pyorbital_az = tk.DoubleVar()
+		self.text_std_pyorbital_az.set("PyOrbital az.")
+
+		std_pyorbital_az = tk.Label(data_frame, textvariable = self.text_std_pyorbital_az)
+		std_pyorbital_az.grid(column = 3, row = 6, columnspan = 1, rowspan = 1, sticky = tk.E)
+
+		# Orbitron STD
+		text_std_orbitron = tk.Label(data_frame, text = "Orbitron")
+		text_std_orbitron.grid(column = 1, row = 7, columnspan = 1, rowspan = 1, sticky = tk.E)
+
+		self.text_std_orbitron_alt = tk.DoubleVar()
+		self.text_std_orbitron_alt.set("Orbitron alt.")
+
+		std_orbitron_alt = tk.Label(data_frame, textvariable = self.text_std_orbitron_alt)
+		std_orbitron_alt.grid(column = 2, row = 7, columnspan = 1, rowspan = 1, sticky = tk.E)
+
+		self.text_std_orbitron_az = tk.DoubleVar()
+		self.text_std_orbitron_az.set("Orbitron az.")
+
+		std_orbitron_az = tk.Label(data_frame, textvariable = self.text_std_orbitron_az)
+		std_orbitron_az.grid(column = 3, row = 7, columnspan = 1, rowspan = 1, sticky = tk.E)
+
 
 		# Control frame
 		control_frame = tk.LabelFrame(root, text = "Controls", height = 55, width = 500, padx = 5, pady = 5)
 		control_frame.grid(column = 1, row = 2, columnspan = 1, rowspan = 1)
 		control_frame.grid_propagate(0)
 
+		control_frame.columnconfigure(0, minsize = 40)
+		control_frame.columnconfigure(1, minsize = 40)
+		control_frame.columnconfigure(2, minsize = 350)
+
 		self.next = tk.Button(master = control_frame, text='Next', command=self.next)
 		self.next.grid(column = 0, row = 0, columnspan = 1, rowspan = 1)
+
 		self.forward = tk.Button(master = control_frame, text='Forward', command=self.forward)
 		self.forward.grid(column = 1, row = 0, columnspan = 1, rowspan = 1)
+
 		button = tk.Button(master = control_frame, text='Quit', command=self._quit)
-		button.grid(column = 2, row = 0, columnspan = 1, rowspan = 1)
+		button.grid(column = 2, row = 0, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		# Check buttons state
 		if self.index == 0:
@@ -303,10 +372,6 @@ class GUI:
 		if available_STK == 'yes':
 			self.STK = self.STK + 1
 
-		self.a.clear()
-		self.b.clear()
-		self.c.clear()
-
 		figure = output_data.Read_data(self.pyephem, self.predict, self.pyorbital, \
 		self.orbitron, self.object_name.name, self.STK, argv[3])
 
@@ -318,63 +383,72 @@ class GUI:
 		available_orbitron = actual_available.orbitron
 		available_STK = actual_available.STK
 
-		self.f.clf()
+		self.f.suptitle("")
 		self.f.suptitle(self.object_name.name, fontsize=16)
-
-		# Subplot a
-		self.a = self.f.add_subplot(211)
-		self.b = self.f.add_subplot(212)
 
 		# Check if data is available and print it
 
 		if available_pyephem == 'yes':
 			figure_pyephem = output_data.Read_pyephem_data(self.pyephem)
 			time = figure_pyephem.pyephem_simulation_time
+			
 			pyephem_alt = figure_pyephem.pyephem_alt_satellite
-			self.a.plot(time, pyephem_alt, 'b', label="PyEphem")
+			self.plot_pyephem_alt.set_ydata(pyephem_alt)
+			self.plot_pyephem_alt.set_xdata(time)
+
 			pyephem_az = figure_pyephem.pyephem_az_satellite
-			self.b.plot(time, pyephem_az, 'b', label="PyEphem")
+			self.plot_pyephem_az.set_ydata(pyephem_az)
+			self.plot_pyephem_az.set_xdata(time)
 
 		if available_predict == 'yes':
 			figure_predict = output_data.Read_predict_data(self.predict)
+
 			predict_alt = figure_predict.predict_alt_satellite
-			self.a.plot(time, predict_alt, 'r', label="predict")
+			self.plot_predict_alt.set_ydata(predict_alt)
+			self.plot_predict_alt.set_xdata(time)
+
 			predict_az = figure_predict.predict_az_satellite
-			self.b.plot(time, predict_az, 'r', label="predict")
+			self.plot_predict_az.set_ydata(predict_az)
+			self.plot_predict_az.set_xdata(time)
 
 		if available_pyorbital == 'yes':
 			figure_pyorbital = output_data.Read_pyorbital_data(self.pyorbital)
+
 			pyorbital_alt = figure_pyorbital.pyorbital_alt_satellite
-			self.a.plot(time, pyorbital_alt, 'y', label="pyorbital")
+			self.plot_pyorbital_alt.set_ydata(pyorbital_alt)
+			self.plot_pyorbital_alt.set_xdata(time)
+
 			pyorbital_az = figure_pyorbital.pyorbital_az_satellite
-			self.b.plot(time, pyorbital_az, 'y', label="pyorbital")
+			self.plot_pyorbital_az.set_ydata(pyephem_az)
+			self.plot_pyorbital_az.set_xdata(time)
 
 		if available_orbitron == 'yes':
 			figure_orbitron = output_data.Read_orbitron_data(self.orbitron,\
 			self.object_name.name)
+
 			orbitron_time = figure_orbitron.orbitron_time
 			orbitron_alt = figure_orbitron.orbitron_alt_satellite
-			self.a.plot(orbitron_time, orbitron_alt, 'm', label="orbitron")
+			self.plot_orbitron_alt.set_ydata(orbitron_alt)
+			self.plot_orbitron_alt.set_xdata(orbitron_time)
+
 			orbitron_az = figure_orbitron.orbitron_az_satellite
-			self.b.plot(orbitron_time, orbitron_az, 'm', label="orbitron")
+			self.plot_orbitron_az.set_ydata(orbitron_az)
+			self.plot_orbitron_az.set_xdata(orbitron_time)
 
 		if available_STK == 'yes':
 			figure_STK = output_data.Read_STK_data(self.STK, argv[3])
+
 			STK_alt = figure_STK.STK_alt_satellite
 			STK_time = figure_STK.STK_simulation_time
-			self.a.plot(STK_time, STK_alt, 'g', label ="STK")
+			self.plot_STK_alt.set_ydata(STK_alt)
+			self.plot_STK_alt.set_xdata(STK_time)
+
 			STK_az = figure_STK.STK_az_satellite
-			self.b.plot(STK_time, STK_az, 'g', label ="STK")
+			self.plot_STK_az.set_ydata(STK_az)
+			self.plot_STK_az.set_xdata(STK_time)
 
-		self.a.legend(loc = 2, borderaxespad = 0., prop={'size':12})
-		self.a.set_ylabel("Degrees")
-		self.a.grid(True)
+		self.f.canvas.draw()
 
-		self.b.legend(loc = 2, borderaxespad = 0., prop={'size':12})
-		self.b.set_ylabel("Degrees")
-		self.b.grid(True)
-
-		self.canvas.draw()
 
 		# Subplot c
 		self.c = self.g.add_subplot(111)
@@ -534,7 +608,7 @@ class GUI:
 
 	def pick_simulation(self, index):
 
-	if self.list_of_simulations[index][8:12] == "pred":
+		if self.list_of_simulations[index][8:12] == "pred":
 			from output_data import Read_data
 			from sys import argv
 			figure = Read_data(self.pyephem, self.predict, self.pyorbital, \
@@ -567,35 +641,34 @@ class GUI:
 		from output_data import Read_data
 		from sys import argv
 		
-		# pyephem data
-		figure_pyephem = Read_data(self.pyephem, self.predict, self.pyorbital, \
+		# predict
+		data = Read_data(self.pyephem, self.predict, self.pyorbital, \
 		self.orbitron, self.object_name.name, self.STK, argv[3])
-		(std_pyephem_alt, std_pyephem_az) = figure_pyephem.STK_vs_predict()
+		(std_predict_alt, std_predict_az) = data.STK_vs_predict()
 
-		# Show data
+		self.text_std_predict_alt.set(round(float(std_predict_alt), 7))
+		self.text_std_predict_az.set(round(float(std_predict_az), 7))
 
-		# predict data		
-		figure_predict = Read_data(self.pyephem, self.predict, self.pyorbital, \
-		self.orbitron, self.object_name.name, self.STK, argv[3])
-		(std_predict_alt, std_predict_az) = figure_predict.STK_vs_PyEphem()
+		# pyephem
+		(std_pyephem_alt, std_pyephem_az) = data.STK_vs_PyEphem()
 
-		# Show data
-		self.text_std.set(std_alt)
-		self.text_std_pyephem_at
+		self.text_std_pyephem_alt.set(round(float(std_pyephem_alt), 7))
+		self.text_std_pyephem_az.set(round(float(std_pyephem_az), 7))
 
-		# pyorbital data
-		figure_pyorbital = Read_data(self.pyephem, self.predict, self.pyorbital, \
-		self.orbitron, self.object_name.name, self.STK, argv[3])
-		(std_orbital_alt, std_pyorbital_az) = figure_pyorbital.STK_vs_PyOrbital()
+		# pyorbital
+		(std_pyorbital_alt, std_pyorbital_az) = data.STK_vs_PyOrbital()
 
-		# Show data
+		self.text_std_pyorbital_alt.set(round(float(std_pyorbital_alt), 7))
+		self.text_std_pyorbital_az.set(round(float(std_pyorbital_az), 7))
 
-		# orbitron data
-		figure_orbitron = Read_data(self.pyephem, self.predict, self.pyorbital, \
-		self.orbitron, self.object_name.name, self.STK, argv[3])
-		(std_orbitron_alt, std_orbitron_az) = figure_orbitron.STK_vs_Orbitron()
+		# orbitron
+		(std_orbitron_alt, std_orbitron_az) = data.STK_vs_Orbitron()
 
-		# Show data
+		self.text_std_orbitron_alt.set(round(float(std_orbitron_alt), 7))
+		self.text_std_orbitron_az.set(round(float(std_orbitron_az), 7))
+
+		from os import getcwd
+		print getcwd()
 	
 	def _quit(self):
 		root.quit()     # stops mainloop

@@ -22,32 +22,27 @@
 # agains STK simulations.
 ################################################################################
 
-cd TLEs/
+# Remove old data
 {
+	cd TLEs/
 	rm COPY*
 	rm xa*
 	rm SAT*
-} &> /dev/null
 
-cd ../results/predict
-{
+	cd ../results/predict
 	rm SAT*
 	rm temp
-} &> /dev/null
 
-cd ../PyEphem
-{
+	cd ../PyEphem
 	rm SAT*
 	rm temp
-} &> /dev/null
 
-cd ../PyOrbital
-{
+	cd ../PyOrbital
 	rm SAT*
 	rm temp
-} &> /dev/null
 
-cd ../..
+	cd ../..
+} &> /dev/null
 
 clear
 
@@ -76,9 +71,7 @@ elif [ -d $ACTUALDIR$TLESDIR ]; then
 
 		chmod +x update_tles.sh
 		./update_tles.sh
-	
-		#		cd TLEs/
-	
+		
 	elif [ -f amateur.txt ]; then
 		# amateur.txt exist		
 		# Check file's date
@@ -199,6 +192,7 @@ select opt_time in $OPTIONSTIME; do
 		break
 	elif [ "$opt_time" = "Another" ]; then                
 		echo -e "The starting date and time should be entered now."
+		echo ""
 
 		# Date
 		echo -e "Day: \c"
@@ -215,8 +209,10 @@ select opt_time in $OPTIONSTIME; do
 		read -e MINUTES
 		echo -e "Seconds (Two digits): \c"
 		read -e SECONDS
-     
-		echo -e "Time is: ...\n"           
+
+		DATE=`date -d "$YEAR-$MONTH-$DAY $HOURS:$MINUTES:$SECONDS" "+%s"`
+
+		echo ""
 		break
 	else
 		echo "Wrong chosen"
@@ -283,7 +279,8 @@ python pyorbital_sims.py $FAMILY $DATE $END_TIME
 
 # Orbitron data
 echo -e "\nPerfom Orbitron simulations"
-echo -e "Parameters:\n"
+echo -e "Parameters:"
+echo -e "Family $FAMILY"
 echo "Family $FAMILY"
 wine "C:\\Program Files\Orbitron\Orbitron.exe"
 
@@ -297,21 +294,21 @@ echo "$FAMILY family simulations done!"
 python gui.py $FAMILY COPY$FAMILY $STK_FOLDER
 
 # Remove garbage
-cd TLEs/
+#cd TLEs/
 
-rm $FAMILY
-rm xa*
-rm SAT*
+#rm $FAMILY
+#rm xa*
+#rm SAT*
 
-mv COPY$FAMILY $FAMILY
+#mv COPY$FAMILY $FAMILY
 
-cd ../results/predict
-rm *
+#cd ../results/predict
+#rm *
 
-cd ../PyEphem
-rm *
+#cd ../PyEphem
+#rm *
 
-cd ../PyOrbital
-rm *
+#cd ../PyOrbital
+#rm *
 
-cd ..
+#cd ..
