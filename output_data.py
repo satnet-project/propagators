@@ -330,60 +330,6 @@ class Read_data:
 		from os import getcwd
 		self.directorio_script = getcwd()
 
-	def STK_vs_predict_alt(self):
-
-		# STK routine
-		from os import getcwd, chdir
-		directorio_script = getcwd()
-		self.open_STK(self.STK_dir)
-		self.open_files_STK(self.index_STK, directorio_script)	
-		chdir(directorio_script)
-
-		# predict routine
-		self.open_predict(directorio_script)
-		self.open_files_predict()
-		
-		# Differences
-		list_alt = []
-		list_az = []
-
-		time_intersected_predict = []
-		time_intersected_predict = list(set(self.STK_simulation_time).intersection(self.predict_simulation_time))
-
-		i = 0
-
-		for i in range(len(time_intersected_predict)):
-
-			difference_alt = \
-			float(self.predict_alt_satellite[self.predict_simulation_time.index(time_intersected_predict[i])]) - \
-			float(self.STK_alt_satellite[self.STK_simulation_time.index(time_intersected_predict[i])])
-
-			list_alt.append(difference_alt)
-
-			difference_az = \
-			float(self.predict_az_satellite[self.predict_simulation_time.index(time_intersected_predict[i])]) - \
-			float(self.STK_az_satellite[self.STK_simulation_time.index(time_intersected_predict[i])])
-
-			list_az.append(difference_az)
-
-			i = i + 1
-
-		# Force mean to zero
-		m = 0
-
-		import numpy
-		alt = numpy.asarray(list_alt)
-		az = numpy.asarray(list_az)
-		
-		# Standard deviation
-		std_alt = numpy.sqrt(numpy.mean((alt-m)**2))
-		std_az = numpy.sqrt(numpy.mean((az-m)**2))
-
-		chdir(self.directorio_script)
-
-		return std_alt, std_az
-
-
 	def STK_vs_predict(self):
 
 		# STK routine
@@ -437,6 +383,48 @@ class Read_data:
 
 		return std_alt, std_az
 
+	def STK_vs_predict_comp(self):
+
+		# STK routine
+		from os import getcwd, chdir
+		directorio_script = getcwd()
+		self.open_STK(self.STK_dir)
+		self.open_files_STK(self.index_STK, directorio_script)	
+		chdir(directorio_script)
+
+		# predict routine
+		self.open_predict(directorio_script)
+		self.open_files_predict()
+		
+		# Differences
+		list_alt = []
+		list_az = []
+
+		time_intersected_predict = []
+		time_intersected_predict = list(set(self.STK_simulation_time).intersection(self.predict_simulation_time))
+
+		i = 0
+
+		for i in range(len(time_intersected_predict)):
+
+			difference_alt = \
+			float(self.predict_alt_satellite[self.predict_simulation_time.index(time_intersected_predict[i])]) - \
+			float(self.STK_alt_satellite[self.STK_simulation_time.index(time_intersected_predict[i])])
+
+			list_alt.append(difference_alt)
+
+			difference_az = \
+			float(self.predict_az_satellite[self.predict_simulation_time.index(time_intersected_predict[i])]) - \
+			float(self.STK_az_satellite[self.STK_simulation_time.index(time_intersected_predict[i])])
+
+			list_az.append(difference_az)
+
+			i = i + 1
+
+
+		chdir(self.directorio_script)
+
+		return time_intersected_predict, list_alt, list_az
 
 	def STK_vs_PyEphem(self):
 
@@ -493,6 +481,58 @@ class Read_data:
 		chdir(self.directorio_script)
 
 		return std_alt, std_az
+
+	def STK_vs_PyEphem_comp(self):
+
+		# STK routine
+		from os import getcwd, chdir
+		directorio_script = getcwd()
+		self.open_STK(self.STK_dir)
+		self.open_files_STK(self.index_STK, directorio_script)	
+		chdir(directorio_script)
+
+		from os import chdir
+		chdir(self.directorio_script)
+
+		object_pyephem = Read_pyephem_data(self.index_pyephem)
+
+		pyephem_time = object_pyephem.pyephem_simulation_time
+		pyephem_time = [int(item) for item in pyephem_time]
+
+		pyephem_alt = object_pyephem.pyephem_alt_satellite
+		pyephem_alt = [float(item) for item in pyephem_alt]
+		
+		pyephem_az = object_pyephem.pyephem_az_satellite
+		pyephem_az = [float(item) for item in pyephem_az]
+
+		# Differences
+		list_alt = []
+		list_az = []
+
+		time_intersected = []
+		time_intersected = list(set(self.STK_simulation_time).intersection(pyephem_time))
+
+		i = 0
+
+		for i in range(len(time_intersected)):
+
+			difference_alt = \
+			float(pyephem_alt[pyephem_time.index(time_intersected[i])]) - \
+			float(self.STK_alt_satellite[self.STK_simulation_time.index(time_intersected[i])])
+
+			list_alt.append(difference_alt)
+
+			difference_az = \
+			float(pyephem_az[pyephem_time.index(time_intersected[i])]) - \
+			float(self.STK_az_satellite[self.STK_simulation_time.index(time_intersected[i])])
+
+			list_az.append(difference_az)
+
+			i = i + 1
+
+		chdir(self.directorio_script)
+
+		return time_intersected, list_alt, list_az
 		
 	def STK_vs_PyOrbital(self):
 
@@ -550,6 +590,59 @@ class Read_data:
 		chdir(self.directorio_script)
 
 		return std_alt, std_az
+
+	def STK_vs_PyOrbital_comp(self):
+
+		# STK routine
+		from os import getcwd, chdir
+		directorio_script = getcwd()
+		self.open_STK(self.STK_dir)
+		self.open_files_STK(self.index_STK, directorio_script)	
+		chdir(directorio_script)
+
+		from os import chdir
+		chdir(self.directorio_script)
+
+		object_pyorbital = Read_pyorbital_data(self.index_pyorbital)
+
+		pyorbital_time = object_pyorbital.pyorbital_simulation_time
+		pyorbital_time = [int(item) for item in pyorbital_time]
+
+		pyorbital_alt = object_pyorbital.pyorbital_alt_satellite
+		pyorbital_alt = [float(item) for item in pyorbital_alt]
+
+		
+		pyorbital_az = object_pyorbital.pyorbital_az_satellite
+		pyorbital_az = [float(item) for item in pyorbital_az]
+
+		# Differences
+		list_alt = []
+		list_az = []
+
+		time_intersected = []
+		time_intersected = list(set(self.STK_simulation_time).intersection(pyorbital_time))
+
+		i = 0
+
+		for i in range(len(time_intersected)):
+		
+			difference_alt = \
+			float(pyorbital_alt[pyorbital_time.index(time_intersected[i])]) -\
+			float(self.STK_alt_satellite[self.STK_simulation_time.index(time_intersected[i])])
+
+			list_alt.append(difference_alt)
+
+			difference_az = \
+			float(pyorbital_az[pyorbital_time.index(time_intersected[i])]) - \
+			float(self.STK_az_satellite[self.STK_simulation_time.index(time_intersected[i])])
+
+			list_az.append(difference_az)
+
+			i = i + 1
+
+		chdir(self.directorio_script)
+
+		return time_intersected, list_alt, list_az
 		
 	def STK_vs_Orbitron(self):
 
@@ -596,9 +689,53 @@ class Read_data:
 		std_az = numpy.sqrt(numpy.mean((az-m)**2))
 
 		return std_alt, std_az
-
-	def STK_
 	
+	def STK_vs_Orbitron_comp(self):
+		
+		# STK routine
+		from os import getcwd, chdir
+		directorio_script = getcwd()
+		self.open_STK(self.STK_dir)
+		self.open_files_STK(self.index_STK, directorio_script)	
+		chdir(directorio_script)
+
+		from os import chdir
+		chdir(self.directorio_script)
+
+		object_orbitron = Read_orbitron_data(self.index_orbitron, self.sat_selected)
+		orbitron_time = object_orbitron.orbitron_time
+		orbitron_time = [int(item) for item in orbitron_time]
+
+		orbitron_alt = object_orbitron.orbitron_alt_satellite
+		orbitron_alt = [float(item) for item in orbitron_alt]
+		
+		orbitron_az = object_orbitron.orbitron_az_satellite
+		orbitron_az = [float(item) for item in orbitron_az]
+
+		# Differences
+		list_alt = []
+		list_az = []
+
+		time_intersected = []
+		time_intersected = list(set(self.STK_simulation_time).intersection(orbitron_time))
+
+		for i in range(len(time_intersected)):
+		
+			difference_alt = \
+			float(orbitron_alt[orbitron_time.index(time_intersected[i])]) -\
+			float(self.STK_alt_satellite[self.STK_simulation_time.index(time_intersected[i])])
+
+			list_alt.append(difference_alt)
+
+			difference_az = \
+			float(orbitron_az[orbitron_time.index(time_intersected[i])]) - \
+			float(self.STK_az_satellite[self.STK_simulation_time.index(time_intersected[i])])
+
+			list_az.append(difference_az)
+
+		return time_intersected, list_alt, list_az
+
+
 	# predict data
 	def open_predict(self, script_dir):
 
