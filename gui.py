@@ -49,6 +49,7 @@ class GUI:
 		import Tkinter as tk
 		from matplotlib.figure import Figure
 		from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+		import matplotlib.pyplot as plt
 
 		# Default
 		available_predict = 'no'
@@ -78,28 +79,30 @@ class GUI:
 
 		if available_pyephem == 'yes':
 			figure_pyephem = output_data.Read_pyephem_data(self.pyephem)
-			time = figure_pyephem.pyephem_simulation_time		
+			pyephem_time = figure_pyephem.pyephem_simulation_time		
 			pyephem_alt = figure_pyephem.pyephem_alt_satellite
-			self.plot_pyephem_alt, = self.a.plot(time, pyephem_alt, 'b', label="PyEphem")
+			self.plot_pyephem_alt, = self.a.plot(pyephem_time, pyephem_alt, 'b', label="PyEphem")
 
 			pyephem_az = figure_pyephem.pyephem_az_satellite
-			self.plot_pyephem_az, = self.b.plot(time, pyephem_az, 'b', label="PyEphem")
+			self.plot_pyephem_az, = self.b.plot(pyephem_time, pyephem_az, 'b', label="PyEphem")
 
 		if available_predict == 'yes':
 			figure_predict = output_data.Read_predict_data(self.predict)
+			predict_time = figure_predict.predict_simulation_time
 			predict_alt = figure_predict.predict_alt_satellite
-			self.plot_predict_alt, = self.a.plot(time, predict_alt, 'r', label="predict")
+			self.plot_predict_alt, = self.a.plot(predict_time, predict_alt, 'r', label="predict")
 
 			predict_az = figure_predict.predict_az_satellite
-			self.plot_predict_az, = self.b.plot(time, predict_az, 'r', label="predict")
+			self.plot_predict_az, = self.b.plot(predict_time, predict_az, 'r', label="predict")
 
 		if available_pyorbital == 'yes':
 			figure_pyorbital = output_data.Read_pyorbital_data(self.pyorbital)
+			pyorbital_time = figure_pyorbital.pyorbital_simulation_time
 			pyorbital_alt = figure_pyorbital.pyorbital_alt_satellite
-			self.plot_pyorbital_alt, = self.a.plot(time, pyorbital_alt, 'y', label="pyorbital")
+			self.plot_pyorbital_alt, = self.a.plot(pyorbital_time, pyorbital_alt, 'y', label="pyorbital")
 
 			pyorbital_az = figure_pyorbital.pyorbital_az_satellite
-			self.plot_pyorbital_az, = self.b.plot(time, pyorbital_az, 'y', label="pyorbital")
+			self.plot_pyorbital_az, = self.b.plot(pyorbital_time, pyorbital_az, 'y', label="pyorbital")
 
 		if available_orbitron == 'yes':
 			figure_orbitron = output_data.Read_orbitron_data(self.orbitron, self.object_name.name)
@@ -129,6 +132,10 @@ class GUI:
 		
 		# Grid is on
 		self.b.grid(True)
+
+
+		# Prueba para guardar archivos
+		plt.savefig('prueba.pdf')
 
 		import Tkinter as tk
 		left_frame = tk.Frame(root, height = 800, width = 500, padx = 5, pady = 5)
@@ -390,37 +397,39 @@ class GUI:
 
 		if available_pyephem == 'yes':
 			figure_pyephem = output_data.Read_pyephem_data(self.pyephem)
-			time = figure_pyephem.pyephem_simulation_time
+			pyephem_time = figure_pyephem.pyephem_simulation_time
 			
 			pyephem_alt = figure_pyephem.pyephem_alt_satellite
 			self.plot_pyephem_alt.set_ydata(pyephem_alt)
-			self.plot_pyephem_alt.set_xdata(time)
+			self.plot_pyephem_alt.set_xdata(pyephem_time)
 
 			pyephem_az = figure_pyephem.pyephem_az_satellite
 			self.plot_pyephem_az.set_ydata(pyephem_az)
-			self.plot_pyephem_az.set_xdata(time)
+			self.plot_pyephem_az.set_xdata(pyephem_time)
 
 		if available_predict == 'yes':
 			figure_predict = output_data.Read_predict_data(self.predict)
+			predict_time = figure_predict.predict_simulation_time
 
 			predict_alt = figure_predict.predict_alt_satellite
 			self.plot_predict_alt.set_ydata(predict_alt)
-			self.plot_predict_alt.set_xdata(time)
+			self.plot_predict_alt.set_xdata(predict_time)
 
 			predict_az = figure_predict.predict_az_satellite
 			self.plot_predict_az.set_ydata(predict_az)
-			self.plot_predict_az.set_xdata(time)
+			self.plot_predict_az.set_xdata(predict_time)
 
 		if available_pyorbital == 'yes':
 			figure_pyorbital = output_data.Read_pyorbital_data(self.pyorbital)
+			pyorbital_time = figure_pyorbital.pyorbital_simulation_time
 
 			pyorbital_alt = figure_pyorbital.pyorbital_alt_satellite
 			self.plot_pyorbital_alt.set_ydata(pyorbital_alt)
-			self.plot_pyorbital_alt.set_xdata(time)
+			self.plot_pyorbital_alt.set_xdata(pyorbital_time)
 
 			pyorbital_az = figure_pyorbital.pyorbital_az_satellite
-			self.plot_pyorbital_az.set_ydata(pyephem_az)
-			self.plot_pyorbital_az.set_xdata(time)
+			self.plot_pyorbital_az.set_ydata(pyorbital_az)
+			self.plot_pyorbital_az.set_xdata(pyorbital_time)
 
 		if available_orbitron == 'yes':
 			figure_orbitron = output_data.Read_orbitron_data(self.orbitron,\
@@ -495,14 +504,9 @@ class GUI:
 		if available_STK == 'yes':
 			self.STK = self.STK - 1
 
-		self.a.clear()
-		self.b.clear()
-		self.c.clear()
-
 		import output_data
 		figure = output_data.Read_data(self.pyephem, self.predict, self.pyorbital, \
 		self.orbitron, self.object_name.name, self.STK, argv[3])
-
 
 		# Available
 		actual_available = output_data.Check_data(self.index, self.object_name.name, argv[3])
@@ -512,62 +516,67 @@ class GUI:
 		available_orbitron = actual_available.orbitron
 		available_STK = actual_available.STK		
 
-		self.f.clf()
+		self.f.suptitle("")
 		self.f.suptitle(self.object_name.name, fontsize=16)
-
-		# Subplot a
-		self.a = self.f.add_subplot(211)
-		self.b = self.f.add_subplot(212)
-
 
 		if available_pyephem == 'yes':
 			figure_pyephem = output_data.Read_pyephem_data(self.pyephem)
 			time = figure_pyephem.pyephem_simulation_time
+			
 			pyephem_alt = figure_pyephem.pyephem_alt_satellite
-			self.a.set_ydata(pyephem_alt)
-			self.a.set_xdata(time)
-#			self.a.plot(time, pyephem_alt, 'b', label="PyEphem")
+			self.plot_pyephem_alt.set_ydata(pyephem_alt)
+			self.plot_pyephem_alt.set_xdata(time)
+
 			pyephem_az = figure_pyephem.pyephem_az_satellite
-			self.b.plot(time, pyephem_az, 'b', label="PyEphem")
+			self.plot_pyephem_az.set_ydata(pyephem_az)
+			self.plot_pyephem_az.set_xdata(time)
 
 		if available_predict == 'yes':
 			figure_predict = output_data.Read_predict_data(self.predict)
+
 			predict_alt = figure_predict.predict_alt_satellite
-			self.a.plot(time, predict_alt, 'r', label="predict")
+			self.plot_predict_alt.set_ydata(predict_alt)
+			self.plot_predict_alt.set_xdata(time)
+
 			predict_az = figure_predict.predict_az_satellite
-			self.b.plot(time, predict_az, 'r', label="predict")
+			self.plot_predict_az.set_ydata(predict_az)
+			self.plot_predict_az.set_xdata(time)
 
 		if available_pyorbital == 'yes':
 			figure_pyorbital = output_data.Read_pyorbital_data(self.pyorbital)
+
 			pyorbital_alt = figure_pyorbital.pyorbital_alt_satellite
-			self.a.plot(time, pyorbital_alt, 'y', label="pyorbital")
+			self.plot_pyorbital_alt.set_ydata(pyorbital_alt)
+			self.plot_pyorbital_alt.set_xdata(time)
+
 			pyorbital_az = figure_pyorbital.pyorbital_az_satellite
-			self.b.plot(time, pyorbital_az, 'y', label="pyorbital")
+			self.plot_pyorbital_az.set_ydata(pyephem_az)
+			self.plot_pyorbital_az.set_xdata(time)
 
 		if available_orbitron == 'yes':
 			figure_orbitron = output_data.Read_orbitron_data(self.orbitron,\
 			self.object_name.name)
+
 			orbitron_time = figure_orbitron.orbitron_time
 			orbitron_alt = figure_orbitron.orbitron_alt_satellite
-			self.a.plot(orbitron_time, orbitron_alt, 'm', label="Orbitron")
+			self.plot_orbitron_alt.set_ydata(orbitron_alt)
+			self.plot_orbitron_alt.set_xdata(orbitron_time)
+
 			orbitron_az = figure_orbitron.orbitron_az_satellite
-			self.b.plot(orbitron_time, orbitron_az, 'm', label="orbitron")
+			self.plot_orbitron_az.set_ydata(orbitron_az)
+			self.plot_orbitron_az.set_xdata(orbitron_time)
 
 		if available_STK == 'yes':
 			figure_STK = output_data.Read_STK_data(self.STK, argv[3])
+
 			STK_alt = figure_STK.STK_alt_satellite
 			STK_time = figure_STK.STK_simulation_time
-			self.a.plot(STK_time, STK_alt, 'g', label ="STK")
+			self.plot_STK_alt.set_ydata(STK_alt)
+			self.plot_STK_alt.set_xdata(STK_time)
+
 			STK_az = figure_STK.STK_az_satellite
-			self.b.plot(STK_time, STK_az, 'g', label ="STK")
-
-		self.a.set_ylabel("Degrees")
-		self.a.legend(loc = 2, borderaxespad = 0., prop={'size':12})
-		self.a.grid(True)
-
-		self.b.legend(loc = 2, borderaxespad = 0., prop={'size':12})
-		self.b.set_ylabel("Degrees")
-		self.b.grid(True)
+			self.plot_STK_az.set_ydata(STK_az)
+			self.plot_STK_az.set_xdata(STK_time)
 
 		self.canvas.draw()
 
@@ -594,13 +603,17 @@ class GUI:
 		list_of_simulations = [ ]
 		if available_STK == 'yes':
 			if available_predict == 'yes':
-				list_of_simulations.append("STK vs. predict")
+				list_of_simulations.append("STK vs. predict Alt.")
+				list_of_simulations.append("STK vs. predict Azi.")
 			if available_pyephem == 'yes':
-				list_of_simulations.append("STK vs. PyEphem")
+				list_of_simulations.append("STK vs. PyEphem Alt.")
+				list_of_simulations.append("STK vs. PyEphem Azi.")
 			if available_pyorbital == 'yes':
-				list_of_simulations.append("STK vs. PyOrbital")
+				list_of_simulations.append("STK vs. PyOrbital Alt.")
+				list_of_simulations.append("STK vs. PyOrbital Azi.")
 			if available_orbitron == 'yes':
-				list_of_simulations.append("STK vs. Orbitron")
+				list_of_simulations.append("STK vs. Orbitron Alt.")
+				list_of_simulations.append("STK vs. Orbitron Alt.")
 		else:
 			list_of_simulations.append("STK not available")
 		
@@ -608,29 +621,25 @@ class GUI:
 
 	def pick_simulation(self, index):
 
+		from output_data import Read_data
+		from sys import argv
+		comparation = Read_data(self.pyephem, self.predict, self.pyorbital, \
+		self.orbitron, self.object_name.name, self.STK, argv[3])
+
 		if self.list_of_simulations[index][8:12] == "pred":
-			from output_data import Read_data
-			from sys import argv
-			figure = Read_data(self.pyephem, self.predict, self.pyorbital, \
-			self.orbitron, self.object_name.name, self.STK, argv[3])
+			print "predict"
+
+			# Ejecutar funcion de resta
 	
 		elif self.list_of_simulations[index][8:12] == "PyEp":
-			from output_data import Read_data
-			from sys import argv
-			figure = Read_data(self.pyephem, self.predict, self.pyorbital, \
-			self.orbitron, self.object_name.name, self.STK, argv[3])
+			print "pyephem"
+			# Ejecutar funcion de resta
 
 		elif self.list_of_simulations[index][8:12] == "PyOr":
-			from output_data import Read_data
-			from sys import argv
-			figure = Read_data(self.pyephem, self.predict, self.pyorbital, \
-			self.orbitron, self.object_name.name, self.STK, argv[3])
+			print "pyorbital"
 
 		elif self.list_of_simulations[index][8:12] == "Orbi":
-			from output_data import Read_data
-			from sys import argv
-			figure = Read_data(self.pyephem, self.predict, self.pyorbital, \
-			self.orbitron, self.object_name.name, self.STK, argv[3])
+			print "orbitron"
 
 	def redo_simulations(self):
 		import configure_simulations
@@ -666,9 +675,6 @@ class GUI:
 
 		self.text_std_orbitron_alt.set(round(float(std_orbitron_alt), 7))
 		self.text_std_orbitron_az.set(round(float(std_orbitron_az), 7))
-
-		from os import getcwd
-		print getcwd()
 	
 	def _quit(self):
 		root.quit()     # stops mainloop

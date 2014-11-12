@@ -90,6 +90,9 @@ class Solve_coordinates:
 
 		satellite = pyorbital.orbital.Orbital(satellite_name, line1 = line1, line2 = line2)
 		
+#		start_time = int(sys.argv[2])
+#		end_time = int(sys.argv[3])
+
 		start_time = int(sys.argv[2])
 		end_time = int(sys.argv[3])
 
@@ -101,7 +104,11 @@ class Solve_coordinates:
 		(lon, lat, ele) = self.get_location()
 
 		az1, alt1 = satellite.get_observer_look(time1, lon, lat, ele)
-		self.output_data(satellite_name, start_time, alt1, az1)
+
+		if alt1 >= 0:
+			start_time = start_time + 3200
+			self.output_data(satellite_name, start_time, alt1, az1)
+
 		n2 = start_time
 
 		for j in range(iterations):
@@ -111,11 +118,15 @@ class Solve_coordinates:
 			timeN = datetime.datetime.fromtimestamp(n2)
                         
 			azN, altN = satellite.get_observer_look(timeN, lon, lat, ele)
-			self.output_data(satellite_name, n2, altN, azN)
+
+			if altN >= 0:
+				n2 = n2 + 3200
+				self.output_data(satellite_name, n2, altN, azN)
+
 			j = j + 1
 
 		i = i + 1
-		print "pyorbital - Simulation [%s/%d] done!" %(i, self.satellites_number)
+		print "PyOrbital - Simulation [%s/%d] done!" %(i, self.satellites_number)
 
 	def output_data(self, name, time, alt, az):
 
@@ -148,7 +159,7 @@ class Solve_coordinates:
 
 if __name__ == '__main__':
 	print ""
-	print "pyorbit data"
+	print "PyOrbital data"
 	do_list = Do_list()
 
 	solve_coordinates = Solve_coordinates(do_list.mostrar_lista_satelites, do_list.mostrar_lista_linea1, do_list.mostrar_lista_linea2)

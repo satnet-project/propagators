@@ -24,13 +24,10 @@ class Do_list:
 
 	def __init__(self):
 
-		import sys
+		from sys import argv
 		from os import getcwd
-		actual_dir = getcwd()
-		
-		file = actual_dir + '/TLEs/' + sys.argv[1]
 
-		open_tle = open(file, 'r')
+		open_tle = open(getcwd() + '/TLEs/' + argv[1], 'r')
 		satellite_list = open_tle.readlines()
 		satellite_list = [item.rstrip('\n') for item in satellite_list]
 
@@ -87,10 +84,17 @@ class Solve_coordinates:
 
 		self.observer.horizon = '0'
 
+		# TO-DO
+#		import progressbar
+#		bar = progressbar.ProgressBar(maxval=len(satellites_name), widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()])
+
 		# Provide data to pyephem_routine
 		for i in range(len(satellites_name)):
 			self.pyephem_routine(satellites_name[i], lista_prueba[i], lista_prueba2[i], i)
 			i = i + 1
+#			bar.update(i+1)
+
+		bar.finish()
 		
 
 	def pyephem_routine(self, satellite_name, line1, line2, i):
@@ -117,8 +121,8 @@ class Solve_coordinates:
 		alt1 = math.degrees(alt1)
 		az1 = float(repr(satellite.az))
 		az1 = math.degrees(az1)
-
-		self.output_data(satellite_name, start_time, alt1, az1)
+		if alt1 >= 0:
+			self.output_data(satellite_name, start_time, alt1, az1)
 
 		for j in range(iterations):
 			time = ephem.Date(self.observer.date + ephem.second)
@@ -133,7 +137,8 @@ class Solve_coordinates:
 			altN = math.degrees(altN)
 			azN = float(repr(satellite.az))
 			azN = math.degrees(azN)
-			self.output_data(satellite_name, UnixTimeN, altN, azN)
+			if altN >= 0:
+				self.output_data(satellite_name, UnixTimeN, altN, azN)
 
 			j = j + 1
 		i = i + 1
