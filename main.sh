@@ -49,90 +49,102 @@ clear
 ACTUALDIR=`pwd`
 TLESDIR="/TLEs/"
 
-if [ ! -d $ACTUALDIR$TLESDIR ]; then
-	# If directory doesn't exist,
-	# create it.
-	mkdir TLEs/
-	cd TLEs/
-	chmod +x update_tles.sh
-	./update_tles.sh
+#!/bin/bash
 
-elif [ -d $ACTUALDIR$TLESDIR ]; then
-	# If directory exist,
-	# check last TLE's update.
-	cd TLEs/
+wget -q --tries=10 --timeout=20 --spider http://google.com
+if [[ $? -eq 0 ]]; then
 
-	# Check if amateur.txt exist
-	if [ ! -f amateur.txt ]; then
-		# amateur.txt doesn't exist.
-		# Update all data.
-		# TO-DO. Update only files needed.
-		cd ..
-
+	if [ ! -d $ACTUALDIR$TLESDIR ]; then
+		# If directory doesn't exist,
+		# create it.
+		mkdir TLEs/
+		cd TLEs/
 		chmod +x update_tles.sh
 		./update_tles.sh
-		
-	elif [ -f amateur.txt ]; then
-		# amateur.txt exist		
-		# Check file's date
-		file_month=`ls -Ald amateur.txt | awk '{print $6}'`
-		system_month=`date +"%m"`
 
-		file_day=`ls -Ald amateur.txt | awk '{print $7}'`
-		system_day=`date +"%d"`
+	elif [ -d $ACTUALDIR$TLESDIR ]; then
+		# If directory exist,
+		# check last TLE's update.
+		cd TLEs/
 
-		cd ..
+		# Check if amateur.txt exist
+		if [ ! -f amateur.txt ]; then
+			# amateur.txt doesn't exist.
+			# Update all data.
+			# TO-DO. Update only files needed.
+			cd ..
 
-		if [ "$file_month" = "jan" ]; then
-			declare month=1
-		elif [ "$file_month" = "feb" ]; then
-			declare month=2 
-		elif [ "$file_month" = "mar" ]; then
-			declare month=3
-		elif [ "$file_month" = "apr" ]; then
-        	declare month=4
-		elif [ "$file_month" = "may" ]; then
-        	declare month=5
-		elif [ "$file_month" = "jun" ]; then
-        	declare month=6
-		elif [ "$file_month" = "jul" ]; then
-        	declare month=7
-		elif [ "$file_month" = "aug" ]; then
-        	declare month=8
-		elif [ "$file_month" = "ago" ]; then
-			declare month=8
-		elif [ "$file_month" = "sep" ]; then
-        	declare month=9
-		elif [ "$file_month" = "oct" ]; then
-        	declare month=10
-		elif [ "$file_month" = "nov" ]; then
-        	declare month=11
-		elif [ "$file_month" = "dec" ]; then
-        	declare month=12
-		else
-			echo "Invalid Month"
-		fi
-
-
-		if [ $month -lt $system_month ]; then
 			chmod +x update_tles.sh
 			./update_tles.sh
+		
+		elif [ -f amateur.txt ]; then
+			# amateur.txt exist		
+			# Check file's date
+			file_month=`ls -Ald amateur.txt | awk '{print $6}'`
+			system_month=`date +"%m"`
 
-			echo "Database updated."
-		else
-			if [ $file_day -lt $system_day ]; then
+			file_day=`ls -Ald amateur.txt | awk '{print $7}'`
+			system_day=`date +"%d"`
+
+			cd ..
+
+			if [ "$file_month" = "jan" ]; then
+				declare month=1
+			elif [ "$file_month" = "feb" ]; then
+				declare month=2 
+			elif [ "$file_month" = "mar" ]; then
+				declare month=3
+			elif [ "$file_month" = "apr" ]; then
+        		declare month=4
+			elif [ "$file_month" = "may" ]; then
+        		declare month=5
+			elif [ "$file_month" = "jun" ]; then
+        		declare month=6
+			elif [ "$file_month" = "jul" ]; then
+        		declare month=7
+			elif [ "$file_month" = "aug" ]; then
+        		declare month=8
+			elif [ "$file_month" = "ago" ]; then
+				declare month=8
+			elif [ "$file_month" = "sep" ]; then
+        		declare month=9
+			elif [ "$file_month" = "oct" ]; then
+        		declare month=10
+			elif [ "$file_month" = "nov" ]; then
+        		declare month=11
+			elif [ "$file_month" = "dec" ]; then
+        		declare month=12
+			else
+				echo "Invalid Month"
+			fi
+
+
+			if [ $month -lt $system_month ]; then
 				chmod +x update_tles.sh
 				./update_tles.sh
 
 				echo "Database updated."
 			else
-				echo "Database updated."
+				if [ $file_day -lt $system_day ]; then
+					chmod +x update_tles.sh
+					./update_tles.sh
+
+					echo "Database updated."
+				else
+					echo "Database updated."
+				fi
 			fi
-		fi
 	
+		fi
+
 	fi
 
+
+else
+	echo "Offline - Update canceled."
 fi
+
+
 
 echo " "
 
@@ -282,6 +294,9 @@ echo -e "\nPerfom Orbitron simulations"
 echo -e "Parameters:"
 echo -e "Family $FAMILY"
 echo "Family $FAMILY"
+echo -e "Introduce Orbitron simulations folder: \c"
+read -e ORBITRON_FOLDER
+
 wine "C:\\Program Files\Orbitron\Orbitron.exe"
 
 # Request for STK data
@@ -291,7 +306,7 @@ read -e STK_FOLDER
 echo " "
 echo "$FAMILY family simulations done!"
 
-python gui.py $FAMILY COPY$FAMILY $STK_FOLDER
+python gui.py $FAMILY COPY$FAMILY $STK_FOLDER $ORBITRON_FOLDER
 
 # Remove garbage
 cd TLEs/

@@ -60,7 +60,7 @@ class GUI:
 
 		import output_data
 		from sys import argv
-		actual_available = output_data.Check_data(self.index, self.object_name.name, argv[3])
+		actual_available = output_data.Check_data(self.index, self.object_name.name, argv[3], argv[4])
 		available_predict = actual_available.predict
 		available_pyephem = actual_available.pyephem
 		available_pyorbital = actual_available.pyorbital
@@ -105,7 +105,9 @@ class GUI:
 			self.plot_pyorbital_az, = self.b.plot(pyorbital_time, pyorbital_az, 'y', label="pyorbital")
 
 		if available_orbitron == 'yes':
-			figure_orbitron = output_data.Read_orbitron_data(self.orbitron, self.object_name.name)
+			from sys import argv
+			print argv[4]
+			figure_orbitron = output_data.Read_orbitron_data(self.orbitron, self.object_name.name, argv[4])
 			orbitron_alt = figure_orbitron.orbitron_alt_satellite
 			orbitron_time = figure_orbitron.orbitron_time
 			self.plot_orbitron_alt, = self.a.plot(orbitron_time, orbitron_alt, 'm', label="orbitron")
@@ -148,7 +150,7 @@ class GUI:
 
 		# Plot g
 		self.g = Figure(figsize=(6,4), dpi = 80)
-		self.g.suptitle("Comparation", fontsize=16)
+		self.text = self.g.suptitle("Comparation", fontsize=16)
 		
 		# Subplot c
 		self.c = self.g.add_subplot(111)
@@ -355,7 +357,7 @@ class GUI:
 
 		import output_data
 		from sys import argv
-		available = output_data.Check_data(self.index, self.object_name.name, argv[3]) 		
+		available = output_data.Check_data(self.index, self.object_name.name, argv[3], argv[4]) 		
 
 		available_predict = available.predict
 		if available_predict == 'yes':
@@ -374,18 +376,17 @@ class GUI:
 			self.STK = self.STK + 1
 
 		figure = output_data.Read_data(self.pyephem, self.predict, self.pyorbital, \
-		self.orbitron, self.object_name.name, self.STK, argv[3])
+		self.orbitron, self.object_name.name, self.STK, argv[3], argv[4])
 
 		# Available
-		actual_available = output_data.Check_data(self.index, self.object_name.name, argv[3])
+		actual_available = output_data.Check_data(self.index, self.object_name.name, argv[3], argv[4])
 		available_predict = actual_available.predict
 		available_pyephem = actual_available.pyephem
 		available_pyorbital = actual_available.pyorbital
 		available_orbitron = actual_available.orbitron
 		available_STK = actual_available.STK
 
-		self.f.suptitle("")
-		self.f.suptitle(self.object_name.name, fontsize=16)
+		self.text.set_text(self.object_name.name)
 
 		# Check if data is available and print it
 
@@ -426,8 +427,9 @@ class GUI:
 			self.plot_pyorbital_az.set_xdata(pyorbital_time)
 
 		if available_orbitron == 'yes':
+			from sys import argv
 			figure_orbitron = output_data.Read_orbitron_data(self.orbitron,\
-			self.object_name.name)
+			self.object_name.name, argv[4])
 
 			orbitron_time = figure_orbitron.orbitron_time
 			orbitron_alt = figure_orbitron.orbitron_alt_satellite
@@ -475,7 +477,7 @@ class GUI:
 
 		import output_data
 		from sys import argv
-		available = output_data.Check_data(self.index, self.object_name.name, argv[3]) 		
+		available = output_data.Check_data(self.index, self.object_name.name, argv[3], argv[4]) 		
 
 		available_predict = available.predict
 		if available_predict == 'yes':
@@ -495,18 +497,17 @@ class GUI:
 
 		import output_data
 		figure = output_data.Read_data(self.pyephem, self.predict, self.pyorbital, \
-		self.orbitron, self.object_name.name, self.STK, argv[3])
+		self.orbitron, self.object_name.name, self.STK, argv[3], argv[4])
 
 		# Available
-		actual_available = output_data.Check_data(self.index, self.object_name.name, argv[3])
+		actual_available = output_data.Check_data(self.index, self.object_name.name, argv[3], argv[4])
 		available_predict = actual_available.predict
 		available_pyephem = actual_available.pyephem
 		available_pyorbital = actual_available.pyorbital
 		available_orbitron = actual_available.orbitron
 		available_STK = actual_available.STK		
 
-		self.f.suptitle("")
-		self.f.suptitle(self.object_name.name, fontsize=16)
+		self.text.set_text(self.object_name.name)
 
 		if available_pyephem == 'yes':
 			figure_pyephem = output_data.Read_pyephem_data(self.pyephem)
@@ -543,8 +544,9 @@ class GUI:
 			self.plot_pyorbital_az.set_xdata(time)
 
 		if available_orbitron == 'yes':
+			from sys import argv
 			figure_orbitron = output_data.Read_orbitron_data(self.orbitron,\
-			self.object_name.name)
+			self.object_name.name, argv[4])
 
 			orbitron_time = figure_orbitron.orbitron_time
 			orbitron_alt = figure_orbitron.orbitron_alt_satellite
@@ -609,7 +611,7 @@ class GUI:
 		from output_data import Read_data
 		from sys import argv
 		comparation = Read_data(self.pyephem, self.predict, self.pyorbital, \
-		self.orbitron, self.object_name.name, self.STK, argv[3])
+		self.orbitron, self.object_name.name, self.STK, argv[3], argv[4])
 
 		if self.list_of_simulations[index][8:12] == "pred" and\
 		self.list_of_simulations[index][16:19] == 'Alt':
@@ -750,7 +752,7 @@ class GUI:
 
 			from sys import argv
 			from output_data import Check_data
-			actual_available = Check_data(index, object_name.name, argv[3])
+			actual_available = Check_data(index, object_name.name, argv[3], argv[4])
 			available_STK = actual_available.STK 
 
 			if available_STK == 'yes':
@@ -763,7 +765,7 @@ class GUI:
 				from output_data import Read_data
 				from sys import argv
 				data = Read_data(index, index, index, \
-				index, self.object_name.name, index, argv[3])
+				index, self.object_name.name, index, argv[3], argv[4])
 
 				if available_predict == 'yes':
 
@@ -830,7 +832,7 @@ class GUI:
 		
 		# predict
 		data = Read_data(self.pyephem, self.predict, self.pyorbital, \
-		self.orbitron, self.object_name.name, self.STK, argv[3])
+		self.orbitron, self.object_name.name, self.STK, argv[3], argv[4])
 		(std_predict_alt, std_predict_az) = data.STK_vs_predict()
 
 		self.text_std_predict_alt.set(round(float(std_predict_alt), 7))

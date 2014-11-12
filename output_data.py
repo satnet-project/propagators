@@ -23,9 +23,11 @@
 
 class Read_orbitron_data:
 
-	def __init__(self, index_satellite, sat_selected):
+	def __init__(self, index_satellite, sat_selected, data_dir):
 		
-		file = '/home/case/Orbitron/Output/output.txt'
+		file = data_dir + '/output.txt'
+
+#		file = '/home/case/Orbitron/Output/output.txt'
 
 		import os.path
 		from os import getcwd
@@ -311,7 +313,8 @@ class Read_pyorbital_data:
 
 class Read_data:
 
-	def __init__(self, index_pyephem, index_predict, index_pyorbital, index_orbitron, sat_selected, index_STK, STK_dir):
+	def __init__(self, index_pyephem, index_predict, index_pyorbital,\
+	index_orbitron, sat_selected, index_STK, STK_dir, orbitron_dir):
 
 		# Orbitron stuff
 		self.file = '/home/case/Orbitron/Output/output.txt'
@@ -326,6 +329,7 @@ class Read_data:
 		# STK stuff
 		self.index_STK = index_STK
 		self.STK_dir = STK_dir
+		self.orbitron_dir = orbitron_dir
 
 		from os import getcwd
 		self.directorio_script = getcwd()
@@ -646,7 +650,7 @@ class Read_data:
 		
 	def STK_vs_Orbitron(self):
 
-		object_orbitron = Read_orbitron_data(self.index_orbitron, self.sat_selected)
+		object_orbitron = Read_orbitron_data(self.index_orbitron, self.sat_selected, self.orbitron_dir)
 		orbitron_time = object_orbitron.orbitron_time
 		orbitron_time = [int(item) for item in orbitron_time]
 
@@ -702,7 +706,7 @@ class Read_data:
 		from os import chdir
 		chdir(self.directorio_script)
 
-		object_orbitron = Read_orbitron_data(self.index_orbitron, self.sat_selected)
+		object_orbitron = Read_orbitron_data(self.index_orbitron, self.sat_selected, self.orbitron_dir)
 		orbitron_time = object_orbitron.orbitron_time
 		orbitron_time = [int(item) for item in orbitron_time]
 
@@ -817,7 +821,7 @@ class Read_data:
 
 class Check_data:
 
-	def __init__(self, index_satellite, sat_name, STK_folder):
+	def __init__(self, index_satellite, sat_name, STK_folder, Orbitron_folder):
 
 		index = index_satellite + 1
 		satellite_name = "SAT%s" %(index)
@@ -828,7 +832,7 @@ class Check_data:
 		self.check_predict(index_satellite, satellite_name)
 		self.check_pyephem(index_satellite, satellite_name)
 		self.check_pyorbital(index_satellite, satellite_name)
-		self.check_orbitron(index_satellite, sat_name)
+		self.check_orbitron(index_satellite, sat_name, Orbitron_folder)
 		self.check_STK(index_satellite, STK_folder)
 
 		chdir(self.directorio_actual)
@@ -869,9 +873,11 @@ class Check_data:
 		else:
 			self.pyorbital = 'no'
 
-	def check_orbitron(self, index, actual_sat_name):
+	def check_orbitron(self, index, actual_sat_name, Orbitron_folder):
 
-		file = '/home/case/Orbitron/Output/output.txt'
+		file = Orbitron_folder + '/output.txt'
+
+#		file = '/home/case/Orbitron/Output/output.txt'
 
 		try:
 			open_file = open(file, 'r')
