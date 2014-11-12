@@ -105,9 +105,12 @@ class Solve_coordinates:
 
 		az1, alt1 = satellite.get_observer_look(time1, lon, lat, ele)
 
-		if alt1 >= 0:
-			start_time = start_time + 3200
+		if alt1 > 0:
+#			start_time = start_time + 3200
 			self.output_data(satellite_name, start_time, alt1, az1)
+
+#		start_time = start_time + 3200
+#		self.output_data(satellite_name, start_time, alt1, az1)
 
 		n2 = start_time
 
@@ -119,9 +122,13 @@ class Solve_coordinates:
                         
 			azN, altN = satellite.get_observer_look(timeN, lon, lat, ele)
 
-			if altN >= 0:
-				n2 = n2 + 3200
+			if altN > 0:
+#				n2 = n2 + 3200
 				self.output_data(satellite_name, n2, altN, azN)
+
+#			if altN >= 0:
+#			n2 = n2 + 3200
+#			self.output_data(satellite_name, n2, altN, azN)
 
 			j = j + 1
 

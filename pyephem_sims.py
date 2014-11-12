@@ -94,7 +94,7 @@ class Solve_coordinates:
 			i = i + 1
 #			bar.update(i+1)
 
-		bar.finish()
+#		bar.finish()
 		
 
 	def pyephem_routine(self, satellite_name, line1, line2, i):

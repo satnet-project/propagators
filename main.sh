@@ -294,21 +294,21 @@ echo "$FAMILY family simulations done!"
 python gui.py $FAMILY COPY$FAMILY $STK_FOLDER
 
 # Remove garbage
-#cd TLEs/
+cd TLEs/
 
-#rm $FAMILY
-#rm xa*
-#rm SAT*
+rm $FAMILY
+rm xa*
+rm SAT*
 
-#mv COPY$FAMILY $FAMILY
+mv COPY$FAMILY $FAMILY
 
-#cd ../results/predict
-#rm *
+cd ../results/predict
+rm *
 
-#cd ../PyEphem
-#rm *
+cd ../PyEphem
+rm *
 
-#cd ../PyOrbital
-#rm *
+cd ../PyOrbital
+rm *
 
-#cd ..
+cd ..

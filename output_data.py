@@ -139,7 +139,13 @@ class Read_STK_data:
 
 			i = i + 1
 
-		self.open_file_STK(name)
+		try:
+			self.open_file_STK(name)
+
+		except UnboundLocalError:
+			self.STK_simulation_time = []
+			self.STK_alt_satellite = []
+			self.STK_az_satellite = []		
 
 	def open_file_STK(self, name):
 	
@@ -509,12 +515,8 @@ class Read_data:
 		list_alt = []
 		list_az = []
 
-		print self.STK_simulation_time[1]-pyorbital_time[1]
-
 		time_intersected = []
 		time_intersected = list(set(self.STK_simulation_time).intersection(pyorbital_time))
-
-		print len(time_intersected)
 
 		i = 0
 
@@ -594,6 +596,8 @@ class Read_data:
 		std_az = numpy.sqrt(numpy.mean((az-m)**2))
 
 		return std_alt, std_az
+
+	def STK_
 	
 	# predict data
 	def open_predict(self, script_dir):
