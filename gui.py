@@ -69,7 +69,8 @@ class GUI:
 
 		# Plot
 		self.f = Figure(figsize=(6,7), dpi = 80)
-		self.f.suptitle(self.object_name.name, fontsize=16)
+		self.text = self.f.suptitle(self.object_name.name, fontsize = 16)
+#		self.f.suptitle(self.object_name.name, fontsize=16)
 
 		# Subplots altitude & azimuth
 		self.a = self.f.add_subplot(211)
@@ -150,7 +151,7 @@ class GUI:
 
 		# Plot g
 		self.g = Figure(figsize=(6,4), dpi = 80)
-		self.text = self.g.suptitle("Comparation", fontsize=16)
+		self.g.suptitle("Comparation", fontsize=16)
 		
 		# Subplot c
 		self.c = self.g.add_subplot(111)
@@ -386,7 +387,10 @@ class GUI:
 		available_orbitron = actual_available.orbitron
 		available_STK = actual_available.STK
 
-		self.text.set_text(self.object_name.name)
+		import get_elements
+		object_name = get_elements.Get_name(self.index)
+
+		self.text.set_text(object_name.name)
 
 		# Check if data is available and print it
 
@@ -505,43 +509,49 @@ class GUI:
 		available_pyephem = actual_available.pyephem
 		available_pyorbital = actual_available.pyorbital
 		available_orbitron = actual_available.orbitron
-		available_STK = actual_available.STK		
+		available_STK = actual_available.STK
 
-		self.text.set_text(self.object_name.name)
+
+		import get_elements
+		object_name = get_elements.Get_name(self.index)		
+
+		self.text.set_text(object_name.name)
 
 		if available_pyephem == 'yes':
 			figure_pyephem = output_data.Read_pyephem_data(self.pyephem)
-			time = figure_pyephem.pyephem_simulation_time
+			pyephem_time = figure_pyephem.pyephem_simulation_time
 			
 			pyephem_alt = figure_pyephem.pyephem_alt_satellite
 			self.plot_pyephem_alt.set_ydata(pyephem_alt)
-			self.plot_pyephem_alt.set_xdata(time)
+			self.plot_pyephem_alt.set_xdata(pyephem_time)
 
 			pyephem_az = figure_pyephem.pyephem_az_satellite
 			self.plot_pyephem_az.set_ydata(pyephem_az)
-			self.plot_pyephem_az.set_xdata(time)
+			self.plot_pyephem_az.set_xdata(pyephem_time)
 
 		if available_predict == 'yes':
 			figure_predict = output_data.Read_predict_data(self.predict)
+			predict_time = figure_predict.predict_simulation_time
 
 			predict_alt = figure_predict.predict_alt_satellite
 			self.plot_predict_alt.set_ydata(predict_alt)
-			self.plot_predict_alt.set_xdata(time)
+			self.plot_predict_alt.set_xdata(predict_time)
 
 			predict_az = figure_predict.predict_az_satellite
 			self.plot_predict_az.set_ydata(predict_az)
-			self.plot_predict_az.set_xdata(time)
+			self.plot_predict_az.set_xdata(predict_time)
 
 		if available_pyorbital == 'yes':
 			figure_pyorbital = output_data.Read_pyorbital_data(self.pyorbital)
+			pyorbital_time = figure_pyorbital.pyorbital_simulation_time
 
 			pyorbital_alt = figure_pyorbital.pyorbital_alt_satellite
 			self.plot_pyorbital_alt.set_ydata(pyorbital_alt)
-			self.plot_pyorbital_alt.set_xdata(time)
+			self.plot_pyorbital_alt.set_xdata(pyorbital_time)
 
 			pyorbital_az = figure_pyorbital.pyorbital_az_satellite
-			self.plot_pyorbital_az.set_ydata(pyephem_az)
-			self.plot_pyorbital_az.set_xdata(time)
+			self.plot_pyorbital_az.set_ydata(pyorbital_az)
+			self.plot_pyorbital_az.set_xdata(pyorbital_time)
 
 		if available_orbitron == 'yes':
 			from sys import argv
@@ -569,7 +579,7 @@ class GUI:
 			self.plot_STK_az.set_ydata(STK_az)
 			self.plot_STK_az.set_xdata(STK_time)
 
-		self.canvas.draw()
+		self.f.canvas.draw()
 
 		# Subplot c
 		self.c.clear()
