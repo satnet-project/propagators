@@ -28,6 +28,9 @@ sudo apt-get upgrade
 sudo apt-get install build-essential -y
 sudo apt-get install python-dev -y
 
+# it seems that wine could give problems in 64 bits architectures
+# must correct that issue
+
 echo "Orbitron's installation"
 sudo apt-get install wine -y
 if `wget -qr http://www.stoff.pl/orbitron/files/orbitron.exe -O orbitron.exe`; then
@@ -71,6 +74,9 @@ cd ~
 echo "========================="
 echo "= Please select folder: ="
 echo "========================="
+
+
+
 select D in */ ; do 
 	test -n "$D" && break; 
 	echo ">>> Invalid Selection"; 
@@ -88,9 +94,9 @@ select opt in $OPT;do
 		break
 
 	elif [ "$opt" = "No" ]; then     
-        	cd "$D"
-        	clear
-        	echo "========================="
+        cd "$D"
+        clear
+        echo "========================="
 		echo "= Please select folder: ="
 		echo "========================="
 		select SD in */ ; do 
