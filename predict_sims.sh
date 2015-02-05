@@ -20,6 +20,7 @@
 # Author: s.gongoragarcia[at]gmail.com
 ################################################################################
 
+
 FILE=$1
 START_TIME=$2
 END_TIME=$3
@@ -82,7 +83,23 @@ do
 	SATELLITE="`awk 'NR==j2' j2="${j}" ${LIST_FILES_SPLITED[k]}`"
 	FILESPLITTED="${LIST_FILES_SPLITED[k]}"
 
-	predict -t $FILESPLITTED -f $SATELLITE $START_TIME $END_TIME -o $SATELLITE
+	# Llamar a la rutina segundo a segundo
+
+	BEGIN=$START_TIME
+	END=$[$END_TIME + 1]
+	SATELLITEFILE=SATELLITEFILE
+	SATELLITEFINAL=SATELLITEFINAL
+
+	until [ $BEGIN -eq $END ]
+	do
+		predict -t $FILESPLITTED -f $SATELLITE $BEGIN -o $SATELLITEFILE
+		
+		cat $SATELLITEFILE >> $SATELLITE
+		
+		BEGIN=$[$BEGIN + 1]
+		
+	done
+
 	
 	cp $SATELLITE ../results/predict	
 	cd ../
