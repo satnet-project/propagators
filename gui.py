@@ -21,7 +21,15 @@
 ################################################################################
 
 
+
+#	argv[1]	Family 
+#	argv[2] Copyfamily
+#	argv[3] STK_folder
+#	argv[4]	Orbitron_folder
+
 import matplotlib
+from pygments.styles.paraiso_dark import BACKGROUND
+from matplotlib.ft2font import ITALIC
 
 class GUI:
 
@@ -107,7 +115,6 @@ class GUI:
 
 		if available_orbitron == 'yes':
 			from sys import argv
-			print argv[4]
 			figure_orbitron = output_data.Read_orbitron_data(self.orbitron, self.object_name.name, argv[4])
 			orbitron_alt = figure_orbitron.orbitron_alt_satellite
 			orbitron_time = figure_orbitron.orbitron_time
@@ -166,7 +173,7 @@ class GUI:
 
 		data_frame = tk.LabelFrame(root, text = "Data", height = 215, width = 500, padx = 5, pady = 5)
 		data_frame.grid(column = 1, row = 1, columnspan = 1, rowspan = 1)
-		data_frame.columnconfigure(0, minsize = 110)
+		data_frame.columnconfigure(0, minsize = 170)
 		data_frame.columnconfigure(1, minsize = 65)
 		data_frame.columnconfigure(2, minsize = 110)
 		data_frame.columnconfigure(3, minsize = 110)
@@ -191,7 +198,7 @@ class GUI:
 		self.text_name.set(object_name.name)
 
 		name = tk.Label(data_frame, textvariable = self.text_name)
-		name.grid(column = 1, row = 0, columnspan = 1, rowspan = 1, sticky = tk.E)
+		name.grid(column = 0, row = 0, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		# Inclination
 		from sys import argv
@@ -213,7 +220,7 @@ class GUI:
 		self.file_name.set(argv[1])
 
 		file_ = tk.Label(data_frame, textvariable = self.file_name)
-		file_.grid(column = 1, row = 1, columnspan = 1, rowspan = 1, sticky = tk.E)
+		file_.grid(column = 0, row = 1, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		# Mean motion
 		label_motion = tk.Label(data_frame, text = "Mean motion")
@@ -259,13 +266,13 @@ class GUI:
 		self.text_std_pyephem_alt = tk.DoubleVar()
 		self.text_std_pyephem_alt.set("PyEphem alt.")
 
-		std_pyephem_alt = tk.Label(data_frame, textvariable = self.text_std_pyephem_alt)
+		std_pyephem_alt = tk.Label(data_frame, textvariable = self.text_std_pyephem_alt, bg='#B7C68B')
 		std_pyephem_alt.grid(column = 2, row = 4, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		self.text_std_pyephem_az = tk.DoubleVar()
 		self.text_std_pyephem_az.set("PyePhem az.")
 
-		std_pyephem_az = tk.Label(data_frame, textvariable = self.text_std_pyephem_az)
+		std_pyephem_az = tk.Label(data_frame, textvariable = self.text_std_pyephem_az, bg='#B7C68B')
 		std_pyephem_az.grid(column = 3, row = 4, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		# predict STD
@@ -275,13 +282,13 @@ class GUI:
 		self.text_std_predict_alt = tk.DoubleVar()
 		self.text_std_predict_alt.set("predict alt.")
 
-		std_predict_alt = tk.Label(data_frame, textvariable = self.text_std_predict_alt)
+		std_predict_alt = tk.Label(data_frame, textvariable = self.text_std_predict_alt, bg='#F4F0CB')
 		std_predict_alt.grid(column = 2, row = 5, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		self.text_std_predict_az = tk.DoubleVar()
 		self.text_std_predict_az.set("predict az.")
 
-		std_predict_az = tk.Label(data_frame, textvariable = self.text_std_predict_az)
+		std_predict_az = tk.Label(data_frame, textvariable = self.text_std_predict_az, bg='#F4F0CB')
 		std_predict_az.grid(column = 3, row = 5, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		# Boton para realizar de nuevo las simulaciones
@@ -295,13 +302,13 @@ class GUI:
 		self.text_std_pyorbital_alt = tk.DoubleVar()
 		self.text_std_pyorbital_alt.set("PyOrbital alt.")
 
-		std_pyorbital_alt = tk.Label(data_frame, textvariable = self.text_std_pyorbital_alt)
+		std_pyorbital_alt = tk.Label(data_frame, textvariable = self.text_std_pyorbital_alt, bg='#B7C68B')
 		std_pyorbital_alt.grid(column = 2, row = 6, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		self.text_std_pyorbital_az = tk.DoubleVar()
 		self.text_std_pyorbital_az.set("PyOrbital az.")
 
-		std_pyorbital_az = tk.Label(data_frame, textvariable = self.text_std_pyorbital_az)
+		std_pyorbital_az = tk.Label(data_frame, textvariable = self.text_std_pyorbital_az, bg='#B7C68B')
 		std_pyorbital_az.grid(column = 3, row = 6, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		# Orbitron STD
@@ -311,13 +318,13 @@ class GUI:
 		self.text_std_orbitron_alt = tk.DoubleVar()
 		self.text_std_orbitron_alt.set("Orbitron alt.")
 
-		std_orbitron_alt = tk.Label(data_frame, textvariable = self.text_std_orbitron_alt)
+		std_orbitron_alt = tk.Label(data_frame, textvariable = self.text_std_orbitron_alt, bg='#F4F0CB')
 		std_orbitron_alt.grid(column = 2, row = 7, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		self.text_std_orbitron_az = tk.DoubleVar()
 		self.text_std_orbitron_az.set("Orbitron az.")
 
-		std_orbitron_az = tk.Label(data_frame, textvariable = self.text_std_orbitron_az)
+		std_orbitron_az = tk.Label(data_frame, textvariable = self.text_std_orbitron_az, bg='#F4F0CB')
 		std_orbitron_az.grid(column = 3, row = 7, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		# Control frame

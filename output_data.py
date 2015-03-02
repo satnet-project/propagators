@@ -1,3 +1,5 @@
+from matplotlib.fontconfig_pattern import family_escape
+from posix import getcwd
 
 
 ################################################################################
@@ -104,59 +106,86 @@ class Read_STK_data:
 
 	def __init__(self, index_satellite, directorio_datos):
 
+		print "Read data"
+
 		from os import getcwd, chdir
 
-		index_satellite = index_satellite
 		script_dir = getcwd()
 		
 		# STK routine
-		self.open_STK(directorio_datos)
-		self.open_files_STK(index_satellite, script_dir)
+		files = self.open_STK(directorio_datos)
+		self.open_files_STK(index_satellite, script_dir, files)
 
 		chdir(script_dir)
 
 	def open_STK(self, directorio_datos):
 
-		from os import chdir, getcwd, listdir
+		from os import listdir
+		files = listdir(directorio_datos)
 
-		chdir(directorio_datos)
+		return files
 
-		self.files_STK = listdir(getcwd())
-		self.files_STK.sort()
+	def open_files_STK(self, index_satellite, script_dir, files):
 
-	def open_files_STK(self, index_satellite, script_dir):
+		from os import listdir
+		
+		family = listdir(script_dir + '/results/STK')
+		print family
+		
+		open_names_TLE = open(script_dir + '/results/temp')
+		names_TLE = open_names_TLE.readlines()
+		names_TLE = [item.rstrip('\n\r') for item in names_TLE]
+		names_TLE = [item.strip() for item in names_TLE]
+		
+		satellite = names_TLE[index_satellite].replace (" ", "_")
+		
+		open_names_STK = open(script_dir + '/results/STK/temp.txt')
+		names_STK = str(open_names_STK.readlines())
+		names_STK = names_STK.split()
 
-		open_file = open(script_dir + '/results/PyEphem/temp')
-		copy_names = open_file.readlines()
-		copy_names = [item.rstrip('\n\r') for item in copy_names]
-		copy_names = [item.strip() for item in copy_names]
+		names_STK_final = []
 
-		satellite = copy_names[index_satellite].replace (" ", "_")
+		for i in range(len(names_STK)):
+			
+			if 'Satellite' in names_STK[i]:
+				import string
+				name_STK_final = string.replace(names_STK[i], 'Satellite-', '')
+				name_STK_final = string.replace(name_STK_final, ',', '')
+				name_STK_final = string.replace(name_STK_final, ':', '')
+				name_STK_final = string.replace(name_STK_final, "['Place-CUVI-To-", '')
+				names_STK_final.append(name_STK_final)
 
-		i = 0
+		print names_STK_final
 
-		for i in range(len(copy_names)):
-			if satellite in self.files_STK[i]:
-				name = self.files_STK[i]
-
-			i = i + 1
-
-		try:
-			self.open_file_STK(name)
-
-		except UnboundLocalError:
-			self.STK_simulation_time = []
-			self.STK_alt_satellite = []
-			self.STK_az_satellite = []		
-
-	def open_file_STK(self, name):
+		if satellite in names_STK_final:
+			print "mi satelite esta"
+			
+			try:
+				self.open_file_STK(family, satellite)
+				
+			except UnboundLocalError:
+				self.STK_simulation_time = []
+				self.STK_alt_satellite = []
+				self.STK_az_satellite = []
+		
+		else:
+			print "mi satelite no esta"		
+		
+	# Extraer los datos del fichero.
+	def open_file_STK(self, family, satellite):
+		
+		print "satellite %s" %(satellite)
 	
 		self.STK_simulation_time = []
 		self.STK_alt_satellite = []
 		self.STK_az_satellite = []
+	
+		from os import chdir, getcwd, listdir
+	
+		chdir(getcwd() + '/results/STK')
 		
 		import csv
-		with open(name, 'rb') as open_file:
+		with open(family + '.txt', 'rb') as open_file:
 			reader = csv.reader(open_file)
 			for row in reader:
 				# Tengo que comprobar si la linea esta vacia
@@ -191,7 +220,6 @@ class Read_pyephem_data:
 		os.chdir(directorio_script + '/results/PyEphem')
 
 		self.files_pyephem = os.listdir(os.getcwd())
-		self.files_pyephem.remove('temp')
 		self.files_pyephem.sort()
 
 	def open_files_pyephem(self, index_satellite):
@@ -237,7 +265,6 @@ class Read_predict_data:
 		os.chdir(directorio_script + '/results/predict')
 
 		self.files_predict = os.listdir(os.getcwd())
-		self.files_predict.remove('temp')
 		self.files_predict.sort()
 	
 	def open_files_predict(self, index_satellite):
@@ -283,7 +310,6 @@ class Read_pyorbital_data:
 		chdir(directorio_script + '/results/PyOrbital')
 		
 		self.files_pyorbital = listdir(getcwd())
-		self.files_pyorbital.remove('temp')
 		self.files_pyorbital.sort()
 
 		if not self.files_pyorbital:
@@ -747,7 +773,6 @@ class Read_data:
 		chdir(script_dir + '/results/predict')
 
 		self.files_predict = listdir(getcwd())
-		self.files_predict.remove('temp')
 		self.files_predict.sort()
 	
 
@@ -782,7 +807,7 @@ class Read_data:
 
 	def open_files_STK(self, index_satellite, script_dir):
 
-		open_file = open(script_dir + '/results/PyEphem/temp')
+		open_file = open(script_dir + '/results/temp')
 		copy_names = open_file.readlines()
 		copy_names = [item.rstrip('\n\r') for item in copy_names]
 		copy_names = [item.strip() for item in copy_names]

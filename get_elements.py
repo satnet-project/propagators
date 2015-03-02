@@ -64,8 +64,18 @@ class Get_elements:
 		self.inclination = satellite._inc
 		from math import degrees 
 		self.inclination = degrees(self.inclination)
+		
+
+		
 		self.mean_motion = satellite._n
 		self.epoch = satellite._epoch
+		
+		
+		import numpy as np
+		self.inclination = np.around(self.inclination, 6)
+		self.mean_motion = np.around(self.mean_motion, 6)
+
+
 
 	# No es relevante. Comprobar.
 	def get_location(self):
@@ -82,7 +92,7 @@ class Get_name:
 		from os import getcwd, chdir
 		actual_dir = getcwd()
 
-		chdir(actual_dir + '/results/predict')
+		chdir(actual_dir + '/results')
 
 		open_temp = open('temp', 'r')
 		names_list = open_temp.readlines()
@@ -102,7 +112,7 @@ class Get_names:
 		from os import getcwd, chdir
 		actual_dir = getcwd()
 
-		chdir(actual_dir + '/results/predict')
+		chdir(actual_dir + '/results')
 
 		open_temp = open('temp', 'r')
 		names_list = open_temp.readlines()
@@ -121,7 +131,7 @@ class Get_list_length:
 		from os import getcwd, chdir
 		
 		actual_dir = getcwd()
-		chdir(actual_dir + '/results/predict')
+		chdir(actual_dir + '/results')
 
 		open_temp = open('temp', 'r')
 		names_list = open_temp.readlines()
