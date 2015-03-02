@@ -60,30 +60,10 @@ class Get_names:
 		current_dir = os.getcwd()
 
 		# PyEphem
-		os.chdir(current_dir + '/results/PyEphem')
+		os.chdir(current_dir + '/results')
 
 		create_file_pyephem = open('temp', 'w')
 		create_file_pyephem.writelines(["%s\n" % item  for item in list])
-
-		# predict
-		os.chdir(current_dir + '/results/predict')
-
-		create_file_predict = open('temp', 'w')
-		create_file_predict.writelines(["%s\n" % item  for item in list])
-
-		# pyorbital
-		os.chdir(current_dir)
-		os.chdir(current_dir + '/results/PyOrbital')
-
-		create_file_pyorbital = open('temp', 'w')
-		create_file_pyorbital.writelines(["%s\n" % item for item in list])
-
-		# Orbitron
-		os.chdir(current_dir)
-		os.chdir(current_dir + '/results/Orbitron')
-		
-		create_file_orbitron = open('temp', 'w')
-		create_file_orbitron.writelines(["%s\n" % item for item in list])
 
 		os.chdir(current_dir)
 
