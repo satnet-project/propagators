@@ -1,5 +1,6 @@
 from matplotlib.fontconfig_pattern import family_escape
 from posix import getcwd
+from lib2to3.fixer_util import Number
 
 
 ################################################################################
@@ -128,74 +129,106 @@ class Read_STK_data:
 	def open_files_STK(self, index_satellite, script_dir, files):
 
 		from os import listdir
-		
 		family = listdir(script_dir + '/results/STK')
-		print family
+		family.remove('temp.txt')
 		
 		open_names_TLE = open(script_dir + '/results/temp')
 		names_TLE = open_names_TLE.readlines()
 		names_TLE = [item.rstrip('\n\r') for item in names_TLE]
 		names_TLE = [item.strip() for item in names_TLE]
 		
-		satellite = names_TLE[index_satellite].replace (" ", "_")
+		satellite = names_TLE[index_satellite]		
+		satellite = satellite.replace(satellite[satellite.index('('):(1 + satellite.index(')'))], '')
+		satellite = satellite.strip()
 		
+		# Rutina para obtener el numero del catalogo del NORAD correspondiente al satelite
+		open_NORAD_database = open(script_dir + '/NORAD_Catalog.csv')
+		from csv import reader
+		NORAD_database = reader(open_NORAD_database)
+		for row in NORAD_database:
+			if satellite == row[2].strip():
+				number = row[0]
+				# Rutina para autocompletar los numberos.
+				if len(number) == 4:
+					number = '0' + number
+				elif len(number) == 3:
+					number = '00' + number
+				elif len(number) == 2:
+					number = '000' + number
+				elif len(number) == 1:
+					number = '0000' + number
+				else:
+					pass
+			else:
+				error = 1
+
+		# Fichero con las simulaciones disponibles		
 		open_names_STK = open(script_dir + '/results/STK/temp.txt')
 		names_STK = str(open_names_STK.readlines())
 		names_STK = names_STK.split()
 
 		names_STK_final = []
 
-		for i in range(len(names_STK)):
-			
+		for i in range(len(names_STK)):		
 			if 'Satellite' in names_STK[i]:
 				import string
 				name_STK_final = string.replace(names_STK[i], 'Satellite-', '')
 				name_STK_final = string.replace(name_STK_final, ',', '')
 				name_STK_final = string.replace(name_STK_final, ':', '')
 				name_STK_final = string.replace(name_STK_final, "['Place-CUVI-To-", '')
+				name_STK_final = name_STK_final[-5:]
 				names_STK_final.append(name_STK_final)
 
-		print names_STK_final
-
-		if satellite in names_STK_final:
-			print "mi satelite esta"
-			
-			try:
-				self.open_file_STK(family, satellite)
-				
-			except UnboundLocalError:
-				self.STK_simulation_time = []
-				self.STK_alt_satellite = []
-				self.STK_az_satellite = []
-		
-		else:
-			print "mi satelite no esta"		
+		if names_STK_final.index(number):
+			self.open_file_STK(family[0], names_STK_final.index(number), len(names_STK_final), script_dir)
 		
 	# Extraer los datos del fichero.
-	def open_file_STK(self, family, satellite):
-		
-		print "satellite %s" %(satellite)
-	
+	def open_file_STK(self, family, index, list_length, script_dir):
+			
 		self.STK_simulation_time = []
 		self.STK_alt_satellite = []
 		self.STK_az_satellite = []
+
+		i = 0
+		gaps = 1
+
+		index_list = []
+		from csv import reader
+		open_sims = open(script_dir + '/results/STK/' + family)
+		read_sims = reader(open_sims)
+		for row in read_sims:
+			i = i + 1
+			try:
+				valor = row[0][0]
+			except IndexError:
+				gaps = gaps + 1
+				index_list.append(i + 2)
+				pass
+			
+		# Compruebo que estan todas las simulaciones.	
+		if gaps == list_length:
+			print index
+			print index_list[index]
+
+
+
 	
-		from os import chdir, getcwd, listdir
+#		from os import chdir, getcwd, listdir
 	
-		chdir(getcwd() + '/results/STK')
+#		chdir(getcwd() + '/results/STK')
 		
-		import csv
-		with open(family + '.txt', 'rb') as open_file:
-			reader = csv.reader(open_file)
-			for row in reader:
-				# Tengo que comprobar si la linea esta vacia
-				try:
-					valor = int((float(row[0]) - 2440587.5)*86400)
-					self.STK_simulation_time.append(valor)
-					self.STK_az_satellite.append((row[1]))
-					self.STK_alt_satellite.append((row[2]))
-				except:
-					pass
+#		import csv
+#		with open(family + '.txt', 'rb') as open_file:
+#			reader = csv.reader(open_file)
+#			for row in reader:
+#				# Tengo que comprobar si la linea esta vacia
+#				try:
+#					valor = int((float(row[0]) - 2440587.5)*86400)
+#					self.STK_simulation_time.append(valor)
+#					self.STK_az_satellite.append((row[1]))
+#					self.STK_alt_satellite.append((row[2]))
+#				except:
+#					pass
 
 class Read_pyephem_data:
 
