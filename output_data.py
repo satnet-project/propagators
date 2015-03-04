@@ -1,6 +1,7 @@
 from matplotlib.fontconfig_pattern import family_escape
 from posix import getcwd
 from lib2to3.fixer_util import Number
+from docutils.nodes import row
 
 
 ################################################################################
@@ -194,9 +195,9 @@ class Read_STK_data:
 
 		index_list = []
 		from csv import reader
-		open_sims = open(script_dir + '/results/STK/' + family)
-		read_sims = reader(open_sims)
-		for row in read_sims:
+		open_index = open(script_dir + '/results/STK/' + family)
+		read_index = reader(open_index)
+		for row in read_index:
 			i = i + 1
 			try:
 				valor = row[0][0]
@@ -209,26 +210,26 @@ class Read_STK_data:
 		if gaps == list_length:
 			print index
 			print index_list[index]
-
-
-
-	
-#		from os import chdir, getcwd, listdir
-	
-#		chdir(getcwd() + '/results/STK')
 		
-#		import csv
-#		with open(family + '.txt', 'rb') as open_file:
-#			reader = csv.reader(open_file)
-#			for row in reader:
-#				# Tengo que comprobar si la linea esta vacia
-#				try:
-#					valor = int((float(row[0]) - 2440587.5)*86400)
-#					self.STK_simulation_time.append(valor)
-#					self.STK_az_satellite.append((row[1]))
-#					self.STK_alt_satellite.append((row[2]))
-#				except:
-#					pass
+		j = 0
+
+		open_sims = open(script_dir + '/results/STK/' + family)	
+		read_sims = reader(open_sims)
+		for row in read_sims:
+			j = j + 1
+			try:
+				if j >= index_list[index] and j < (index_list[index + 1] - 2):
+					valor = int((float(row[0]) - 2440587.5)*86400)
+					self.STK_simulation_time.append(valor)
+					self.STK_az_satellite.append((row[1]))
+					self.STK_alt_satellite.append((row[2]))
+			except IndexError:
+				pass
+		
+		print len(self.STK_simulation_time)
+		print len(self.STK_alt_satellite)
+		print len(self.STK_az_satellite)
+
 
 class Read_pyephem_data:
 
