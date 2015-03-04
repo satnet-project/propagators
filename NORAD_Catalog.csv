@@ -4004,12 +4004,3 @@ NORAD ID,COSPAR ID,Name,Source,Period,Inclination (deg),Apogee (km),Perigee (km)
 "20","1959-007A","VANGUARD 3","US","124.75","33.35","3,275","509","0.17","0.00","0.00","0.02","","1958-12-14","","false","false","false","false"
 "11","1959-001A","VANGUARD 2","US","121.54","32.87","2,946","553","0.15","0.00","0.00","0.03","","1959-02-17","","false","false","false","false"
 "5","1958-002B","VANGUARD 1","US","132.78","34.24","3,833","654","0.18","0.00","0.00","0.03","","1958-03-17","","false","false","false","false"
-<script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-
-<script type="text/javascript">
-var pageTracker = _gat._getTracker("UA-19808699-1");
-pageTracker._trackPageview();
-</script> 
