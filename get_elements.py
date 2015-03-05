@@ -9,6 +9,7 @@ class Get_elements:
 		actual_dir = getcwd()
 		chdir(actual_dir + '/TLEs')
 
+
 		open_tle = open(file, 'r')
 		lista_nombres_satelites = open_tle.readlines()
 		lista_nombres_satelites = [item.rstrip('\n') for item in lista_nombres_satelites]

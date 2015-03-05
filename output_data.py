@@ -31,8 +31,6 @@ class Read_orbitron_data:
 		
 		file = data_dir + '/output.txt'
 
-#		file = '/home/case/Orbitron/Output/output.txt'
-
 		import os.path
 		from os import getcwd
 		if os.path.exists(file):
