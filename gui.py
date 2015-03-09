@@ -180,7 +180,7 @@ class GUI:
 		data_frame.grid(column = 1, row = 1, columnspan = 1, rowspan = 1)
 		data_frame.columnconfigure(0, minsize = 170)
 		data_frame.columnconfigure(1, minsize = 20)
-		data_frame.rowconfigure(0, minsize = 20)
+#		data_frame.rowconfigure(0, minsize = 10)
 		data_frame.rowconfigure(1, minsize = 20)
 		data_frame.rowconfigure(2, minsize = 20)
 		data_frame.rowconfigure(3, minsize = 20)
@@ -191,20 +191,8 @@ class GUI:
 
 		data_frame.grid_propagate(0)
 
-		# Name
-		label_name = tk.Label(data_frame, text="Name", font = arial11norm)
-		label_name.grid(column = 0, row = 0, columnspan = 1, rowspan = 1, sticky = tk.W)
-
-		self.text_name = tk.StringVar()
-		import get_elements
-		object_name = get_elements.Get_name(self.index)
-		self.text_name.set(object_name.name)
-
-		name = tk.Label(data_frame, textvariable = self.text_name, font = arial11norm)
-		name.grid(column = 0, row = 0, columnspan = 1, rowspan = 1, sticky = tk.E)
-
 		# File
-		file_name = tk.Label(data_frame, text="File", font = arial11norm)
+		file_name = tk.Label(data_frame, text="File", font = arial11italic)
 		file_name.grid(column = 0, row = 1, columnspan = 1, rowspan = 1, sticky = tk.W)
 
 		self.file_name = tk.StringVar()
@@ -217,7 +205,7 @@ class GUI:
 		# Inclination
 		from sys import argv
 		elements = get_elements.Get_elements(argv[1], self.index)
-		label_incl = tk.Label(data_frame, text="Inclination", font = arial11norm)
+		label_incl = tk.Label(data_frame, text="Inclination", font = arial11italic)
 		label_incl.grid(column = 0, row = 2, columnspan = 1, rowspan = 1, sticky = tk.W)
 		
 		self.text_incl = tk.DoubleVar()
@@ -233,9 +221,9 @@ class GUI:
 
 		# Generate data
 		import scrolledlist
-		sims_availables = scrolledlist.ScrolledList(data_frame, width = 19, height = 5, \
+		sims_availables = scrolledlist.ScrolledList(data_frame, width = 19, height = 6, \
 													callback = self.pick_simulation)
-		sims_availables.grid(column = 0, row = 5, columnspan = 1, rowspan = 4, sticky = tk.W)
+		sims_availables.grid(column = 0, row = 5, columnspan = 1, rowspan = 5, sticky = tk.W)
 
 		# Generate list of simulations
 		self.sims_availables(available_predict, available_pyephem, available_pyorbital, \
@@ -332,16 +320,28 @@ class GUI:
 		std_orbitron_az = tk.Label(data_frame, textvariable = self.text_std_orbitron_az, \
 									bg='#F4F0CB', width = 13, font = arial11norm)
 		std_orbitron_az.grid(column = 4, row = 5, columnspan = 1, rowspan = 1, sticky = tk.E)		
+
+		self.zoom_window = tk.DoubleVar()
+		self.zoom_window.set("Zoom to:")
 		
-		# Boton para realizar de nuevo las simulaciones
-		save = tk.Button(data_frame, text = "Save sims", command = self.save_routine,\
-						 font = arial11norm)
-		save.grid(column = 3, row = 6, columnspan = 1, rowspan = 2)
+		windows = ["altitude", "azimuth", "comparation"]
+
+		import ttk
+		prueba_combobox = ttk.Combobox(data_frame, textvariable = self.zoom_window, \
+										font = arial11norm, values = windows)
+		prueba_combobox.grid(column = 2, row = 6, columnspan = 2, rowspan = 2)
+
 	
 		# Boton para guardar las simulaciones en formato de texto		
 		std_button = tk.Button(data_frame, text = "Get data", command = self.std_simulations, 
 							font = arial11norm)
 		std_button.grid(column = 4, row = 6, columnspan = 1, rowspan = 2)
+		
+		
+		# Etiqueta de aviso	
+		help_label = tk.Label(data_frame, text = 'If you need any help click "Help!"', \
+								font = arial11italic)
+		help_label.grid(column = 2, row = 9, columnspan = 3, rowspan = 2)
 
 		# Control frame
 		control_frame = tk.LabelFrame(root, text = "Controls", height = 55, width = 500, padx = 5, pady = 5)
@@ -417,7 +417,6 @@ class GUI:
 		elements = get_elements.Get_elements(argv[1], self.index)
 
 		self.text.set_text(name_object.name)
-		self.text_name.set(elements.name)
 		self.text_incl.set(elements.inclination)
 
 
@@ -547,7 +546,7 @@ class GUI:
 		elements = get_elements.Get_elements(argv[1], self.index)
 
 		self.text.set_text(name_object.name)
-		self.text_name.set(elements.name)
+#		self.text_name.set(name_object.name)
 		self.text_incl.set(elements.inclination)
 
 		if available_pyephem == 'yes':
@@ -903,7 +902,42 @@ class GUI:
 		root.quit()     # stops mainloop
 
 
+class Save_sims():
+	
+	def __init__(self):
+		print "hola clase"
+
+
+class About():
+	
+	def __init__(self):
+		about_window = tk.Tk()
+		about_window.title("About this software.")
+		
+		from PIL import ImageTk, Image
+		
+		img = ImageTk.PhotoImage(Image.open('/home/dayvan/Documentos/propagators/satnet.png'))
+		panel = tk.Label(image = img)
+#		panel.pack(side = "bottom", fill = "both", expand = "yes")
+	
+#		panel.pack()
+		panel.configure(about_window)
+
+		panel.grid(column = 1, row = 1, columnspan = 1, rowspan = 1)
+		
+		about_window.mainloop()
+
 if __name__ == '__main__':
+	
+	def save_sims():
+		
+		Save_sims()
+		
+	def about():
+		print "hola about"
+		
+		About()
+		
 	import Tkinter as tk
 	root = tk.Tk()
 	interfaz = GUI()
@@ -913,8 +947,11 @@ if __name__ == '__main__':
 	
 	menu.add_cascade(label = "Preferences", menu = filemenu)
 	menu.add_cascade(label = "Help!")
-	menu.add_cascade(label = "About")
+	menu.add_command(label = "About", command = about)
+	
 	filemenu.add_command(label = "Folders")
+	filemenu.add_separator()
+	filemenu.add_command(label = "Save sims", command = save_sims)
 	
 	
 	root.title("Simulaciones")
