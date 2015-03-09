@@ -106,8 +106,6 @@ class Read_STK_data:
 
 	def __init__(self, index_satellite, directorio_datos):
 
-		print "Read data"
-
 		from os import getcwd, chdir
 
 		script_dir = getcwd()
@@ -139,9 +137,6 @@ class Read_STK_data:
 		satellite = names_TLE[index_satellite]		
 		satellite = satellite.replace(satellite[satellite.index('('):(1 + satellite.index(')'))], '')
 		satellite = satellite.strip()
-		
-		print satellite
-		
 		
 		# Rutina para obtener el numero del catalogo del NORAD correspondiente al satelite
 		open_NORAD_database = open(script_dir + '/NORAD_Catalog.csv')
@@ -208,11 +203,6 @@ class Read_STK_data:
 				gaps = gaps + 1
 				index_list.append(i + 2)
 				pass
-			
-		# Compruebo que estan todas las simulaciones.	
-#		if gaps == list_length:
-#			print index
-#			print index_list[index]
 		
 		j = 0
 
@@ -228,11 +218,7 @@ class Read_STK_data:
 					self.STK_alt_satellite.append((row[2]))
 			except IndexError:
 				pass
-		
-#		print len(self.STK_simulation_time)
-#		print len(self.STK_alt_satellite)
-#		print len(self.STK_az_satellite)
-
+			
 
 class Read_pyephem_data:
 

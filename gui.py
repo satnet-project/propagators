@@ -45,10 +45,15 @@ class GUI:
 		import get_elements
 		object_elements = get_elements.Get_list_length()
 		self.length = object_elements.length - 1
+		
+		# Fonts
+		import tkFont
+		arial11italic = tkFont.Font(family="Arial", size=11, slant="italic")
+		arial11norm = tkFont.Font(family="Arial", size=11)
 
-		self.widgets()
+		self.widgets(arial11italic, arial11norm)
 
-	def widgets(self):
+	def widgets(self, arial11italic, arial11norm):
 
 		# Satellite name
 		import get_elements
@@ -174,11 +179,9 @@ class GUI:
 		data_frame = tk.LabelFrame(root, text = "Data", height = 215, width = 500, padx = 5, pady = 5)
 		data_frame.grid(column = 1, row = 1, columnspan = 1, rowspan = 1)
 		data_frame.columnconfigure(0, minsize = 170)
-		data_frame.columnconfigure(1, minsize = 65)
-		data_frame.columnconfigure(2, minsize = 110)
-		data_frame.columnconfigure(3, minsize = 110)
-		data_frame.rowconfigure(0, minsize = 25)
-		data_frame.rowconfigure(1, minsize = 25)
+		data_frame.columnconfigure(1, minsize = 20)
+		data_frame.rowconfigure(0, minsize = 20)
+		data_frame.rowconfigure(1, minsize = 20)
 		data_frame.rowconfigure(2, minsize = 20)
 		data_frame.rowconfigure(3, minsize = 20)
 		data_frame.rowconfigure(4, minsize = 20)
@@ -189,7 +192,7 @@ class GUI:
 		data_frame.grid_propagate(0)
 
 		# Name
-		label_name = tk.Label(data_frame, text="Name")
+		label_name = tk.Label(data_frame, text="Name", font = arial11norm)
 		label_name.grid(column = 0, row = 0, columnspan = 1, rowspan = 1, sticky = tk.W)
 
 		self.text_name = tk.StringVar()
@@ -197,135 +200,148 @@ class GUI:
 		object_name = get_elements.Get_name(self.index)
 		self.text_name.set(object_name.name)
 
-		name = tk.Label(data_frame, textvariable = self.text_name)
+		name = tk.Label(data_frame, textvariable = self.text_name, font = arial11norm)
 		name.grid(column = 0, row = 0, columnspan = 1, rowspan = 1, sticky = tk.E)
 
-		# Inclination
-		from sys import argv
-		elements = get_elements.Get_elements(argv[1], self.index)
-		label_incl = tk.Label(data_frame, text="Inclination")
-		label_incl.grid(column = 2, row = 0, columnspan = 1, rowspan = 1, sticky = tk.W)
-		
-		self.text_incl = tk.DoubleVar()
-		self.text_incl.set(elements.inclination)
-
-		incl = tk.Label(data_frame, textvariable = self.text_incl)
-		incl.grid(column = 3, row = 0, columnspan = 1, rowspan = 1, sticky = tk.E)
-
 		# File
-		file_name = tk.Label(data_frame, text="File")
+		file_name = tk.Label(data_frame, text="File", font = arial11norm)
 		file_name.grid(column = 0, row = 1, columnspan = 1, rowspan = 1, sticky = tk.W)
 
 		self.file_name = tk.StringVar()
 		self.file_name.set(argv[1])
 
-		file_ = tk.Label(data_frame, textvariable = self.file_name)
+		file_ = tk.Label(data_frame, textvariable = self.file_name, font = arial11norm)
 		file_.grid(column = 0, row = 1, columnspan = 1, rowspan = 1, sticky = tk.E)
 
-		# Mean motion
-		label_motion = tk.Label(data_frame, text = "Mean motion")
-		label_motion.grid(column = 2, row = 1, columnspan = 1, rowspan = 1, sticky = tk.W)
 
-		self.text_motion = tk.DoubleVar()
-		self.text_motion.set(elements.mean_motion)
+		# Inclination
+		from sys import argv
+		elements = get_elements.Get_elements(argv[1], self.index)
+		label_incl = tk.Label(data_frame, text="Inclination", font = arial11norm)
+		label_incl.grid(column = 0, row = 2, columnspan = 1, rowspan = 1, sticky = tk.W)
+		
+		self.text_incl = tk.DoubleVar()
+		self.text_incl.set(elements.inclination)
 
-		motion = tk.Label(data_frame, textvariable = self.text_motion)
-		motion.grid(column = 3, row = 1, columnspan = 1, rowspan = 1, sticky = tk.E)
+		incl = tk.Label(data_frame, textvariable = self.text_incl, font = arial11norm)
+		incl.grid(column = 0, row = 2, columnspan = 1, rowspan = 1, sticky = tk.E)
 
-		label_sims = tk.Label(data_frame, text = "Simulations availables")
-		label_sims.grid(column = 0, row = 2, columnspan = 2, rowspan = 1, sticky = tk.W)
+
+		# Simulations availables 
+		label_sims = tk.Label(data_frame, text = "Choose a simulation!", font = arial11italic)
+		label_sims.grid(column = 0, row = 3, columnspan = 1, rowspan = 2, sticky = tk.W)
 
 		# Generate data
 		import scrolledlist
-		sims_availables = scrolledlist.ScrolledList(data_frame, width = 16, height = 3, callback = self.pick_simulation)
-		sims_availables.grid(column = 0, row = 3, columnspan = 1, rowspan = 3, sticky = tk.W)
+		sims_availables = scrolledlist.ScrolledList(data_frame, width = 19, height = 5, \
+													callback = self.pick_simulation)
+		sims_availables.grid(column = 0, row = 5, columnspan = 1, rowspan = 4, sticky = tk.W)
 
 		# Generate list of simulations
-		self.sims_availables(available_predict, available_pyephem, available_pyorbital, available_orbitron, available_STK)
+		self.sims_availables(available_predict, available_pyephem, available_pyorbital, \
+								available_orbitron, available_STK)
 
 		for i in range(len(self.list_of_simulations)):
 			sims_availables.append(self.list_of_simulations[i])
 
 		# STD
-		label_std = tk.Label(data_frame, text = "Standard desviation")
-		label_std.grid(column = 2, row = 2, columnspan = 1, rowspan = 1, sticky = tk.W)
+#		label_std = tk.Label(data_frame, text = "Standard desviation")
+#		label_std.grid(column = 2, row = 0, columnspan = 1, rowspan = 1, sticky = tk.W)
 
-		std_button = tk.Button(data_frame, text = "Get data", command = self.std_simulations)
-		std_button.grid(column = 3, row = 2, columnspan = 1, rowspan = 1, sticky = tk.E)
+		label_std_alt = tk.Label(data_frame, text = "Altitude", bg='#DED29E', width = 13, \
+									font = arial11italic)
+		label_std_alt.grid(column = 3, row = 1, columnspan = 1, rowspan = 1, sticky = tk.E)
 
-		label_std_alt = tk.Label(data_frame, text = "Altitude")
-		label_std_alt.grid(column = 2, row = 3, columnspan = 1, rowspan = 1, sticky = tk.E)
-
-		label_std_az = tk.Label(data_frame, text = "Azimuth")
-		label_std_az.grid(column = 3, row = 3, columnspan = 1, rowspan = 1, sticky = tk.E)
+		label_std_az = tk.Label(data_frame, text = "Azimuth", bg='#DED29E', width = 13, \
+								font = arial11italic)
+		label_std_az.grid(column = 4, row = 1, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		# PyEphem STD
-		text_std_pyephem = tk.Label(data_frame, text = "PyEphem")
-		text_std_pyephem.grid(column = 1, row = 4, columnspan = 1, rowspan = 1, sticky = tk.E)
+		text_std_pyephem = tk.Label(data_frame, text = "PyEphem", bg='#DED29E', width = 9, \
+									font = arial11italic)
+		text_std_pyephem.grid(column = 2, row = 2, columnspan = 1, rowspan = 1)
 
 		self.text_std_pyephem_alt = tk.DoubleVar()
 		self.text_std_pyephem_alt.set("PyEphem alt.")
 
-		std_pyephem_alt = tk.Label(data_frame, textvariable = self.text_std_pyephem_alt, bg='#B7C68B')
-		std_pyephem_alt.grid(column = 2, row = 4, columnspan = 1, rowspan = 1, sticky = tk.E)
+		std_pyephem_alt = tk.Label(data_frame, textvariable = self.text_std_pyephem_alt, \
+									bg='#B7C68B', width = 13, font = arial11norm)
+		std_pyephem_alt.grid(column = 3, row = 2, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		self.text_std_pyephem_az = tk.DoubleVar()
 		self.text_std_pyephem_az.set("PyePhem az.")
 
-		std_pyephem_az = tk.Label(data_frame, textvariable = self.text_std_pyephem_az, bg='#B7C68B')
-		std_pyephem_az.grid(column = 3, row = 4, columnspan = 1, rowspan = 1, sticky = tk.E)
+		std_pyephem_az = tk.Label(data_frame, textvariable = self.text_std_pyephem_az, \
+									bg='#B7C68B', width = 13, font = arial11norm)
+		std_pyephem_az.grid(column = 4, row = 2, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		# predict STD
-		text_std_predict = tk.Label(data_frame, text = "predict")
-		text_std_predict.grid(column = 1, row = 5, columnspan = 1, rowspan = 1, sticky = tk.E)
+		text_std_predict = tk.Label(data_frame, text = "predict", bg='#DED29E', width = 9, \
+									font = arial11italic)
+		text_std_predict.grid(column = 2, row = 3, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		self.text_std_predict_alt = tk.DoubleVar()
 		self.text_std_predict_alt.set("predict alt.")
 
-		std_predict_alt = tk.Label(data_frame, textvariable = self.text_std_predict_alt, bg='#F4F0CB')
-		std_predict_alt.grid(column = 2, row = 5, columnspan = 1, rowspan = 1, sticky = tk.E)
+		std_predict_alt = tk.Label(data_frame, textvariable = self.text_std_predict_alt, \
+									bg='#F4F0CB', width = 13, font = arial11norm)
+		std_predict_alt.grid(column = 3, row = 3, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		self.text_std_predict_az = tk.DoubleVar()
 		self.text_std_predict_az.set("predict az.")
 
-		std_predict_az = tk.Label(data_frame, textvariable = self.text_std_predict_az, bg='#F4F0CB')
-		std_predict_az.grid(column = 3, row = 5, columnspan = 1, rowspan = 1, sticky = tk.E)
-
-		# Boton para realizar de nuevo las simulaciones
-		save = tk.Button(data_frame, text = "Save sims", command = self.save_routine)
-		save.grid(column = 0, row = 6, columnspan = 1, rowspan = 2, sticky = tk.W)
+		std_predict_az = tk.Label(data_frame, textvariable = self.text_std_predict_az,\
+									 bg='#F4F0CB', width = 13, font = arial11norm)
+		std_predict_az.grid(column = 4, row = 3, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		# PyOrbital STD
-		text_std_pyorbital = tk.Label(data_frame, text = "PyOrbital")
-		text_std_pyorbital.grid(column = 1, row = 6, columnspan = 1, rowspan = 1, sticky = tk.E)
+		text_std_pyorbital = tk.Label(data_frame, text = "PyOrbital", bg='#DED29E',\
+									 width = 9, font = arial11italic)
+		text_std_pyorbital.grid(column = 2, row = 4, columnspan = 1, rowspan = 1,\
+								 sticky = tk.E)
 
 		self.text_std_pyorbital_alt = tk.DoubleVar()
 		self.text_std_pyorbital_alt.set("PyOrbital alt.")
 
-		std_pyorbital_alt = tk.Label(data_frame, textvariable = self.text_std_pyorbital_alt, bg='#B7C68B')
-		std_pyorbital_alt.grid(column = 2, row = 6, columnspan = 1, rowspan = 1, sticky = tk.E)
+		std_pyorbital_alt = tk.Label(data_frame, textvariable = self.text_std_pyorbital_alt,\
+									 bg='#B7C68B', width = 13, font = arial11norm)
+		std_pyorbital_alt.grid(column = 3, row = 4, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		self.text_std_pyorbital_az = tk.DoubleVar()
 		self.text_std_pyorbital_az.set("PyOrbital az.")
 
-		std_pyorbital_az = tk.Label(data_frame, textvariable = self.text_std_pyorbital_az, bg='#B7C68B')
-		std_pyorbital_az.grid(column = 3, row = 6, columnspan = 1, rowspan = 1, sticky = tk.E)
+		std_pyorbital_az = tk.Label(data_frame, textvariable = self.text_std_pyorbital_az,\
+									bg='#B7C68B', width = 13, font = arial11norm)
+		std_pyorbital_az.grid(column = 4, row = 4, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		# Orbitron STD
-		text_std_orbitron = tk.Label(data_frame, text = "Orbitron")
-		text_std_orbitron.grid(column = 1, row = 7, columnspan = 1, rowspan = 1, sticky = tk.E)
+		text_std_orbitron = tk.Label(data_frame, text = "Orbitron",  bg='#DED29E', width = 9,\
+									 font = arial11italic)
+		text_std_orbitron.grid(column = 2, row = 5, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		self.text_std_orbitron_alt = tk.DoubleVar()
 		self.text_std_orbitron_alt.set("Orbitron alt.")
 
-		std_orbitron_alt = tk.Label(data_frame, textvariable = self.text_std_orbitron_alt, bg='#F4F0CB')
-		std_orbitron_alt.grid(column = 2, row = 7, columnspan = 1, rowspan = 1, sticky = tk.E)
+		std_orbitron_alt = tk.Label(data_frame, textvariable = self.text_std_orbitron_alt,\
+									 bg='#F4F0CB', width = 13, font = arial11norm)
+		std_orbitron_alt.grid(column = 3, row = 5, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		self.text_std_orbitron_az = tk.DoubleVar()
 		self.text_std_orbitron_az.set("Orbitron az.")
 
-		std_orbitron_az = tk.Label(data_frame, textvariable = self.text_std_orbitron_az, bg='#F4F0CB')
-		std_orbitron_az.grid(column = 3, row = 7, columnspan = 1, rowspan = 1, sticky = tk.E)
+		std_orbitron_az = tk.Label(data_frame, textvariable = self.text_std_orbitron_az, \
+									bg='#F4F0CB', width = 13, font = arial11norm)
+		std_orbitron_az.grid(column = 4, row = 5, columnspan = 1, rowspan = 1, sticky = tk.E)		
+		
+		# Boton para realizar de nuevo las simulaciones
+		save = tk.Button(data_frame, text = "Save sims", command = self.save_routine,\
+						 font = arial11norm)
+		save.grid(column = 3, row = 6, columnspan = 1, rowspan = 2)
+	
+		# Boton para guardar las simulaciones en formato de texto		
+		std_button = tk.Button(data_frame, text = "Get data", command = self.std_simulations, 
+							font = arial11norm)
+		std_button.grid(column = 4, row = 6, columnspan = 1, rowspan = 2)
 
 		# Control frame
 		control_frame = tk.LabelFrame(root, text = "Controls", height = 55, width = 500, padx = 5, pady = 5)
@@ -395,9 +411,15 @@ class GUI:
 		available_STK = actual_available.STK
 
 		import get_elements
-		object_name = get_elements.Get_name(self.index)
+		name_object = get_elements.Get_name(self.index)
+		
+		from sys import argv
+		elements = get_elements.Get_elements(argv[1], self.index)
 
-		self.text.set_text(object_name.name)
+		self.text.set_text(name_object.name)
+		self.text_name.set(elements.name)
+		self.text_incl.set(elements.inclination)
+
 
 		# Check if data is available and print it
 
@@ -518,11 +540,15 @@ class GUI:
 		available_orbitron = actual_available.orbitron
 		available_STK = actual_available.STK
 
-
 		import get_elements
-		object_name = get_elements.Get_name(self.index)		
+		name_object = get_elements.Get_name(self.index)
+		
+		from sys import argv
+		elements = get_elements.Get_elements(argv[1], self.index)
 
-		self.text.set_text(object_name.name)
+		self.text.set_text(name_object.name)
+		self.text_name.set(elements.name)
+		self.text_incl.set(elements.inclination)
 
 		if available_pyephem == 'yes':
 			figure_pyephem = output_data.Read_pyephem_data(self.pyephem)
@@ -881,7 +907,18 @@ if __name__ == '__main__':
 	import Tkinter as tk
 	root = tk.Tk()
 	interfaz = GUI()
+	menu = tk.Menu(root)
+	root.config(menu=menu)
+	filemenu = tk.Menu(menu)
+	
+	menu.add_cascade(label = "Preferences", menu = filemenu)
+	menu.add_cascade(label = "Help!")
+	menu.add_cascade(label = "About")
+	filemenu.add_command(label = "Folders")
+	
+	
 	root.title("Simulaciones")
 	root.geometry("1010x620")
 	root.resizable(0, 0)
+	root.config(menu=menu)
 	root.mainloop()
