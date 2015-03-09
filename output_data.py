@@ -140,12 +140,17 @@ class Read_STK_data:
 		satellite = satellite.replace(satellite[satellite.index('('):(1 + satellite.index(')'))], '')
 		satellite = satellite.strip()
 		
+		print satellite
+		
+		
 		# Rutina para obtener el numero del catalogo del NORAD correspondiente al satelite
 		open_NORAD_database = open(script_dir + '/NORAD_Catalog.csv')
 		from csv import reader
 		NORAD_database = reader(open_NORAD_database)
+		
 		for row in NORAD_database:
-			if satellite == row[2].strip():
+				
+			if satellite.lower() in row[2].strip().lower():
 				number = row[0]
 				# Rutina para autocompletar los numberos.
 				if len(number) == 4:
@@ -205,9 +210,9 @@ class Read_STK_data:
 				pass
 			
 		# Compruebo que estan todas las simulaciones.	
-		if gaps == list_length:
-			print index
-			print index_list[index]
+#		if gaps == list_length:
+#			print index
+#			print index_list[index]
 		
 		j = 0
 
@@ -224,9 +229,9 @@ class Read_STK_data:
 			except IndexError:
 				pass
 		
-		print len(self.STK_simulation_time)
-		print len(self.STK_alt_satellite)
-		print len(self.STK_az_satellite)
+#		print len(self.STK_simulation_time)
+#		print len(self.STK_alt_satellite)
+#		print len(self.STK_az_satellite)
 
 
 class Read_pyephem_data:
