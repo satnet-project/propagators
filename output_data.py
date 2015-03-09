@@ -5,7 +5,7 @@ from docutils.nodes import row
 
 
 ################################################################################
-# Copyright 2014 Samuel Gongora Garcia (s.gongoragarcia@gmail.com)
+# Copyright 2015 Samuel Gongora Garcia (s.gongoragarcia@gmail.com)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -375,7 +375,7 @@ class Read_data:
 		self.index_predict = index_predict + 1
 		# PyOrbital stuff
 		self.index_pyorbital = index_pyorbital
-		# STK stuff
+		# STK stuff		
 		self.index_STK = index_STK
 		self.STK_dir = STK_dir
 		self.orbitron_dir = orbitron_dir
@@ -387,11 +387,12 @@ class Read_data:
 
 		# STK routine
 		from os import getcwd, chdir
-		directorio_script = getcwd()
-		self.open_STK(self.STK_dir)
-		self.open_files_STK(self.index_STK, directorio_script)	
-		chdir(directorio_script)
-
+		directorio_script = getcwd()		
+		# STK routine
+		files = self.open_STK(self.STK_dir)
+		self.open_files_STK(self.index_STK, directorio_script, files)
+		chdir(directorio_script)		
+		
 		# predict routine
 		self.open_predict(directorio_script)
 		self.open_files_predict()
@@ -440,9 +441,10 @@ class Read_data:
 
 		# STK routine
 		from os import getcwd, chdir
-		directorio_script = getcwd()
-		self.open_STK(self.STK_dir)
-		self.open_files_STK(self.index_STK, directorio_script)	
+		directorio_script = getcwd()		
+		# STK routine
+		files = self.open_STK(self.STK_dir)
+		self.open_files_STK(self.index_STK, directorio_script, files)
 		chdir(directorio_script)
 
 		# predict routine
@@ -539,9 +541,10 @@ class Read_data:
 
 		# STK routine
 		from os import getcwd, chdir
-		directorio_script = getcwd()
-		self.open_STK(self.STK_dir)
-		self.open_files_STK(self.index_STK, directorio_script)	
+		directorio_script = getcwd()		
+		# STK routine
+		files = self.open_STK(self.STK_dir)
+		self.open_files_STK(self.index_STK, directorio_script, files)
 		chdir(directorio_script)
 
 		from os import chdir
@@ -586,7 +589,8 @@ class Read_data:
 		chdir(self.directorio_script)
 
 		return time_intersected, list_alt, list_az
-		
+
+	# Standard deviations		
 	def STK_vs_PyOrbital(self):
 
 		from os import chdir
@@ -644,15 +648,16 @@ class Read_data:
 
 		return std_alt, std_az
 
+	# Altitudes and azimuths
 	def STK_vs_PyOrbital_comp(self):
 
 		# STK routine
 		from os import getcwd, chdir
-		directorio_script = getcwd()
-		self.open_STK(self.STK_dir)
-		self.open_files_STK(self.index_STK, directorio_script)	
+		directorio_script = getcwd()		
+		# STK routine
+		files = self.open_STK(self.STK_dir)
+		self.open_files_STK(self.index_STK, directorio_script, files)
 		chdir(directorio_script)
-
 		from os import chdir
 		chdir(self.directorio_script)
 
@@ -696,7 +701,8 @@ class Read_data:
 		chdir(self.directorio_script)
 
 		return time_intersected, list_alt, list_az
-		
+
+	# Standard deviations		
 	def STK_vs_Orbitron(self):
 
 		object_orbitron = Read_orbitron_data(self.index_orbitron, self.sat_selected, self.orbitron_dir)
@@ -742,14 +748,16 @@ class Read_data:
 		std_az = numpy.sqrt(numpy.mean((az-m)**2))
 
 		return std_alt, std_az
-	
+
+	# Altitudes and azimuths	
 	def STK_vs_Orbitron_comp(self):
 		
 		# STK routine
 		from os import getcwd, chdir
-		directorio_script = getcwd()
-		self.open_STK(self.STK_dir)
-		self.open_files_STK(self.index_STK, directorio_script)	
+		directorio_script = getcwd()		
+		# STK routine
+		files = self.open_STK(self.STK_dir)
+		self.open_files_STK(self.index_STK, directorio_script, files)
 		chdir(directorio_script)
 
 		from os import chdir
@@ -818,53 +826,113 @@ class Read_data:
 				self.predict_alt_satellite.append(float(line[1]))
 				self.predict_az_satellite.append(float(line[2]))
 
-
 	def open_STK(self, directorio_datos):
 
-		from os import chdir, getcwd, listdir
+		from os import listdir
+		files = listdir(directorio_datos)
 
-		chdir(directorio_datos)
+		return files
 
-		self.files_STK = listdir(getcwd())
-		self.files_STK.sort()
+	def open_files_STK(self, index_satellite, script_dir, files):
 
-	def open_files_STK(self, index_satellite, script_dir):
-
-		open_file = open(script_dir + '/results/temp')
-		copy_names = open_file.readlines()
-		copy_names = [item.rstrip('\n\r') for item in copy_names]
-		copy_names = [item.strip() for item in copy_names]
-
-		satellite = copy_names[index_satellite].replace (" ", "_")
-
-		i = 0
-
-		for i in range(len(copy_names)):
-			if satellite in self.files_STK[i]:
-				name = self.files_STK[i]
-
-			i = i + 1
-
-		self.open_file_STK(name)
-
-	def open_file_STK(self, name):
+		from os import listdir
+		family = listdir(script_dir + '/results/STK')
+		family.remove('temp.txt')
+		
+		open_names_TLE = open(script_dir + '/results/temp')
+		names_TLE = open_names_TLE.readlines()
+		names_TLE = [item.rstrip('\n\r') for item in names_TLE]
+		names_TLE = [item.strip() for item in names_TLE]
+		
+		satellite = names_TLE[index_satellite]		
+		satellite = satellite.replace(satellite[satellite.index('('):(1 + satellite.index(')'))], '')
+		satellite = satellite.strip()
 	
+		print satellite
+			
+		# Rutina para obtener el numero del catalogo del NORAD correspondiente al satelite
+		open_NORAD_database = open(script_dir + '/NORAD_Catalog.csv')
+		from csv import reader
+		NORAD_database = reader(open_NORAD_database)
+		
+		for row in NORAD_database:
+				
+			print row[2]
+			
+			if satellite.lower() in row[2].strip().lower():
+				number = row[0]
+				# Rutina para autocompletar los numberos.
+				if len(number) == 4:
+					number = '0' + number
+				elif len(number) == 3:
+					number = '00' + number
+				elif len(number) == 2:
+					number = '000' + number
+				elif len(number) == 1:
+					number = '0000' + number
+				else:
+					pass
+			else:
+				error = 1
+
+		# Fichero con las simulaciones disponibles		
+		open_names_STK = open(script_dir + '/results/STK/temp.txt')
+		names_STK = str(open_names_STK.readlines())
+		names_STK = names_STK.split()
+
+		names_STK_final = []
+
+		for i in range(len(names_STK)):		
+			if 'Satellite' in names_STK[i]:
+				import string
+				name_STK_final = string.replace(names_STK[i], 'Satellite-', '')
+				name_STK_final = string.replace(name_STK_final, ',', '')
+				name_STK_final = string.replace(name_STK_final, ':', '')
+				name_STK_final = string.replace(name_STK_final, "['Place-CUVI-To-", '')
+				name_STK_final = name_STK_final[-5:]
+				names_STK_final.append(name_STK_final)
+
+		if names_STK_final.index(number):
+			self.open_file_STK(family[0], names_STK_final.index(number), len(names_STK_final), script_dir)
+		
+	# Extraer los datos del fichero.
+	def open_file_STK(self, family, index, list_length, script_dir):
+			
 		self.STK_simulation_time = []
 		self.STK_alt_satellite = []
 		self.STK_az_satellite = []
+
+		i = 0
+		gaps = 1
+
+		index_list = []
+		from csv import reader
+		open_index = open(script_dir + '/results/STK/' + family)
+		read_index = reader(open_index)
+		for row in read_index:
+			i = i + 1
+			try:
+				valor = row[0][0]
+			except IndexError:
+				gaps = gaps + 1
+				index_list.append(i + 2)
+				pass
 		
-		import csv
-		with open(name, 'rb') as open_file:
-			reader = csv.reader(open_file)
-			for row in reader:
-				# Tengo que comprobar si la linea esta vacia
-				try:
+		j = 0
+
+		open_sims = open(script_dir + '/results/STK/' + family)	
+		read_sims = reader(open_sims)
+		for row in read_sims:
+			j = j + 1
+			try:
+				if j >= index_list[index] and j < (index_list[index + 1] - 2):
 					valor = int((float(row[0]) - 2440587.5)*86400)
 					self.STK_simulation_time.append(valor)
 					self.STK_az_satellite.append((row[1]))
 					self.STK_alt_satellite.append((row[2]))
-				except:
-					pass
+			except IndexError:
+				pass
+			
 
 
 class Check_data:

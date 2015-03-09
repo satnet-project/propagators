@@ -80,8 +80,8 @@ class GUI:
 		available_orbitron = actual_available.orbitron
 		available_STK = actual_available.STK
 
-		# Plot
-		self.f = Figure(figsize=(6,7), dpi = 80)
+		# Plot 6,7
+		self.f = Figure(figsize=(6,7), dpi = 80, facecolor="#DED29E")
 		self.text = self.f.suptitle(self.object_name.name, fontsize = 16)
 #		self.f.suptitle(self.object_name.name, fontsize=16)
 
@@ -162,13 +162,13 @@ class GUI:
 		self.canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=0)
 
 		# Plot g
-		self.g = Figure(figsize=(6,4), dpi = 80)
+		self.g = Figure(figsize=(6,4), dpi = 80, facecolor="#DED29E")	
 		self.g.suptitle("Comparation", fontsize=16)
 		
 		# Subplot c
 		self.c = self.g.add_subplot(111)
 
-		right_frame = tk.Frame(root, height = 330, width = 500, bd = 0)
+		right_frame = tk.Frame(root, height = 330, width = 500, bd = 0, bg = '#F4F0CB')
 		right_frame.grid(column = 1, row = 0, columnspan = 1, rowspan = 1, padx = 5, pady = 5)
 		right_frame.grid_propagate(0)
 
@@ -176,11 +176,10 @@ class GUI:
 		self.canvas2.show()
 		self.canvas2.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=0)
 
-		data_frame = tk.LabelFrame(root, text = "Data", height = 215, width = 500, padx = 5, pady = 5)
+		data_frame = tk.LabelFrame(root, text = "Data", height = 215, width = 500, padx = 5, pady = 5, bg='#F4F0CB')
 		data_frame.grid(column = 1, row = 1, columnspan = 1, rowspan = 1)
 		data_frame.columnconfigure(0, minsize = 170)
 		data_frame.columnconfigure(1, minsize = 20)
-#		data_frame.rowconfigure(0, minsize = 10)
 		data_frame.rowconfigure(1, minsize = 20)
 		data_frame.rowconfigure(2, minsize = 20)
 		data_frame.rowconfigure(3, minsize = 20)
@@ -192,31 +191,31 @@ class GUI:
 		data_frame.grid_propagate(0)
 
 		# File
-		file_name = tk.Label(data_frame, text="File", font = arial11italic)
+		file_name = tk.Label(data_frame, text="File", font = arial11italic, bg='#F4F0CB')
 		file_name.grid(column = 0, row = 1, columnspan = 1, rowspan = 1, sticky = tk.W)
 
 		self.file_name = tk.StringVar()
 		self.file_name.set(argv[1])
 
-		file_ = tk.Label(data_frame, textvariable = self.file_name, font = arial11norm)
+		file_ = tk.Label(data_frame, textvariable = self.file_name, font = arial11norm, bg='#F4F0CB')
 		file_.grid(column = 0, row = 1, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 
 		# Inclination
 		from sys import argv
 		elements = get_elements.Get_elements(argv[1], self.index)
-		label_incl = tk.Label(data_frame, text="Inclination", font = arial11italic)
+		label_incl = tk.Label(data_frame, text="Inclination", font = arial11italic, bg='#F4F0CB')
 		label_incl.grid(column = 0, row = 2, columnspan = 1, rowspan = 1, sticky = tk.W)
 		
 		self.text_incl = tk.DoubleVar()
 		self.text_incl.set(elements.inclination)
 
-		incl = tk.Label(data_frame, textvariable = self.text_incl, font = arial11norm)
+		incl = tk.Label(data_frame, textvariable = self.text_incl, font = arial11norm, bg='#F4F0CB')
 		incl.grid(column = 0, row = 2, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 
 		# Simulations availables 
-		label_sims = tk.Label(data_frame, text = "Choose a simulation!", font = arial11italic)
+		label_sims = tk.Label(data_frame, text = "Choose a simulation!", font = arial11italic, bg='#F4F0CB')
 		label_sims.grid(column = 0, row = 3, columnspan = 1, rowspan = 2, sticky = tk.W)
 
 		# Generate data
@@ -231,10 +230,6 @@ class GUI:
 
 		for i in range(len(self.list_of_simulations)):
 			sims_availables.append(self.list_of_simulations[i])
-
-		# STD
-#		label_std = tk.Label(data_frame, text = "Standard desviation")
-#		label_std.grid(column = 2, row = 0, columnspan = 1, rowspan = 1, sticky = tk.W)
 
 		label_std_alt = tk.Label(data_frame, text = "Altitude", bg='#DED29E', width = 13, \
 									font = arial11italic)
@@ -272,14 +267,14 @@ class GUI:
 		self.text_std_predict_alt.set("predict alt.")
 
 		std_predict_alt = tk.Label(data_frame, textvariable = self.text_std_predict_alt, \
-									bg='#F4F0CB', width = 13, font = arial11norm)
+									bg='#B3A580', width = 13, font = arial11norm)
 		std_predict_alt.grid(column = 3, row = 3, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		self.text_std_predict_az = tk.DoubleVar()
 		self.text_std_predict_az.set("predict az.")
 
 		std_predict_az = tk.Label(data_frame, textvariable = self.text_std_predict_az,\
-									 bg='#F4F0CB', width = 13, font = arial11norm)
+									 bg='#B3A580', width = 13, font = arial11norm)
 		std_predict_az.grid(column = 4, row = 3, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		# PyOrbital STD
@@ -311,14 +306,14 @@ class GUI:
 		self.text_std_orbitron_alt.set("Orbitron alt.")
 
 		std_orbitron_alt = tk.Label(data_frame, textvariable = self.text_std_orbitron_alt,\
-									 bg='#F4F0CB', width = 13, font = arial11norm)
+									 bg='#B3A580', width = 13, font = arial11norm)
 		std_orbitron_alt.grid(column = 3, row = 5, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		self.text_std_orbitron_az = tk.DoubleVar()
 		self.text_std_orbitron_az.set("Orbitron az.")
 
 		std_orbitron_az = tk.Label(data_frame, textvariable = self.text_std_orbitron_az, \
-									bg='#F4F0CB', width = 13, font = arial11norm)
+									bg='#B3A580', width = 13, font = arial11norm)
 		std_orbitron_az.grid(column = 4, row = 5, columnspan = 1, rowspan = 1, sticky = tk.E)		
 
 		self.zoom_window = tk.DoubleVar()
@@ -327,38 +322,41 @@ class GUI:
 		windows = ["altitude", "azimuth", "comparation"]
 
 		import ttk
-		prueba_combobox = ttk.Combobox(data_frame, textvariable = self.zoom_window, \
-										font = arial11norm, values = windows)
-		prueba_combobox.grid(column = 2, row = 6, columnspan = 2, rowspan = 2)
+		self.zoom_combobox = ttk.Combobox(data_frame, textvariable = self.zoom_window, \
+										font = arial11norm, values = windows, width = 11)
+		self.zoom_combobox.grid(column = 2, row = 6, columnspan = 2, rowspan = 2, sticky = tk.W)
 
+		# Boton para ampliar la ventana
+		zoom_button = tk.Button(data_frame, text = 'Zoom!', font = arial11norm, command = self.zoom_routine)
+		zoom_button.grid(column = 3, row = 6, columnspan = 1, rowspan = 2, sticky = tk.E)
 	
 		# Boton para guardar las simulaciones en formato de texto		
 		std_button = tk.Button(data_frame, text = "Get data", command = self.std_simulations, 
-							font = arial11norm)
+							font = arial11norm, bg='#B3A580')
 		std_button.grid(column = 4, row = 6, columnspan = 1, rowspan = 2)
 		
 		
 		# Etiqueta de aviso	
 		help_label = tk.Label(data_frame, text = 'If you need any help click "Help!"', \
-								font = arial11italic)
+								font = arial11italic, bg='#F4F0CB')
 		help_label.grid(column = 2, row = 9, columnspan = 3, rowspan = 2)
 
 		# Control frame
-		control_frame = tk.LabelFrame(root, text = "Controls", height = 55, width = 500, padx = 5, pady = 5)
+		control_frame = tk.LabelFrame(root, text = "Controls", height = 55, width = 500, padx = 5, pady = 5, bg='#F4F0CB')
 		control_frame.grid(column = 1, row = 2, columnspan = 1, rowspan = 1)
 		control_frame.grid_propagate(0)
 
 		control_frame.columnconfigure(0, minsize = 40)
 		control_frame.columnconfigure(1, minsize = 40)
-		control_frame.columnconfigure(2, minsize = 350)
+		control_frame.columnconfigure(2, minsize = 340)
 
-		self.next = tk.Button(master = control_frame, text='Next', command=self.next)
+		self.next = tk.Button(master = control_frame, text='Next', command=self.next, bg='#B3A580', font = arial11norm)
 		self.next.grid(column = 0, row = 0, columnspan = 1, rowspan = 1)
 
-		self.forward = tk.Button(master = control_frame, text='Forward', command=self.forward)
+		self.forward = tk.Button(master = control_frame, text='Forward', command=self.forward, bg='#B3A580', font = arial11norm)
 		self.forward.grid(column = 1, row = 0, columnspan = 1, rowspan = 1)
 
-		button = tk.Button(master = control_frame, text='Quit', command=self._quit)
+		button = tk.Button(master = control_frame, text='Quit', command=self._quit, bg='#B3A580', font = arial11norm)
 		button.grid(column = 2, row = 0, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		# Check buttons state
@@ -713,7 +711,7 @@ class GUI:
 
 			self.c.clear()
 
-			self.c.plot(time, list_az, 'bs', label = "Difference")
+			self.c.plot(time, list_alt, 'bs', label = "Difference")
 			self.c.legend(loc = 2, borderaxespad = 0., prop={'size':12})
 			self.c.set_ylabel("Altitude - Degrees")
 			self.c.grid(True)
@@ -897,6 +895,17 @@ class GUI:
 
 		self.text_std_orbitron_alt.set(round(float(std_orbitron_alt), 7))
 		self.text_std_orbitron_az.set(round(float(std_orbitron_az), 7))
+		
+	def zoom_routine(self):
+		print "rutina actual"
+		zoom_window = tk.Toplevel()
+		zoom_window.title("Patata")
+		zoom_window.geometry("800x600")
+		
+		
+		print self.zoom_combobox.get()
+		
+		zoom_window.mainloop()
 	
 	def _quit(self):
 		root.quit()     # stops mainloop
@@ -911,19 +920,13 @@ class Save_sims():
 class About():
 	
 	def __init__(self):
-		about_window = tk.Tk()
+		about_window = tk.Toplevel()
 		about_window.title("About this software.")
-		
-		from PIL import ImageTk, Image
-		
-		img = ImageTk.PhotoImage(Image.open('/home/dayvan/Documentos/propagators/satnet.png'))
-		panel = tk.Label(image = img)
-#		panel.pack(side = "bottom", fill = "both", expand = "yes")
-	
-#		panel.pack()
-		panel.configure(about_window)
-
-		panel.grid(column = 1, row = 1, columnspan = 1, rowspan = 1)
+				
+		img = tk.PhotoImage(file = "satnet.png")
+		panel = tk.Label(about_window, image = img)	
+		panel.img = img
+		panel.grid()
 		
 		about_window.mainloop()
 
@@ -934,7 +937,6 @@ if __name__ == '__main__':
 		Save_sims()
 		
 	def about():
-		print "hola about"
 		
 		About()
 		
@@ -958,4 +960,5 @@ if __name__ == '__main__':
 	root.geometry("1010x620")
 	root.resizable(0, 0)
 	root.config(menu=menu)
+	root.configure(background = '#F4F0CB')
 	root.mainloop()
