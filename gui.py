@@ -319,7 +319,7 @@ class GUI:
 		self.zoom_window = tk.DoubleVar()
 		self.zoom_window.set("Zoom to:")
 		
-		windows = ["altitude", "azimuth", "comparation"]
+		windows = ["altitude", "azimuth", "comparation alt", "comparation az"]
 
 		import ttk
 		self.zoom_combobox = ttk.Combobox(data_frame, textvariable = self.zoom_window, \
@@ -926,7 +926,7 @@ class GUI:
 		elif self.zoom_combobox.get() == 'azimuth':
 			text = zoom.suptitle(self.zoom_combobox.get(), fontsize = 20)
 
-		elif self.zoom_combobox.get() == 'comparation':
+		elif self.zoom_combobox.get() == 'comparation alt':
 			text = zoom.suptitle(self.zoom_combobox.get(), fontsize = 20)
 
 		else:
@@ -948,6 +948,21 @@ class GUI:
 			elif self.zoom_combobox.get() == 'azimuth':
 				pyephem_az = figure_pyephem.pyephem_az_satellite
 				plot_pyephem_az, = subplot_zoom.plot(pyephem_time, pyephem_az, 'b', label="PyEphem")
+				
+			elif self.zoom_combobox.get() == 'comparation alt':
+				from output_data import Read_data
+				comparation = Read_data(self.pyephem, self.predict, self.pyorbital, \
+										self.orbitron, self.object_name.name, self.STK, argv[3], argv[4])
+				(time, list_alt, list_az) = comparation.STK_vs_PyEphem_comp()
+				plot_pyephem_comp_alt, = subplot_zoom.plot(time, list_alt, 'b', label="PyEphem")
+			
+			elif self.zoom_combobox.get() == 'comparation az':
+				from output_data import Read_data
+				comparation = Read_data(self.pyephem, self.predict, self.pyorbital, \
+										self.orbitron, self.object_name.name, self.STK, argv[3], argv[4])
+				(time, list_alt, list_az) = comparation.STK_vs_PyEphem_comp()
+				plot_pyephem_comp_az, = subplot_zoom.plot(time, list_az, 'b', label="PyEphem")
+				
 
 		if available_predict == 'yes':
 			figure_predict = output_data.Read_predict_data(self.predict)
@@ -982,21 +997,24 @@ class GUI:
 				orbitron_alt = figure_orbitron.orbitron_alt_satellite
 				plot_orbitron_alt, = subplot_zoom.plot(orbitron_time, orbitron_alt, 'm', label="orbitron")
 
-			if self.zoom_combobox.get():
+			if self.zoom_combobox.get() == 'azimuth':
 				orbitron_az = figure_orbitron.orbitron_az_satellite
 				plot_orbitron_az, = subplot_zoom.plot(orbitron_time, orbitron_az, 'm', label="orbitron")
 
 		if available_STK == 'yes':
 			figure_STK = output_data.Read_STK_data(self.STK, argv[3])
-			STK_alt = figure_STK.STK_alt_satellite
 			STK_time = figure_STK.STK_simulation_time
-			self.plot_STK_alt, = self.a.plot(STK_time, STK_alt, 'g', label ="STK")
+			
+			if self.zoom_combobox.get() == 'altitude':
+				STK_alt = figure_STK.STK_alt_satellite
+				plot_STK_alt, = subplot_zoom.plot(STK_time, STK_alt, 'g', label='STK')
 
-			STK_az = figure_STK.STK_az_satellite
-			self.plot_STK_az, = self.b.plot(STK_time, STK_az, 'g', label ="STK")
+			if self.zoom_combobox.get() == 'azimuth':
+				STK_az = figure_STK.STK_az_satellite
+				plot_STK_az, = subplot_zoom.plot(STK_time, STK_az, 'g', label ="STK")
 
-		self.a.legend(loc = 2, borderaxespad = 0., prop={'size':12})
-		self.a.set_ylabel("Degrees")
+		subplot_zoom.legend(loc = 2, borderaxespad = 0., prop={'size':12})
+		subplot_zoom.set_ylabel("Degrees")
 		# Grid is on
 		subplot_zoom.grid(True)
 		
@@ -1012,9 +1030,35 @@ class GUI:
 		zoom_window.mainloop()
 	
 	def _quit(self):
+
 		root.quit()     # stops mainloop
 
 
+class Folders():
+	
+	def __init__(self):
+		
+		folders_window = tk.Toplevel()
+		
+		# actual folder	
+		folders_frame = tk.LabelFrame(folders_window, text = "Folders", bg='#F4F0CB')
+		folders_frame.grid(column = 0, row = 0, columnspan = 1, rowspan = 1, padx = 5, pady = 5)
+		
+		label_actual = tk.Label(folders_frame, text = 'Working directory: ', bg='#F4F0CB')
+		label_actual.grid(column = 0, row = 0, columnspan = 1, rowspan = 1, ipady = 5, ipadx = 5)
+				
+		from os import getcwd
+		directory = tk.StringVar()
+		directory.set(getcwd())
+		
+		label_directory = tk.Label(folders_frame, textvariable = directory, bg='#F4F0CB')
+		label_directory.grid(column = 1, row = 0, columnspan = 1, rowspan = 1, ipady = 5, ipadx = 5)
+		
+		folders_window.geometry("400x150")
+		folders_windows.resizable(0, 0)
+		folders_window.configure(bg='#F4F0CB')
+		folders_window.mainloop()
+		
 class Save_sims():
 	
 	def __init__(self):
@@ -1036,6 +1080,10 @@ class About():
 
 if __name__ == '__main__':
 	
+	def folders():
+		
+		Folders()
+	
 	def save_sims():
 		
 		Save_sims()
@@ -1055,7 +1103,7 @@ if __name__ == '__main__':
 	menu.add_cascade(label = "Help!")
 	menu.add_command(label = "About", command = about)
 	
-	filemenu.add_command(label = "Folders")
+	filemenu.add_command(label = "Folders", command = folders)
 	filemenu.add_separator()
 	filemenu.add_command(label = "Save sims", command = save_sims)
 	
