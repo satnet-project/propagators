@@ -81,7 +81,7 @@ class GUI:
 		available_STK = actual_available.STK
 
 		# Plot 6,7
-		self.f = Figure(figsize=(6,7), dpi = 80, facecolor="#DED29E")
+		self.f = Figure(figsize=(6,7), dpi = 80, edgecolor="#DED29E", facecolor="#DED29E")
 		self.text = self.f.suptitle(self.object_name.name, fontsize = 16)
 #		self.f.suptitle(self.object_name.name, fontsize=16)
 
@@ -897,7 +897,6 @@ class GUI:
 		self.text_std_orbitron_az.set(round(float(std_orbitron_az), 7))
 		
 	def zoom_routine(self):
-		print "rutina actual"
 		
 		import Tkinter as tk
 		from matplotlib.figure import Figure
@@ -905,23 +904,33 @@ class GUI:
 		import matplotlib.pyplot as plt
 		import output_data
 		
+		from sys import argv
+		
 		zoom_window = tk.Toplevel()
-		zoom_window.title("Patata")
+		zoom_window.title(self.zoom_combobox.get())
 		zoom_window.geometry("1024x768")
-		
-
-		
-		
-		available_pyephem = 'yes'
-		available_predict = 'no'
-		available_pyorbital = 'no'
-		available_STK = 'no'
-		available_orbitron = 'n'
+				
+		actual_available = output_data.Check_data(self.index, self.object_name.name, argv[3], argv[4])
+		available_predict = actual_available.predict
+		available_pyephem = actual_available.pyephem
+		available_pyorbital = actual_available.pyorbital
+		available_orbitron = actual_available.orbitron
+		available_STK = actual_available.STK		
 		
 		datos = self.c.get_xaxis()
 		
-		zoom = Figure(figsize=(6,12), dpi = 70, facecolor="#DED29E")
-#		self.text = self.f.suptitle(self.object_name.name, fontsize = 16)
+		zoom = Figure(figsize=(6,12), dpi = 75, facecolor="#DED29E")
+		if self.zoom_combobox.get() == 'altitude':
+			text = zoom.suptitle(self.zoom_combobox.get(), fontsize = 20)
+			
+		elif self.zoom_combobox.get() == 'azimuth':
+			text = zoom.suptitle(self.zoom_combobox.get(), fontsize = 20)
+
+		elif self.zoom_combobox.get() == 'comparation':
+			text = zoom.suptitle(self.zoom_combobox.get(), fontsize = 20)
+
+		else:
+			pass
 
 		# Subplots altitude & azimuth
 		subplot_zoom = zoom.add_subplot(111)
@@ -950,26 +959,32 @@ class GUI:
 
 			if self.zoom_combobox.get() == 'azimuth':
 				predict_az = figure_predict.predict_az_satellite
-				plot_predict_az, = subplot_zoom.b.plot(predict_time, predict_az, 'r', label="predict")
+				plot_predict_az, = subplot_zoom.plot(predict_time, predict_az, 'r', label="predict")
 
 		if available_pyorbital == 'yes':
 			figure_pyorbital = output_data.Read_pyorbital_data(self.pyorbital)
 			pyorbital_time = figure_pyorbital.pyorbital_simulation_time
-			pyorbital_alt = figure_pyorbital.pyorbital_alt_satellite
-			self.plot_pyorbital_alt, = self.a.plot(pyorbital_time, pyorbital_alt, 'y', label="pyorbital")
+			
+			if self.zoom_combobox.get() == 'altitude':
+				pyorbital_alt = figure_pyorbital.pyorbital_alt_satellite
+				plot_pyorbital_alt, = subplot_zoom.plot(pyorbital_time, pyorbital_alt, 'y', label="pyorbital")
 
-			pyorbital_az = figure_pyorbital.pyorbital_az_satellite
-			self.plot_pyorbital_az, = self.b.plot(pyorbital_time, pyorbital_az, 'y', label="pyorbital")
+			if self.zoom_combobox.get() == 'azimuth':
+				pyorbital_az = figure_pyorbital.pyorbital_az_satellite
+				plot_pyorbital_az, = subplot_zoom.plot(pyorbital_time, pyorbital_az, 'y', label="pyorbital")
 
 		if available_orbitron == 'yes':
 			from sys import argv
 			figure_orbitron = output_data.Read_orbitron_data(self.orbitron, self.object_name.name, argv[4])
-			orbitron_alt = figure_orbitron.orbitron_alt_satellite
 			orbitron_time = figure_orbitron.orbitron_time
-			self.plot_orbitron_alt, = self.a.plot(orbitron_time, orbitron_alt, 'm', label="orbitron")
 
-			orbitron_az = figure_orbitron.orbitron_az_satellite
-			self.plot_orbitron_az, = self.b.plot(orbitron_time, orbitron_az, 'm', label="orbitron")
+			if self.zoom_combobox.get() == 'altitude':
+				orbitron_alt = figure_orbitron.orbitron_alt_satellite
+				plot_orbitron_alt, = subplot_zoom.plot(orbitron_time, orbitron_alt, 'm', label="orbitron")
+
+			if self.zoom_combobox.get():
+				orbitron_az = figure_orbitron.orbitron_az_satellite
+				plot_orbitron_az, = subplot_zoom.plot(orbitron_time, orbitron_az, 'm', label="orbitron")
 
 		if available_STK == 'yes':
 			figure_STK = output_data.Read_STK_data(self.STK, argv[3])
@@ -993,9 +1008,6 @@ class GUI:
 		toolbar = NavigationToolbar2TkAgg(canvas, zoom_window )
 		toolbar.update()
 		canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=0)
-
-		
-		print datos
 		
 		zoom_window.mainloop()
 	
