@@ -898,12 +898,104 @@ class GUI:
 		
 	def zoom_routine(self):
 		print "rutina actual"
+		
+		import Tkinter as tk
+		from matplotlib.figure import Figure
+		from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+		import matplotlib.pyplot as plt
+		import output_data
+		
 		zoom_window = tk.Toplevel()
 		zoom_window.title("Patata")
-		zoom_window.geometry("800x600")
+		zoom_window.geometry("1024x768")
+		
+
 		
 		
-		print self.zoom_combobox.get()
+		available_pyephem = 'yes'
+		available_predict = 'no'
+		available_pyorbital = 'no'
+		available_STK = 'no'
+		available_orbitron = 'n'
+		
+		datos = self.c.get_xaxis()
+		
+		zoom = Figure(figsize=(6,12), dpi = 70, facecolor="#DED29E")
+#		self.text = self.f.suptitle(self.object_name.name, fontsize = 16)
+
+		# Subplots altitude & azimuth
+		subplot_zoom = zoom.add_subplot(111)
+
+		# Check if data is available and print it
+
+		if available_pyephem == 'yes':
+			figure_pyephem = output_data.Read_pyephem_data(self.pyephem)
+			pyephem_time = figure_pyephem.pyephem_simulation_time		
+
+			if self.zoom_combobox.get() == 'altitude':
+				pyephem_alt = figure_pyephem.pyephem_alt_satellite
+				plot_pyephem_alt, = subplot_zoom.plot(pyephem_time, pyephem_alt, 'b', label="PyEphem")
+			
+			elif self.zoom_combobox.get() == 'azimuth':
+				pyephem_az = figure_pyephem.pyephem_az_satellite
+				plot_pyephem_az, = subplot_zoom.plot(pyephem_time, pyephem_az, 'b', label="PyEphem")
+
+		if available_predict == 'yes':
+			figure_predict = output_data.Read_predict_data(self.predict)
+			predict_time = figure_predict.predict_simulation_time
+	
+			if self.zoom_combobox.get() == 'altitude':
+				predict_alt = figure_predict.predict_alt_satellite
+				plot_predict_alt, = subplot_zoom.plot(predict_time, predict_alt, 'r', label="predict")
+
+			if self.zoom_combobox.get() == 'azimuth':
+				predict_az = figure_predict.predict_az_satellite
+				plot_predict_az, = subplot_zoom.b.plot(predict_time, predict_az, 'r', label="predict")
+
+		if available_pyorbital == 'yes':
+			figure_pyorbital = output_data.Read_pyorbital_data(self.pyorbital)
+			pyorbital_time = figure_pyorbital.pyorbital_simulation_time
+			pyorbital_alt = figure_pyorbital.pyorbital_alt_satellite
+			self.plot_pyorbital_alt, = self.a.plot(pyorbital_time, pyorbital_alt, 'y', label="pyorbital")
+
+			pyorbital_az = figure_pyorbital.pyorbital_az_satellite
+			self.plot_pyorbital_az, = self.b.plot(pyorbital_time, pyorbital_az, 'y', label="pyorbital")
+
+		if available_orbitron == 'yes':
+			from sys import argv
+			figure_orbitron = output_data.Read_orbitron_data(self.orbitron, self.object_name.name, argv[4])
+			orbitron_alt = figure_orbitron.orbitron_alt_satellite
+			orbitron_time = figure_orbitron.orbitron_time
+			self.plot_orbitron_alt, = self.a.plot(orbitron_time, orbitron_alt, 'm', label="orbitron")
+
+			orbitron_az = figure_orbitron.orbitron_az_satellite
+			self.plot_orbitron_az, = self.b.plot(orbitron_time, orbitron_az, 'm', label="orbitron")
+
+		if available_STK == 'yes':
+			figure_STK = output_data.Read_STK_data(self.STK, argv[3])
+			STK_alt = figure_STK.STK_alt_satellite
+			STK_time = figure_STK.STK_simulation_time
+			self.plot_STK_alt, = self.a.plot(STK_time, STK_alt, 'g', label ="STK")
+
+			STK_az = figure_STK.STK_az_satellite
+			self.plot_STK_az, = self.b.plot(STK_time, STK_az, 'g', label ="STK")
+
+		self.a.legend(loc = 2, borderaxespad = 0., prop={'size':12})
+		self.a.set_ylabel("Degrees")
+		# Grid is on
+		subplot_zoom.grid(True)
+		
+		# Figure controls	
+		canvas = FigureCanvasTkAgg(zoom, master = zoom_window)
+		canvas.show()
+		canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=0)
+
+		toolbar = NavigationToolbar2TkAgg(canvas, zoom_window )
+		toolbar.update()
+		canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=0)
+
+		
+		print datos
 		
 		zoom_window.mainloop()
 	
