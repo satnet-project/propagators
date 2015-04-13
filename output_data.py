@@ -133,10 +133,33 @@ class Read_STK_data:
 		names_TLE = open_names_TLE.readlines()
 		names_TLE = [item.rstrip('\n\r') for item in names_TLE]
 		names_TLE = [item.strip() for item in names_TLE]
+
+
 		
 		satellite = names_TLE[index_satellite]		
-		satellite = satellite.replace(satellite[satellite.index('('):(1 + satellite.index(')'))], '')
-		satellite = satellite.strip()
+
+		print "satellite: %s" %(satellite)
+		try:
+			satellite = satellite.replace(satellite[satellite.index('('):(1 + satellite.index(')'))], '')
+			print "satellite2: %s" %(satellite)
+
+		except:
+			pass
+		
+#		try:
+#			satellite = satellite.replace(' ', '_')
+#			print "satellite3: %s" %(satellite)
+#		
+#		except:
+#			pass
+#				
+#		try:
+#			satellite = satellite.strip()
+#			print "satellite4: %s" %(satellite)
+#			
+#		except:
+#			pass
+		
 		
 		# Rutina para obtener el numero del catalogo del NORAD correspondiente al satelite
 		open_NORAD_database = open(script_dir + '/NORAD_Catalog.csv')
@@ -146,6 +169,7 @@ class Read_STK_data:
 		for row in NORAD_database:
 				
 			if satellite.lower() in row[2].strip().lower():
+				print row[2]
 				number = row[0]
 				# Rutina para autocompletar los numberos.
 				if len(number) == 4:
@@ -158,6 +182,8 @@ class Read_STK_data:
 					number = '0000' + number
 				else:
 					pass
+				number = int(number)
+				print type(number)
 			else:
 				error = 1
 
@@ -165,20 +191,23 @@ class Read_STK_data:
 		open_names_STK = open(script_dir + '/results/STK/temp.txt')
 		names_STK = str(open_names_STK.readlines())
 		names_STK = names_STK.split()
+		
+		print names_STK
 
 		names_STK_final = []
 
 		for i in range(len(names_STK)):		
 			if 'Satellite' in names_STK[i]:
+				print names_STK[i]
 				import string
 				name_STK_final = string.replace(names_STK[i], 'Satellite-', '')
 				name_STK_final = string.replace(name_STK_final, ',', '')
 				name_STK_final = string.replace(name_STK_final, ':', '')
 				name_STK_final = string.replace(name_STK_final, "['Place-CUVI-To-", '')
 				name_STK_final = name_STK_final[-5:]
-				names_STK_final.append(name_STK_final)
+				names_STK_final.append(int(name_STK_final))
 
-		if names_STK_final.index(number):
+		if number in names_STK_final:
 			self.open_file_STK(family[0], names_STK_final.index(number), len(names_STK_final), script_dir)
 		
 	# Extraer los datos del fichero.
@@ -212,7 +241,7 @@ class Read_STK_data:
 			j = j + 1
 			try:
 				if j >= index_list[index] and j < (index_list[index + 1] - 2):
-					valor = int((float(row[0]) - 2440587.5)*86400)
+					valor = int((float(row[0]) - 2440587.5)*86400+3600)
 					self.STK_simulation_time.append(valor)
 					self.STK_az_satellite.append((row[1]))
 					self.STK_alt_satellite.append((row[2]))
@@ -844,11 +873,17 @@ class Read_data:
 		names_TLE = [item.rstrip('\n\r') for item in names_TLE]
 		names_TLE = [item.strip() for item in names_TLE]
 		
+		print "names_TLE"
+		print names_TLE
+		
 		satellite = names_TLE[index_satellite]		
-		satellite = satellite.replace(satellite[satellite.index('('):(1 + satellite.index(')'))], '')
+		print satellite
+#		satellite = satellite.replace(satellite[satellite.index('('):(1 + satellite.index(')'))], '')
 		satellite = satellite.strip()
 	
+		print "eooo"
 		print satellite
+		print "eooo"
 			
 		# Rutina para obtener el numero del catalogo del NORAD correspondiente al satelite
 		open_NORAD_database = open(script_dir + '/NORAD_Catalog.csv')
@@ -856,10 +891,9 @@ class Read_data:
 		NORAD_database = reader(open_NORAD_database)
 		
 		for row in NORAD_database:
-				
-			print row[2]
 			
 			if satellite.lower() in row[2].strip().lower():
+				print row[2]
 				number = row[0]
 				# Rutina para autocompletar los numberos.
 				if len(number) == 4:
@@ -872,6 +906,7 @@ class Read_data:
 					number = '0000' + number
 				else:
 					pass
+				print number
 			else:
 				error = 1
 
@@ -892,8 +927,12 @@ class Read_data:
 				name_STK_final = name_STK_final[-5:]
 				names_STK_final.append(name_STK_final)
 
-		if names_STK_final.index(number):
+
+		if number in names_STK_final:
 			self.open_file_STK(family[0], names_STK_final.index(number), len(names_STK_final), script_dir)
+
+#		if names_STK_final.index(number):
+#			self.open_file_STK(family[0], names_STK_final.index(number), len(names_STK_final), script_dir)
 		
 	# Extraer los datos del fichero.
 	def open_file_STK(self, family, index, list_length, script_dir):

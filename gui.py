@@ -907,7 +907,9 @@ class GUI:
 		from sys import argv
 		
 		zoom_window = tk.Toplevel()
-		zoom_window.title(self.zoom_combobox.get())
+		title_zoom_window = tk.StringVar(zoom_window)
+		title_zoom_window.set(self.zoom_combobox.get() + " of " + self.object_name.name )
+		zoom_window.title(title_zoom_window.get())
 		zoom_window.geometry("1024x768")
 				
 		actual_available = output_data.Check_data(self.index, self.object_name.name, argv[3], argv[4])

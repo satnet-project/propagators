@@ -112,7 +112,12 @@ class Solve_coordinates:
 		iterations = end_time - start_time
 		iterations = iterations - 1
 
+
+
 		n1 = (start_time + 2440587.5*86400)/86400 - 2415020
+
+		print n1
+
 
 		self.observer.date = n1
 
@@ -128,9 +133,12 @@ class Solve_coordinates:
 			time = ephem.Date(self.observer.date + ephem.second)
 			self.observer.date = time
 			
+			
+			# DJD = DJ - 2415020
+			
 			# UNIX Time
 			UnixTimeN = float(time)
-			UnixTimeN = int((UnixTimeN - 25567.5)*86400)
+			UnixTimeN = int((UnixTimeN - 25567.5)*86400-3600)
 
 			satellite.compute(self.observer)
 			altN = float(repr(satellite.alt))

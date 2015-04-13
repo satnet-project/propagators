@@ -282,7 +282,7 @@ python get_names.py $FAMILY
 echo " "
 echo "predict data"	
 chmod +x predict_sims.sh
-sudo ./predict_sims.sh $FAMILY $DATE $END_TIME
+bash predict_sims.sh $FAMILY $DATE $END_TIME
 
 # PyEphem data
 python pyephem_sims.py $FAMILY $DATE $END_TIME
@@ -318,13 +318,13 @@ rm SAT*
 
 mv COPY$FAMILY $FAMILY
 
-cd ../results/predict
-rm *
+#cd ../results/predict
+#rm *
 
-cd ../PyEphem
-rm *
+#cd ../PyEphem
+#rm *
 
-cd ../PyOrbital
-rm *
+#cd ../PyOrbital
+#rm *
 
-cd ..
+#cd ..
