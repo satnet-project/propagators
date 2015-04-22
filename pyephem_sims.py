@@ -138,7 +138,7 @@ class Solve_coordinates:
 			
 			# UNIX Time
 			UnixTimeN = float(time)
-			UnixTimeN = int((UnixTimeN - 25567.5)*86400-3600)
+			UnixTimeN = int((UnixTimeN - 25567.5)*86400-7200)
 
 			satellite.compute(self.observer)
 			altN = float(repr(satellite.alt))

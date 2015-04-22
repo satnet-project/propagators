@@ -138,10 +138,8 @@ class Read_STK_data:
 		
 		satellite = names_TLE[index_satellite]		
 
-		print "satellite: %s" %(satellite)
 		try:
 			satellite = satellite.replace(satellite[satellite.index('('):(1 + satellite.index(')'))], '')
-			print "satellite2: %s" %(satellite)
 
 		except:
 			pass
@@ -169,7 +167,6 @@ class Read_STK_data:
 		for row in NORAD_database:
 				
 			if satellite.lower() in row[2].strip().lower():
-				print row[2]
 				number = row[0]
 				# Rutina para autocompletar los numberos.
 				if len(number) == 4:
@@ -183,7 +180,6 @@ class Read_STK_data:
 				else:
 					pass
 				number = int(number)
-				print type(number)
 			else:
 				error = 1
 
@@ -192,13 +188,10 @@ class Read_STK_data:
 		names_STK = str(open_names_STK.readlines())
 		names_STK = names_STK.split()
 		
-		print names_STK
-
 		names_STK_final = []
 
 		for i in range(len(names_STK)):		
 			if 'Satellite' in names_STK[i]:
-				print names_STK[i]
 				import string
 				name_STK_final = string.replace(names_STK[i], 'Satellite-', '')
 				name_STK_final = string.replace(name_STK_final, ',', '')
@@ -872,18 +865,10 @@ class Read_data:
 		names_TLE = open_names_TLE.readlines()
 		names_TLE = [item.rstrip('\n\r') for item in names_TLE]
 		names_TLE = [item.strip() for item in names_TLE]
-		
-		print "names_TLE"
-		print names_TLE
-		
+
 		satellite = names_TLE[index_satellite]		
-		print satellite
 #		satellite = satellite.replace(satellite[satellite.index('('):(1 + satellite.index(')'))], '')
 		satellite = satellite.strip()
-	
-		print "eooo"
-		print satellite
-		print "eooo"
 			
 		# Rutina para obtener el numero del catalogo del NORAD correspondiente al satelite
 		open_NORAD_database = open(script_dir + '/NORAD_Catalog.csv')
@@ -893,7 +878,6 @@ class Read_data:
 		for row in NORAD_database:
 			
 			if satellite.lower() in row[2].strip().lower():
-				print row[2]
 				number = row[0]
 				# Rutina para autocompletar los numberos.
 				if len(number) == 4:
@@ -906,7 +890,6 @@ class Read_data:
 					number = '0000' + number
 				else:
 					pass
-				print number
 			else:
 				error = 1
 
@@ -971,6 +954,7 @@ class Read_data:
 					self.STK_alt_satellite.append((row[2]))
 			except IndexError:
 				pass
+			print STK_simulation_time[0]
 			
 
 

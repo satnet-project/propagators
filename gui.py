@@ -1056,8 +1056,15 @@ class Folders():
 		label_directory = tk.Label(folders_frame, textvariable = directory, bg='#F4F0CB')
 		label_directory.grid(column = 1, row = 0, columnspan = 1, rowspan = 1, ipady = 5, ipadx = 5)
 		
-		folders_window.geometry("400x150")
-		folders_windows.resizable(0, 0)
+		label_STK = tk.Label(folders_frame, text = 'Results STK', bg='#F4F0CB')
+		label_STK.grid(column = 0, row = 1, columnspan = 1, rowspan = 1, ipady = 5, ipadx = 5)
+		
+		label_Orbitron = tk.Label(folders_frame, text = 'Results Orbitron', bg='#F4F0CB')
+		label_Orbitron.grid(column = 0, row = 2, columnspan = 1, rowspan = 1, ipady = 5, ipadx = 5)
+		
+		
+		folders_window.geometry("450x200")
+		folders_window.resizable(0, 0)
 		folders_window.configure(bg='#F4F0CB')
 		folders_window.mainloop()
 		
