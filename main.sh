@@ -98,6 +98,8 @@ if [[ $? -eq 0 ]]; then
 				declare month=3
 			elif [ "$file_month" = "apr" ]; then
 		       		declare month=4
+			elif [ "$file_month" = "abr" ]; then
+				declare month=4
 			elif [ "$file_month" = "may" ]; then
  		       		declare month=5
 			elif [ "$file_month" = "jun" ]; then
@@ -307,7 +309,7 @@ read -e STK_FOLDER
 echo " "
 echo "$FAMILY family simulations done!"
 
-python gui.py $FAMILY COPY$FAMILY $STK_FOLDER $ORBITRON_FOLDER
+python gui.py $FAMILY $STK_FOLDER $ORBITRON_FOLDER
 
 # Remove garbage
 cd TLEs/

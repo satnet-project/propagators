@@ -138,6 +138,8 @@ class Read_STK_data:
 		
 		satellite = names_TLE[index_satellite]		
 
+		print "satellite: %s" %(satellite)
+
 		try:
 			satellite = satellite.replace(satellite[satellite.index('('):(1 + satellite.index(')'))], '')
 
@@ -180,8 +182,10 @@ class Read_STK_data:
 				else:
 					pass
 				number = int(number)
+				print "number %s" %(number)
 			else:
 				error = 1
+				print "error"
 
 		# Fichero con las simulaciones disponibles		
 		open_names_STK = open(script_dir + '/results/STK/temp.txt')

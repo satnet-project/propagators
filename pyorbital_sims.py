@@ -159,6 +159,7 @@ class Solve_coordinates:
 		site = lines[0]
 		lat = float(lines[1])
 		lon = float(lines[2])
+		lon = -lon
 		ele = int(lines[3])
 
 		return lon, lat, ele

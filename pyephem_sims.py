@@ -177,7 +177,7 @@ class Solve_coordinates:
 
 		site = lines[0]
 		lat = lines[1]
-		lon = lines[2]
+		lon = '-' + lines[2]
 		ele = int(lines[3])
 
 		return lon, lat, ele
