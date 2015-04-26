@@ -333,6 +333,8 @@ class Read_predict_data:
 		# localtime = utc_time + offset
 		# offset = local_time - utc_time
 		
+		import datetime
+		
 		offset = int(datetime.datetime.now().strftime("%s"))\
 		 - int(datetime.datetime.utcnow().strftime("%s"))	
 

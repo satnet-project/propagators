@@ -27,7 +27,6 @@
 	cd TLEs/
 	rm COPY*
 	rm xa*
-	rm SAT*
 
 	cd ../results/predict
 	rm SAT*
@@ -316,7 +315,6 @@ cd TLEs/
 
 rm $FAMILY
 rm xa*
-rm SAT*
 
 mv COPY$FAMILY $FAMILY
 
