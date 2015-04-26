@@ -1,6 +1,6 @@
 
 ################################################################################
-# Copyright 2014 Samuel Gongora Garcia (s.gongoragarcia@gmail.com)
+# Copyright 2015 Samuel Gongora Garcia (s.gongoragarcia@gmail.com)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -39,6 +39,7 @@ class Do_list:
 		self.show_satellite_list = []
 		self.tle_first_line_list = []
 		self.tle_second_line_list = []
+		
 		i = 0
 		j = 1
 		k = 2
@@ -47,6 +48,7 @@ class Do_list:
 			self.show_satellite_list.append(satellite_list[list_numbers[i]])
 			self.tle_first_line_list.append(satellite_list[j])
 			self.tle_second_line_list.append(satellite_list[k])
+			
 			j = list_numbers[i] + 4
 			k = list_numbers[i] + 5				
 			
@@ -63,11 +65,10 @@ class Do_list:
 
 class Solve_coordinates:
 
-	def __init__(self, satellites_name, lista_prueba, lista_prueba2):
+	def __init__(self, satellites_name, tle_first_line_list, tle_second_line_list):
 	
 		import ephem
-		import sys
-		import os
+		from sys import argv
 
 		self.satellites_number = len(satellites_name)
 
@@ -79,8 +80,8 @@ class Solve_coordinates:
 		self.observer.lat = ephem.degrees(lat)
 		self.observer.elevation = ele
 
-		self.observer.date = ephem.now()
-		self.observer.epoch = ephem.now() 
+#		self.observer.date = ephem.now()
+#		self.observer.epoch = ephem.now() 
 
 		self.observer.horizon = '0'
 
@@ -90,7 +91,7 @@ class Solve_coordinates:
 
 		# Provide data to pyephem_routine
 		for i in range(len(satellites_name)):
-			self.pyephem_routine(satellites_name[i], lista_prueba[i], lista_prueba2[i], i)
+			self.pyephem_routine(satellites_name[i], tle_first_line_list[i], tle_second_line_list[i], i)
 			i = i + 1
 #			bar.update(i+1)
 
@@ -99,33 +100,40 @@ class Solve_coordinates:
 
 	def pyephem_routine(self, satellite_name, line1, line2, i):
 
-		import sys
+		from sys import argv
 		import ephem
-		import math
+		from math import degrees
 	
 		satellite = ephem.readtle(satellite_name, line1, line2)
 		satellite.compute(self.observer)
 
-		start_time = int(sys.argv[2])
-		end_time = int(sys.argv[3])
+		start_time = int(argv[2])
+		end_time = int(argv[3])
 
 		iterations = end_time - start_time
 		iterations = iterations - 1
 
+		import datetime
+		
+		localtime = datetime.datetime.fromtimestamp(start_time)
+		utctime = datetime.datetime.utcfromtimestamp(start_time)
 
+		offset = int(localtime.strftime("%s")) - int(utctime.strftime("%s"))
 
+		# Get UTC UNIX time
+		start_time = start_time - offset
+		
+		print start_time
+		
 		n1 = (start_time + 2440587.5*86400)/86400 - 2415020
-
-		print n1
-
-
 		self.observer.date = n1
 
 		satellite.compute(self.observer)
 		alt1 = float(repr(satellite.alt))
-		alt1 = math.degrees(alt1)
+		alt1 = degrees(alt1)
 		az1 = float(repr(satellite.az))
-		az1 = math.degrees(az1)
+		az1 = degrees(az1)
+		
 		if alt1 >= 0:
 			self.output_data(satellite_name, start_time, alt1, az1)
 
@@ -142,9 +150,9 @@ class Solve_coordinates:
 
 			satellite.compute(self.observer)
 			altN = float(repr(satellite.alt))
-			altN = math.degrees(altN)
+			altN = degrees(altN)
 			azN = float(repr(satellite.az))
-			azN = math.degrees(azN)
+			azN = degrees(azN)
 			if altN >= 0:
 				self.output_data(satellite_name, UnixTimeN, altN, azN)
 

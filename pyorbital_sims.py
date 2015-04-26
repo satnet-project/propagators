@@ -1,6 +1,6 @@
 
 ################################################################################
-# Copyright 2014 Samuel Gongora Garcia (s.gongoragarcia@gmail.com)
+# Copyright 2015 Samuel Gongora Garcia (s.gongoragarcia@gmail.com)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -94,12 +94,16 @@ class Solve_coordinates:
 #		end_time = int(sys.argv[3])
 
 		start_time = int(sys.argv[2])
+#		start_time = start_time - 7200
 		end_time = int(sys.argv[3])
 
 		iterations = end_time - start_time
 		iterations = iterations - 1
+	
+		# Obtiene el tiempo UTC en formato datetime de un tiempo UNIX.	
+		time1 = datetime.datetime.utcfromtimestamp(start_time)
 		
-		time1 = datetime.datetime.fromtimestamp(start_time)
+		print time1
 
 		(lon, lat, ele) = self.get_location()
 

@@ -85,16 +85,29 @@ do
 
 	# Llamar a la rutina segundo a segundo
 
-	BEGIN=$START_TIME
-	END=$[$END_TIME + 1]
+#	BEGIN=$START_TIME
+#	BEGIN=$[$BEGIN]
+
+	declare -i BEGIN=1429214400
+
+	END=$[$END_TIME]
 	SATELLITEFILE=SATELLITEFILE
 	SATELLITEFINAL=SATELLITEFINAL
+
+	declare -i flag_neg=0
 
 	until [ $BEGIN -eq $END ]
 	do
 		predict -t $FILESPLITTED -f $SATELLITE $BEGIN -o $SATELLITEFILE
+		value=`cat $SATELLITEFILE`
+
+		if [ ${value:12:1} == "-" ]; then
+			flag_neg=1
+		fi
 		
-		cat $SATELLITEFILE >> $SATELLITE
+		if [ $flag_neg == "0" ]; then
+			cat $SATELLITEFILE >> $SATELLITE
+		fi
 		
 		BEGIN=$[$BEGIN + 1]
 		
