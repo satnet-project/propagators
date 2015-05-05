@@ -61,7 +61,7 @@ class Read_orbitron_data:
 
     def process_data(self, sat_selected):
 
-        self.orbitron_time = []
+        self.orbitron_simulation_time = []
         self.orbitron_az_satellite = []
         self.orbitron_alt_satellite = []
 
@@ -84,9 +84,13 @@ class Read_orbitron_data:
                 alt = alt.strip(' ')
                 az = az.strip(' ')
 
-                self.orbitron_time.append(unix_time)
+                self.orbitron_simulation_time.append(unix_time)
                 self.orbitron_az_satellite.append(az)
                 self.orbitron_alt_satellite.append(alt)
+                
+        self.orbitron_simulation_time = [int(item) for item in self.orbitron_simulation_time]
+        self.orbitron_alt_satellite = [float(item) for item in self.orbitron_alt_satellite]        
+        self.orbitron_az_satellite = [float(item) for item in self.orbitron_az_satellite]
 
     def local_to_unix(self, year, month, day, hour, minute, second):
 

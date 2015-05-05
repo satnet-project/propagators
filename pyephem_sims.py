@@ -113,17 +113,17 @@ class Solve_coordinates:
 		iterations = end_time - start_time
 		iterations = iterations - 1
 
-		import datetime
-		
-		localtime = datetime.datetime.fromtimestamp(start_time)
-		utctime = datetime.datetime.utcfromtimestamp(start_time)
-
-		offset = int(localtime.strftime("%s")) - int(utctime.strftime("%s"))
-
-		# Get UTC UNIX time
-		start_time = start_time - offset
-		
-		print start_time
+# 		import datetime
+# 		
+# 		localtime = datetime.datetime.fromtimestamp(start_time)
+# 		utctime = datetime.datetime.utcfromtimestamp(start_time)
+# 
+# 		offset = int(localtime.strftime("%s")) - int(utctime.strftime("%s"))
+# 
+# 		# Get UTC UNIX time
+# 		start_time = start_time - offset
+# 		
+# 		print start_time
 		
 		n1 = (start_time + 2440587.5*86400)/86400 - 2415020
 		self.observer.date = n1
@@ -146,7 +146,7 @@ class Solve_coordinates:
 			
 			# UNIX Time
 			UnixTimeN = float(time)
-			UnixTimeN = int((UnixTimeN - 25567.5)*86400-7200)
+			UnixTimeN = int((UnixTimeN - 25567.5)*86400)
 
 			satellite.compute(self.observer)
 			altN = float(repr(satellite.alt))

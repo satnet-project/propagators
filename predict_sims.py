@@ -20,6 +20,8 @@
 ################################################################################
 
 
+# argv[1] = family
+
 class Do_list:
 
     def __init__(self):
@@ -69,43 +71,63 @@ class Solve_coordinates:
 
         self.satellites_number = len(lista_elementos)
         
+        begin_time1 = 5
+        begin_time2 = 10
+        output_file1 = "ficherosalida1"
+        output_file2 = "ficherodesalida2"
+        
         # Provide data to pyephem_routine
         for i in range(len(lista_elementos)):
-            i = i + 1
+            i = i + 2
             
             # Create new threads
-            thread1 = myThread(1, "Thread-1", 1)
+            import threading
+            from sys import argv
+            myThread = threading.Thread()
+            thread1 = myThread(argv[1], lista_elementos[i], begin_time1, output_file1)
+            thread2 = myThread(argv[1], lista_elementos[i + 1], begin_time2, output_file2)
+            
             thread1.start()
-            thread2 = myThread(2, "Thread-2", 2)
             thread2.start()
 
 
-class myThread (threading.Thread):
+class myThread:
     
     def __init__(self, file, satellite, begin_time, output_file):
+ 
         import threading
         import time
         threading.Thread.__init__(self)
-        self.threadID = threadID
-        self.name = name
-        self.counter = counter
+ 
         
-    def run(self):
-        import subprocess
-        args = ("predict", "-t", file, "-f", satellite, begin_time, "-o", output_file)
-        compute = subprocess.call(args)
+        self.run(file, satellite, begin_time, output_file)
         
-        print "Starting " + self.name
-        print_time(self.name, self.counter, 5)
-        print "Exiting " + self.name
         
-        if flag_finish == 0:
-            thread.exit()
+    def run(self, file, satellite, begin_time, output_file):
+
+        print "file name is: %s" %(file)
+        print "satellite name is: %s" %(satellite)
+        print "begin time is: %d" %(begin_time)
+        print "output file is: %s" %(output_file)
+
+
+
+#        import subprocess
+#        args = ("predict", "-t", file, "-f", satellite, begin_time, "-o", output_file)
+#        compute = subprocess.call(args)
+#        
+#        print "Starting " + self.name
+#        print_time(self.name, self.counter, 5)
+#        print "Exiting " + self.name
+#        
+#        if flag_finish == 0:
+#            thread.exit()
         
 
 if __name__ == '__main__':
+
     print ""
-    print "PyOrbital data"
+    print "Predict data -test-"
     do_list = Do_list()
 
-    solve_coordinates = Solve_coordinates(do_list.mostrar_lista_satelites, do_list.mostrar_lista_linea1, do_list.mostrar_lista_linea2)
+    solve_coordinates = Solve_coordinates(do_list.show_satellite_list, do_list.tle_first_line_list, do_list.tle_second_line_list)

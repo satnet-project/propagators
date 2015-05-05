@@ -58,8 +58,8 @@ if [[ $? -eq 0 ]]; then
 		# create it.
 		mkdir TLEs/
 		cd TLEs/
-		chmod +x update_tles.sh
-		./update_tles.sh
+#		chmod +x update_tles.sh
+#		./update_tles.sh
 
 	elif [ -d $ACTUALDIR$TLESDIR ]; then
 		# If directory exist,
@@ -73,8 +73,8 @@ if [[ $? -eq 0 ]]; then
 			# TO-DO. Update only files needed.
 			cd ..
 
-			chmod +x update_tles.sh
-			./update_tles.sh
+#			chmod +x update_tles.sh
+#			./update_tles.sh
 		
 		elif [ -f amateur.txt ]; then
 			# amateur.txt exist		
@@ -122,14 +122,14 @@ if [[ $? -eq 0 ]]; then
 			fi
 
 			if [ $month -lt $system_month ]; then
-				chmod +x update_tles.sh
-				./update_tles.sh
+#				chmod +x update_tles.sh
+#				./update_tles.sh
 
 				echo "Database updated."
 			else
 				if [ $file_day -lt $system_day ]; then
-					chmod +x update_tles.sh
-					./update_tles.sh
+#					chmod +x update_tles.sh
+#					./update_tles.sh
 
 					echo "Database updated."
 				else
@@ -203,6 +203,7 @@ select opt_time in $OPTIONSTIME; do
         echo -e "Simulation will start right now!\n"
 		# Unix time
 		DATE=`date +%s`
+		echo $DATE
 		break
 	elif [ "$opt_time" = "Another" ]; then                
 		echo -e "The starting date and time should be entered now."
@@ -225,6 +226,9 @@ select opt_time in $OPTIONSTIME; do
 		read -e SECONDS
 
 		DATE=`date -d "$YEAR-$MONTH-$DAY $HOURS:$MINUTES:$SECONDS" "+%s"`
+		# Local time, i need universal time
+
+		echo $DATE
 
 		echo ""
 		break

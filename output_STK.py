@@ -45,7 +45,10 @@ class Read_STK_data:
 
         from os import listdir
         family = listdir(script_dir + '/results/STK')
-        family.remove('temp.txt')
+        try:
+            family.remove('temp.txt')
+        except:
+            pass
         
         open_names_TLE = open(script_dir + '/results/temp')
         names_TLE = open_names_TLE.readlines()
@@ -111,7 +114,9 @@ class Read_STK_data:
         self.STK_alt_satellite = []
         self.STK_az_satellite = []
         
-        offset = self.return_offset()
+#        offset = self.return_offset()
+
+        offset = 7200
 
         i = 0
         gaps = 1
@@ -144,8 +149,14 @@ class Read_STK_data:
             except IndexError:
                 pass
             
+        print self.STK_simulation_time[0]
+        print self.STK_simulation_time[1]
+            
     def return_offset(self):
         
-        offset = 7200
+        import datetime
+        
+        offset = int(datetime.datetime.now().strftime("%s"))\
+         - int(datetime.datetime.utcnow().strftime("%s"))  
         
         return offset

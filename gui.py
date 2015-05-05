@@ -79,7 +79,8 @@ class GUI:
 		import get_elements
 		import Tkinter as tk
 		from matplotlib.figure import Figure
-		from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+		from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+		from matplotlib.backends.backend_tkagg import NavigationToolbar2TkAgg
 		import matplotlib.pyplot as plt
 		import output_data
 		import ttk
@@ -101,7 +102,8 @@ class GUI:
 		available_STK = actual_available.STK
 
 		# Plot 6,7
-		self.f = Figure(figsize=(6,7), dpi = 80, edgecolor="#DED29E", facecolor="#DED29E")
+		self.f = Figure(figsize=(6,7), dpi = 80, edgecolor="#DED29E",\
+					 facecolor="#DED29E")
 		self.text = self.f.suptitle(self.object_name.name, fontsize = 16)
 
 		# Subplots altitude & azimuth
@@ -115,40 +117,49 @@ class GUI:
 			figure_pyephem = Read_pyephem_data(self.pyephem)
 			pyephem_time = figure_pyephem.pyephem_simulation_time		
 			pyephem_alt = figure_pyephem.pyephem_alt_satellite
-			self.plot_pyephem_alt, = self.a.plot(pyephem_time, pyephem_alt, 'b', label="PyEphem")
+			self.plot_pyephem_alt, = self.a.plot(pyephem_time, pyephem_alt, 'b',\
+												 label="PyEphem")
 
 			pyephem_az = figure_pyephem.pyephem_az_satellite
-			self.plot_pyephem_az, = self.b.plot(pyephem_time, pyephem_az, 'b', label="PyEphem")
+			self.plot_pyephem_az, = self.b.plot(pyephem_time, pyephem_az, 'b',\
+											 label="PyEphem")
 
 		if available_predict == 'yes':
 			from output_predict import Read_predict_data
 			figure_predict = Read_predict_data(self.predict)
 			predict_time = figure_predict.predict_simulation_time
 			predict_alt = figure_predict.predict_alt_satellite
-			self.plot_predict_alt, = self.a.plot(predict_time, predict_alt, 'r', label="predict")
+			self.plot_predict_alt, = self.a.plot(predict_time, predict_alt, 'r',\
+												 label="predict")
 
 			predict_az = figure_predict.predict_az_satellite
-			self.plot_predict_az, = self.b.plot(predict_time, predict_az, 'r', label="predict")
+			self.plot_predict_az, = self.b.plot(predict_time, predict_az, 'r',\
+											 label="predict")
 
 		if available_pyorbital == 'yes':
 			from output_PyOrbital import Read_pyorbital_data
 			figure_pyorbital = Read_pyorbital_data(self.pyorbital)
 			pyorbital_time = figure_pyorbital.pyorbital_simulation_time
 			pyorbital_alt = figure_pyorbital.pyorbital_alt_satellite
-			self.plot_pyorbital_alt, = self.a.plot(pyorbital_time, pyorbital_alt, 'y', label="pyorbital")
+			self.plot_pyorbital_alt, = self.a.plot(pyorbital_time, pyorbital_alt, 'y',\
+												 label="pyorbital")
 
 			pyorbital_az = figure_pyorbital.pyorbital_az_satellite
-			self.plot_pyorbital_az, = self.b.plot(pyorbital_time, pyorbital_az, 'y', label="pyorbital")
+			self.plot_pyorbital_az, = self.b.plot(pyorbital_time, pyorbital_az, 'y',\
+												 label="pyorbital")
 
 		if available_orbitron == 'yes':
 			from output_Orbitron import Read_orbitron_data
-			figure_orbitron = Read_orbitron_data(self.orbitron, self.object_name.name, Orb_dir)
+			figure_orbitron = Read_orbitron_data(self.orbitron, self.object_name.name,\
+												 Orb_dir)
 			orbitron_alt = figure_orbitron.orbitron_alt_satellite
 			orbitron_time = figure_orbitron.orbitron_time
-			self.plot_orbitron_alt, = self.a.plot(orbitron_time, orbitron_alt, 'm', label="orbitron")
+			self.plot_orbitron_alt, = self.a.plot(orbitron_time, orbitron_alt, 'm',\
+												 label="orbitron")
 
 			orbitron_az = figure_orbitron.orbitron_az_satellite
-			self.plot_orbitron_az, = self.b.plot(orbitron_time, orbitron_az, 'm', label="orbitron")
+			self.plot_orbitron_az, = self.b.plot(orbitron_time, orbitron_az, 'm',\
+												 label="orbitron")
 
 		if available_STK == 'yes':
 			from output_STK import Read_STK_data
@@ -192,14 +203,16 @@ class GUI:
 		self.c = self.g.add_subplot(111)
 
 		right_frame = tk.Frame(root, height = 330, width = 500, bd = 0, bg = '#F4F0CB')
-		right_frame.grid(column = 1, row = 0, columnspan = 1, rowspan = 1, padx = 5, pady = 5)
+		right_frame.grid(column = 1, row = 0, columnspan = 1, rowspan = 1,\
+						 padx = 5, pady = 5)
 		right_frame.grid_propagate(0)
 
 		self.canvas2 = FigureCanvasTkAgg(self.g, master=right_frame)
 		self.canvas2.show()
 		self.canvas2.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=0)
 
-		data_frame = tk.LabelFrame(root, text = "Data", height = 215, width = 500, padx = 5, pady = 5, bg='#F4F0CB')
+		data_frame = tk.LabelFrame(root, text = "Data", height = 215, width = 500,\
+								 padx = 5, pady = 5, bg='#F4F0CB')
 		data_frame.grid(column = 1, row = 1, columnspan = 1, rowspan = 1)
 		data_frame.columnconfigure(0, minsize = 170)
 		data_frame.columnconfigure(1, minsize = 20)
@@ -220,23 +233,27 @@ class GUI:
 		self.file_name = tk.StringVar()
 		self.file_name.set(argv[1])
 
-		file_ = tk.Label(data_frame, textvariable = self.file_name, font = arial11norm, bg='#F4F0CB')
+		file_ = tk.Label(data_frame, textvariable = self.file_name, font = arial11norm,\
+						 bg='#F4F0CB')
 		file_.grid(column = 0, row = 1, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		# Inclination
 		elements = get_elements.Get_elements(argv[1], self.index)
-		label_incl = tk.Label(data_frame, text="Inclination", font = arial11italic, bg='#F4F0CB')
+		label_incl = tk.Label(data_frame, text="Inclination", font = arial11italic,\
+							 bg='#F4F0CB')
 		label_incl.grid(column = 0, row = 2, columnspan = 1, rowspan = 1, sticky = tk.W)
 		
 		self.text_incl = tk.DoubleVar()
 		self.text_incl.set(elements.inclination)
 
-		incl = tk.Label(data_frame, textvariable = self.text_incl, font = arial11norm, bg='#F4F0CB')
+		incl = tk.Label(data_frame, textvariable = self.text_incl, font = arial11norm,\
+					 bg='#F4F0CB')
 		incl.grid(column = 0, row = 2, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 
 		# Simulations availables 
-		label_sims = tk.Label(data_frame, text = "Choose a simulation!", font = arial11italic, bg='#F4F0CB')
+		label_sims = tk.Label(data_frame, text = "Choose a simulation!",\
+							 font = arial11italic, bg='#F4F0CB')
 		label_sims.grid(column = 0, row = 3, columnspan = 1, rowspan = 2, sticky = tk.W)
 
 		# Generate data
@@ -349,7 +366,8 @@ class GUI:
 		self.zoom_combobox.grid(column = 2, row = 6, columnspan = 2, rowspan = 2, sticky = tk.W)
 
 		# Boton para ampliar la ventana
-		zoom_button = tk.Button(data_frame, text = 'Zoom!', font = arial11norm, command = self.zoom_routine)
+		zoom_button = tk.Button(data_frame, text = 'Zoom!', font = arial11norm,\
+							 command = self.zoom_routine)
 		zoom_button.grid(column = 3, row = 6, columnspan = 1, rowspan = 2, sticky = tk.E)
 	
 		# Boton para guardar las simulaciones en formato de texto		
@@ -363,7 +381,8 @@ class GUI:
 		help_label.grid(column = 2, row = 9, columnspan = 3, rowspan = 2)
 
 		# Control frame
-		control_frame = tk.LabelFrame(root, text = "Controls", height = 55, width = 500, padx = 5, pady = 5, bg='#F4F0CB')
+		control_frame = tk.LabelFrame(root, text = "Controls", height = 55, width = 500,\
+									 padx = 5, pady = 5, bg='#F4F0CB')
 		control_frame.grid(column = 1, row = 2, columnspan = 1, rowspan = 1)
 		control_frame.grid_propagate(0)
 
@@ -371,13 +390,16 @@ class GUI:
 		control_frame.columnconfigure(1, minsize = 40)
 		control_frame.columnconfigure(2, minsize = 340)
 
-		self.next = tk.Button(master = control_frame, text='Next', command=self.next, bg='#B3A580', font = arial11norm)
+		self.next = tk.Button(master = control_frame, text='Next', command=self.next,\
+							 bg='#B3A580', font = arial11norm)
 		self.next.grid(column = 0, row = 0, columnspan = 1, rowspan = 1)
 
-		self.forward = tk.Button(master = control_frame, text='Forward', command=self.forward, bg='#B3A580', font = arial11norm)
+		self.forward = tk.Button(master = control_frame, text='Forward', command=self.forward,\
+								 bg='#B3A580', font = arial11norm)
 		self.forward.grid(column = 1, row = 0, columnspan = 1, rowspan = 1)
 
-		button = tk.Button(master = control_frame, text='Quit', command=self._quit, bg='#B3A580', font = arial11norm)
+		button = tk.Button(master = control_frame, text='Quit', command=self._quit,\
+						 bg='#B3A580', font = arial11norm)
 		button.grid(column = 2, row = 0, columnspan = 1, rowspan = 1, sticky = tk.E)
 
 		# Check buttons state
@@ -440,11 +462,12 @@ class GUI:
 		self.text.set_text(name_object.name)
 		self.text_incl.set(elements.inclination)
 
-
-		# Check if data is available and print it
-
+		# Actually the next series of functions only update data
+		# if, for any reason, there is no previous data these
+		# functions won't work. TO-DO.
 		if available_pyephem == 'yes':
-			figure_pyephem = output_data.Read_pyephem_data(self.pyephem)
+			from output_PyEphem import Read_pyephem_data
+			figure_pyephem = Read_pyephem_data(self.pyephem)
 			pyephem_time = figure_pyephem.pyephem_simulation_time
 			
 			pyephem_alt = figure_pyephem.pyephem_alt_satellite
@@ -456,7 +479,8 @@ class GUI:
 			self.plot_pyephem_az.set_xdata(pyephem_time)
 
 		if available_predict == 'yes':
-			figure_predict = output_data.Read_predict_data(self.predict)
+			from output_predict import Read_predict_data
+			figure_predict = Read_predict_data(self.predict)
 			predict_time = figure_predict.predict_simulation_time
 
 			predict_alt = figure_predict.predict_alt_satellite
@@ -468,7 +492,8 @@ class GUI:
 			self.plot_predict_az.set_xdata(predict_time)
 
 		if available_pyorbital == 'yes':
-			figure_pyorbital = output_data.Read_pyorbital_data(self.pyorbital)
+			from output_PyOrbital import Read_pyorbital_data
+			figure_pyorbital = Read_pyorbital_data(self.pyorbital)
 			pyorbital_time = figure_pyorbital.pyorbital_simulation_time
 
 			pyorbital_alt = figure_pyorbital.pyorbital_alt_satellite
@@ -480,8 +505,9 @@ class GUI:
 			self.plot_pyorbital_az.set_xdata(pyorbital_time)
 
 		if available_orbitron == 'yes':
+			from output_Orbitron import Read_orbitron_data
 			from sys import argv
-			figure_orbitron = output_data.Read_orbitron_data(self.orbitron,\
+			figure_orbitron = Read_orbitron_data(self.orbitron,\
 			self.object_name.name, argv[3])
 
 			orbitron_time = figure_orbitron.orbitron_time
@@ -494,7 +520,8 @@ class GUI:
 			self.plot_orbitron_az.set_xdata(orbitron_time)
 
 		if available_STK == 'yes':
-			figure_STK = output_data.Read_STK_data(self.STK, argv[2])
+			from output_STK import Read_STK_data
+			figure_STK = Read_STK_data(self.STK, argv[2])
 
 			STK_alt = figure_STK.STK_alt_satellite
 			STK_time = figure_STK.STK_simulation_time
@@ -569,7 +596,8 @@ class GUI:
 		self.text_incl.set(elements.inclination)
 
 		if available_pyephem == 'yes':
-			figure_pyephem = output_data.Read_pyephem_data(self.pyephem)
+			from output_PyEphem import Read_pyephem_data
+			figure_pyephem = Read_pyephem_data(self.pyephem)
 			pyephem_time = figure_pyephem.pyephem_simulation_time
 			
 			pyephem_alt = figure_pyephem.pyephem_alt_satellite
@@ -581,7 +609,8 @@ class GUI:
 			self.plot_pyephem_az.set_xdata(pyephem_time)
 
 		if available_predict == 'yes':
-			figure_predict = output_data.Read_predict_data(self.predict)
+			from output_predict import Read_predict_data
+			figure_predict = Read_predict_data(self.predict)
 			predict_time = figure_predict.predict_simulation_time
 
 			predict_alt = figure_predict.predict_alt_satellite
@@ -593,7 +622,8 @@ class GUI:
 			self.plot_predict_az.set_xdata(predict_time)
 
 		if available_pyorbital == 'yes':
-			figure_pyorbital = output_data.Read_pyorbital_data(self.pyorbital)
+			from output_PyOrbital import Read_pyorbital_data
+			figure_pyorbital = Read_pyorbital_data(self.pyorbital)
 			pyorbital_time = figure_pyorbital.pyorbital_simulation_time
 
 			pyorbital_alt = figure_pyorbital.pyorbital_alt_satellite
@@ -605,8 +635,9 @@ class GUI:
 			self.plot_pyorbital_az.set_xdata(pyorbital_time)
 
 		if available_orbitron == 'yes':
+			from output_Orbitron import Read_orbitron_data
 			from sys import argv
-			figure_orbitron = output_data.Read_orbitron_data(self.orbitron,\
+			figure_orbitron = Read_orbitron_data(self.orbitron,\
 			self.object_name.name, argv[3])
 
 			orbitron_time = figure_orbitron.orbitron_time
@@ -619,7 +650,8 @@ class GUI:
 			self.plot_orbitron_az.set_xdata(orbitron_time)
 
 		if available_STK == 'yes':
-			figure_STK = output_data.Read_STK_data(self.STK, argv[2])
+			from output_STK import Read_STK_data
+			figure_STK = Read_STK_data(self.STK, argv[2])
 
 			STK_alt = figure_STK.STK_alt_satellite
 			STK_time = figure_STK.STK_simulation_time
@@ -799,103 +831,6 @@ class GUI:
 		f.writelines(("%s\n" % line for line in text))
 		f.close()
 
-	def save_data(self):
-		
-		# Crear una clase aparte
-
-		import tkMessageBox
-		tkMessageBox.showinfo("Wait until simulations end.", "This could take a while.")
-
-		index = 0
-		i = 0
-
-		text = []
-		text.append("==================================")
-		from sys import argv
-		text.append(" Family %s" %(argv[1]))
-		text.append("==================================")
-
-		for i in range(self.length):
-
-			import get_elements
-			object_name = get_elements.Get_name(i)
-
-			text.append(" Satellite: %s" %(object_name.name))
-
-			from sys import argv
-			from output_data import Check_data
-			actual_available = Check_data(index, object_name.name, argv[2], argv[3])
-			available_STK = actual_available.STK 
-
-			if available_STK == 'yes':
-
-				available_predict = actual_available.predict
-				available_pyephem = actual_available.pyephem
-				available_pyorbital = actual_available.pyorbital
-				available_orbitron = actual_available.orbitron
-
-				from output_data import Read_data
-				from sys import argv
-				data = Read_data(index, index, index, \
-				index, self.object_name.name, index, argv[2], argv[3])
-
-				if available_predict == 'yes':
-
-					(std_predict_alt, std_predict_az) = data.STK_vs_predict()
-
-					std_predict_alt = round(float(std_predict_alt), 7)
-					std_predict_az = round(float(std_predict_az), 7)
-
-					text.append(" predict data")
-					text.append(" Alt: %s Az: %s" %(std_predict_alt, std_predict_az))
-
-				if available_pyephem == 'yes':
-
-					(std_pyephem_alt, std_pyephem_az) = data.STK_vs_PyEphem()
-
-					std_pyephem_alt = round(float(std_pyephem_alt), 7)
-					std_pyephem_az = round(float(std_pyephem_az), 7)
-
-					text.append(" PyEphem data")
-					text.append(" Alt: %s Az: %s" %(std_pyephem_alt, std_pyephem_az))
-
-				if available_pyorbital == 'yes':
-
-					(std_pyorbital_alt, std_pyorbital_az) = data.STK_vs_PyOrbital()
-
-					std_pyorbital_alt = round(float(std_pyorbital_alt), 7)
-					std_pyrobital_az = round(float(std_pyorbital_az), 7)
-
-					text.append(" PyOrbital data")
-					text.append(" Alt: %s Az: %s" %(std_pyorbital_alt, std_pyorbital_az))
-
-				if available_orbitron == 'yes':
-
-					(std_orbitron_alt, std_orbitron_az) = data.STK_vs_Orbitron()
-
-					std_orbitron_alt = round(float(std_orbitron_alt), 7)
-					std_orbitron_az = round(float(std_orbitron_az), 7)
-
-					text.append(" Orbitron data")
-					text.append(" Alt: %s Az: %s" %(std_orbitron_alt, std_orbitron_az))
-
-
-			elif available_STK == 'no':
-
-				print "Data don't available %s" %(i)
-
-			else:
-
-				pass
-				# pass
-
-			i = i + 1
-			index = index + 1
-			text.append("")
-
-		return text
-
-		# save in pdf file
 
 	def std_simulations(self):
 
@@ -1102,13 +1037,18 @@ class GUI:
 		
 		print "precanvas"
 		# Figure controls	
-		canvas = FigureCanvasTkAgg(zoom, master = zoom_window)
-		canvas.show()
-		canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=0)
+		zoom_canvas = FigureCanvasTkAgg(zoom, zoom_window)
+		zoom_canvas.show()
+		zoom_canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=0)
+		
+		
+		# Subclase
+#		Navigation = NavigationToolbar2TkAgg()
 
-		toolbar = NavigationToolbar2TkAgg(canvas, zoom_window )
-		toolbar.update()
-		canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=0)
+		zoom_toolbar = NavigationToolbar2TkAgg(zoom_canvas, zoom_window )
+#		zoom_toolbar = Navigation(zoom_canvas, zoom_window)
+		zoom_toolbar.update()
+		zoom_canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=0)
 
 		print "postcanvas"
 

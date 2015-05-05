@@ -61,15 +61,15 @@ class Read_predict_data:
         # localtime = utc_time + offset
         # offset = local_time - utc_time
         
-        import datetime
-        
-        offset = int(datetime.datetime.now().strftime("%s"))\
-         - int(datetime.datetime.utcnow().strftime("%s"))    
+#         import datetime
+#         
+#         offset = int(datetime.datetime.now().strftime("%s"))\
+#          - int(datetime.datetime.utcnow().strftime("%s"))    
 
         with open(name) as tsv:
             for line in csv.reader(tsv, delimiter = "\t"):
                 if float(line[1]) >= 0:
-                    linea0 = float(line[0]) - offset
+                    linea0 = float(line[0])
                     self.predict_simulation_time.append(linea0)
                     self.predict_alt_satellite.append(float(line[1]))
                     self.predict_az_satellite.append(float(line[2]))

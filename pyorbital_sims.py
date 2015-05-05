@@ -100,10 +100,12 @@ class Solve_coordinates:
 		iterations = end_time - start_time
 		iterations = iterations - 1
 	
-		# Obtiene el tiempo UTC en formato datetime de un tiempo UNIX.	
-		time1 = datetime.datetime.utcfromtimestamp(start_time)
+# 		# Obtiene el tiempo UTC en formato datetime de un tiempo UNIX.	
+ 		time1 = datetime.datetime.utcfromtimestamp(start_time)
+# 		
+ 		print time1
 		
-		print time1
+#		time1 = start_time
 
 		(lon, lat, ele) = self.get_location()
 

@@ -64,4 +64,9 @@ class Read_pyephem_data:
 				self.pyephem_simulation_time.append(int(line[0]))
 				self.pyephem_alt_satellite.append(float(line[1]))
 				self.pyephem_az_satellite.append(float(line[2]))
+				
+
+		self.pyephem_simulation_time = [int(item) for item in self.pyephem_simulation_time]
+		self.pyephem_alt_satellite = [float(item) for item in self.pyephem_alt_satellite]		
+		self.pyephem_az_satellite = [float(item) for item in self.pyephem_az_satellite]
 

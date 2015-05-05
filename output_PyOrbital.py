@@ -60,10 +60,14 @@ class Read_pyorbital_data:
         self.pyorbital_alt_satellite = []
         self.pyorbital_az_satellite = []
 
-        import csv
+        from csv import reader
 
         with open(name) as tsv:
-            for line in csv.reader(tsv, delimiter = "\t"):
+            for line in reader(tsv, delimiter = "\t"):
                 self.pyorbital_simulation_time.append(line[0])
                 self.pyorbital_alt_satellite.append(float(line[1]))
-                self.pyorbital_az_satellite.append(float(line[2]))
+                self.pyorbital_az_satellite.append(float(line[2]))              
+                
+        self.pyorbital_simulation_time = [int(item) for item in self.pyorbital_simulation_time]
+        self.pyorbital_alt_satellite = [float(item) for item in self.pyorbital_alt_satellite]
+        self.pyorbital_az_satellite = [float(item) for item in self.pyorbital_az_satellite]
