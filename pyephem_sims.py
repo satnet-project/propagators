@@ -80,23 +80,14 @@ class Solve_coordinates:
 		self.observer.lat = ephem.degrees(lat)
 		self.observer.elevation = ele
 
-#		self.observer.date = ephem.now()
-#		self.observer.epoch = ephem.now() 
+		self.observer.epoch = ephem.now() 
 
 		self.observer.horizon = '0'
-
-		# TO-DO
-#		import progressbar
-#		bar = progressbar.ProgressBar(maxval=len(satellites_name), widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()])
 
 		# Provide data to pyephem_routine
 		for i in range(len(satellites_name)):
 			self.pyephem_routine(satellites_name[i], tle_first_line_list[i], tle_second_line_list[i], i)
 			i = i + 1
-#			bar.update(i+1)
-
-#		bar.finish()
-		
 
 	def pyephem_routine(self, satellite_name, line1, line2, i):
 
@@ -112,28 +103,19 @@ class Solve_coordinates:
 
 		iterations = end_time - start_time
 		iterations = iterations - 1
-
-# 		import datetime
-# 		
-# 		localtime = datetime.datetime.fromtimestamp(start_time)
-# 		utctime = datetime.datetime.utcfromtimestamp(start_time)
-# 
-# 		offset = int(localtime.strftime("%s")) - int(utctime.strftime("%s"))
-# 
-# 		# Get UTC UNIX time
-# 		start_time = start_time - offset
-# 		
-# 		print start_time
 		
 		n1 = (start_time + 2440587.5*86400)/86400 - 2415020
 		self.observer.date = n1
 
 		satellite.compute(self.observer)
+
 		alt1 = float(repr(satellite.alt))
+
 		alt1 = degrees(alt1)
 		az1 = float(repr(satellite.az))
+
 		az1 = degrees(az1)
-		
+
 		if alt1 >= 0:
 			self.output_data(satellite_name, start_time, alt1, az1)
 
@@ -185,7 +167,8 @@ class Solve_coordinates:
 
 		site = lines[0]
 		lat = lines[1]
-		lon = '-' + lines[2]
+		lon = lines[2]
+		lon = '-' + lon
 		ele = int(lines[3])
 
 		return lon, lat, ele
