@@ -303,7 +303,7 @@ echo "Family $FAMILY"
 echo -e "Introduce Orbitron simulations folder: \c"
 read -e ORBITRON_FOLDER
 
-wine "C:\\Program Files\Orbitron\Orbitron.exe"
+# wine "C:\\Program Files\Orbitron\Orbitron.exe"
 
 # Request for STK data
 echo "Perfom STK simulations"
