@@ -188,3 +188,9 @@ cp predict_sims.sh ~/$INSDIR			# predict script
 cp get_elements.py ~/$INSDIR			# Get elements from TLE
 cp get_names.py ~/$INSDIR				# Get satellite names from TLE file
 cp update_tles.sh ~/$INSDIR				# Update TLE files from Celestrak
+# Output scripts
+cp output_Orbitron.py ~/$INSDIR
+cp output_PyOrbital.py ~/$INSDIR
+cp output_PyEphem.py ~/$INSDIR
+cp output_STK.py ~/$INSDIR
+cp output_predict.py ~/$INSDIR
