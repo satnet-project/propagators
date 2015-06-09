@@ -33,7 +33,7 @@ class Read_data:
 		# PyEphem stuff
 		self.index_pyephem = index_pyephem
 		# predict stuff		
-		self.index_predict = index_predict + 1
+		self.index_predict = index_predict
 		# PyOrbital stuff
 		self.index_pyorbital = index_pyorbital
 		# STK stuff		
@@ -377,45 +377,52 @@ class Read_data:
 		STK_alt_satellite = STK_data.STK_alt_satellite
 		
 		from output_Orbitron import Read_orbitron_data
-		Orbitron_data = Read_orbitron_data()
-		orbitron_simulation_time = Orbitron_data.orbitron_simulation_time
-		orbitron_az_satellite = Orbitron_data.orbitron_az_satellite
-		orbitron_alt_satellite = Orbitron_data.orbitron_alt_satellite
+		try:
+			Orbitron_data = Read_orbitron_data(self.index_orbitron, self.sat_selected, self.orbitron_dir)
+			orbitron_simulation_time = Orbitron_data.orbitron_simulation_time
+			orbitron_az_satellite = Orbitron_data.orbitron_az_satellite
+			orbitron_alt_satellite = Orbitron_data.orbitron_alt_satellite
+
+
+			list_alt = []
+			list_az = []
+
+			time_intersected = []
+			time_intersected = list(set(STK_simulation_time).intersection(orbitron_simulation_time))
+
+			for i in range(len(time_intersected)):
+		
+				difference_alt = \
+				float(orbitron_alt_satellite[orbitron_simulation_time.index(time_intersected[i])]) -\
+				float(STK_alt_satellite[STK_simulation_time.index(time_intersected[i])])
+
+				list_alt.append(difference_alt)
+
+				difference_az = \
+				float(orbitron_az_satellite[orbitron_simulation_time.index(time_intersected[i])]) - \
+				float(STK_az_satellite[STK_simulation_time.index(time_intersected[i])])
+
+				list_az.append(difference_az)
+
+			# Force mean to zero
+			m = 0
+
+			from numpy import asarray
+			alt = asarray(list_alt)
+			az = asarray(list_az)
+			
+			# Standard deviation
+			from numpy import sqrt
+			std_alt = sqrt(mean((alt-m)**2))
+			std_az = sqrt(mean((az-m)**2))
+
+			return std_alt, std_az
+
+		except:
+			pass
 
 		# Differences
-		list_alt = []
-		list_az = []
 
-		time_intersected = []
-		time_intersected = list(set(STK_simulation_time).intersection(orbitron_simulation_time))
-
-		for i in range(len(time_intersected)):
-		
-			difference_alt = \
-			float(orbitron_alt_satellite[orbitron_simulation_time.index(time_intersected[i])]) -\
-			float(STK_alt_satellite[STK_simulation_time.index(time_intersected[i])])
-
-			list_alt.append(difference_alt)
-
-			difference_az = \
-			float(orbitron_az_satellite[orbitron_simulation_time.index(time_intersected[i])]) - \
-			float(STK_az_satellite[STK_simulation_time.index(time_intersected[i])])
-
-			list_az.append(difference_az)
-
-		# Force mean to zero
-		m = 0
-
-		from numpy import asarray
-		alt = asarray(list_alt)
-		az = asarray(list_az)
-		
-		# Standard deviation
-		from numpy import sqrt
-		std_alt = sqrt(mean((alt-m)**2))
-		std_az = sqrt(mean((az-m)**2))
-
-		return std_alt, std_az
 
 	# Altitudes and azimuths	
 	def STK_vs_Orbitron_comp(self):
@@ -434,34 +441,36 @@ class Read_data:
 		chdir(self.directorio_script)
 		
 		from output_Orbitron import Read_orbitron_data
-		Orbitron_data = Read_orbitron_data()
-		orbitron_simulation_time = Orbitron_data.orbitron_simulation_time
-		orbitron_az_satellite = Orbitron_data.orbitron_az_satellite
-		orbitron_alt_satellite = Orbitron_data.orbitron_alt_satellite
+		try:
+			Orbitron_data = Read_orbitron_data(self.index_orbitron, self.sat_selected, self.orbitron_dir)
+			orbitron_simulation_time = Orbitron_data.orbitron_simulation_time
+			orbitron_az_satellite = Orbitron_data.orbitron_az_satellite
+			orbitron_alt_satellite = Orbitron_data.orbitron_alt_satellite
 
-		# Differences
-		list_alt = []
-		list_az = []
+			# Differences
+			list_alt = []
+			list_az = []
 
-		time_intersected = []
-		time_intersected = list(set(STK_simulation_time).intersection(orbitron_simulation_time))
+			time_intersected = []
+			time_intersected = list(set(STK_simulation_time).intersection(orbitron_simulation_time))
 
-		for i in range(len(time_intersected)):
-		
-			difference_alt = \
-			float(orbitron_alt_satellite[orbitron_simulation_time.index(time_intersected[i])]) -\
-			float(STK_alt_satellite[STK_simulation_time.index(time_intersected[i])])
+			for i in range(len(time_intersected)):
+			
+				difference_alt = \
+				float(orbitron_alt_satellite[orbitron_simulation_time.index(time_intersected[i])]) -\
+				float(STK_alt_satellite[STK_simulation_time.index(time_intersected[i])])
 
-			list_alt.append(difference_alt)
+				list_alt.append(difference_alt)
 
-			difference_az = \
-			float(orbitron_az_satellite[orbitron_simulation_time.index(time_intersected[i])]) - \
-			float(STK_az_satellite[STK_simulation_time.index(time_intersected[i])])
+				difference_az = \
+				float(orbitron_az_satellite[orbitron_simulation_time.index(time_intersected[i])]) - \
+				float(STK_az_satellite[STK_simulation_time.index(time_intersected[i])])
 
-			list_az.append(difference_az)
+				list_az.append(difference_az)
 
-		return time_intersected, list_alt, list_az
-
+			return time_intersected, list_alt, list_az
+		except:
+			pass
 
 class Check_data:
 
