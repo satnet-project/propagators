@@ -76,13 +76,13 @@ class Solve_coordinates:
 		for i in range(len(lista_elementos)):
 			j = i + 1
 			try:
-				self.pyephem_routine(lista_elementos[i], lista_prueba[i], lista_prueba2[i], i)
+				self.pyorbital_routine(lista_elementos[i], lista_prueba[i], lista_prueba2[i], i)
 			except NotImplementedError:
 				print "pyorbital - Simulation [%d/%d] error!" %(j, len(lista_elementos))
 				print "Deep space satellite - Propagation not available"
 			i = i + 1
 
-	def pyephem_routine(self, satellite_name, line1, line2, i):
+	def pyorbital_routine(self, satellite_name, line1, line2, i):
 
 		import sys
 		import pyorbital.orbital
@@ -90,33 +90,23 @@ class Solve_coordinates:
 
 		satellite = pyorbital.orbital.Orbital(satellite_name, line1 = line1, line2 = line2)
 		
-#		start_time = int(sys.argv[2])
-#		end_time = int(sys.argv[3])
-
 		start_time = int(sys.argv[2])
-#		start_time = start_time - 7200
 		end_time = int(sys.argv[3])
+
+		print "El tiempo de inicio es %d" %(start_time)
+		print "El tiempo de finalizacion es %d" %(end_time)
 
 		iterations = end_time - start_time
 		iterations = iterations - 1
 	
-# 		# Obtiene el tiempo UTC en formato datetime de un tiempo UNIX.	
  		time1 = datetime.datetime.utcfromtimestamp(start_time)
-# 		
- 		print time1
-		
-#		time1 = start_time
 
 		(lon, lat, ele) = self.get_location()
 
 		az1, alt1 = satellite.get_observer_look(time1, lon, lat, ele)
 
 		if alt1 > 0:
-#			start_time = start_time + 3200
 			self.output_data(satellite_name, start_time, alt1, az1)
-
-#		start_time = start_time + 3200
-#		self.output_data(satellite_name, start_time, alt1, az1)
 
 		n2 = start_time
 
@@ -129,12 +119,7 @@ class Solve_coordinates:
 			azN, altN = satellite.get_observer_look(timeN, lon, lat, ele)
 
 			if altN > 0:
-#				n2 = n2 + 3200
 				self.output_data(satellite_name, n2, altN, azN)
-
-#			if altN >= 0:
-#			n2 = n2 + 3200
-#			self.output_data(satellite_name, n2, altN, azN)
 
 			j = j + 1
 
@@ -164,8 +149,10 @@ class Solve_coordinates:
 
 		site = lines[0]
 		lat = float(lines[1])
+		lon = '-' + lines[2]
+		print lon
 		lon = float(lines[2])
-		lon = -lon
+		print lon
 		ele = int(lines[3])
 
 		return lon, lat, ele
