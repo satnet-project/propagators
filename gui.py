@@ -877,7 +877,6 @@ class GUI:
 		title_zoom_window = tk.StringVar(zoom_window)
 		title_zoom_window.set(self.zoom_combobox.get() + " of " + self.object_name.name )
 		zoom_window.title(title_zoom_window.get())
-#		zoom_window.geometry("1024x768")
 				
 		actual_available = Check_data(self.index, self.object_name.name, argv[2], argv[3])
 		available_predict = actual_available.predict
