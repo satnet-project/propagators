@@ -125,10 +125,8 @@ class Read_STK_data:
         from csv import reader
         open_index = open(script_dir + '/results/STK/' + family)
         read_index = reader(open_index)
-        for row in read_index:
-            print row[0]
-            print row[1]
 
+        for row in read_index:
             i = i + 1
             try:
                 valor = row[0][0]
