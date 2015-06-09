@@ -825,7 +825,6 @@ class GUI:
 		text_object = Save_sims()
 		text = text_object.text
 
-
 #		text = self.save_data()
 
 		f.writelines(("%s\n" % line for line in text))
@@ -852,17 +851,26 @@ class GUI:
 		self.text_std_pyephem_az.set(round(float(std_pyephem_az), 7))
 
 		# pyorbital
-		(std_pyorbital_alt, std_pyorbital_az) = data.STK_vs_PyOrbital()
+		try:
+			(std_pyorbital_alt, std_pyorbital_az) = data.STK_vs_PyOrbital()
 
-		self.text_std_pyorbital_alt.set(round(float(std_pyorbital_alt), 7))
-		self.text_std_pyorbital_az.set(round(float(std_pyorbital_az), 7))
+			self.text_std_pyorbital_alt.set(round(float(std_pyorbital_alt), 7))
+			self.text_std_pyorbital_az.set(round(float(std_pyorbital_az), 7))
+		except:
+			self.text_std_pyorbital_alt.set("No data")
+			self.text_std_pyorbital_az.set("No data")
 
 		# orbitron
-		(std_orbitron_alt, std_orbitron_az) = data.STK_vs_Orbitron()
+		try:
+			(std_orbitron_alt, std_orbitron_az) = data.STK_vs_Orbitron()
 
-		self.text_std_orbitron_alt.set(round(float(std_orbitron_alt), 7))
-		self.text_std_orbitron_az.set(round(float(std_orbitron_az), 7))
-		
+			self.text_std_orbitron_alt.set(round(float(std_orbitron_alt), 7))
+			self.text_std_orbitron_az.set(round(float(std_orbitron_az), 7))
+		except:
+			self.text_std_orbitron_alt.set("No data")
+			self.text_std_orbitron_az.set("No data")
+
+
 	def zoom_routine(self):
 
 		# Imports		
@@ -1033,24 +1041,14 @@ class GUI:
 		# Grid is on
 		subplot_zoom.grid(True)
 		
-		
-		print "precanvas"
 		# Figure controls	
 		zoom_canvas = FigureCanvasTkAgg(zoom, zoom_window)
 		zoom_canvas.show()
 		zoom_canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=0)
-		
-		
-		# Subclase
-#		Navigation = NavigationToolbar2TkAgg()
 
 		zoom_toolbar = NavigationToolbar2TkAgg(zoom_canvas, zoom_window )
-#		zoom_toolbar = Navigation(zoom_canvas, zoom_window)
 		zoom_toolbar.update()
 		zoom_canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=0)
-
-		print "postcanvas"
-
 
 		zoom_window.mainloop()
 	
@@ -1107,6 +1105,39 @@ class Save_sims():
 	def __init__(self):
 		print "hola clase"
 
+class Compute():
+
+	def __init__(self):
+		compute_window = tk.Toplevel()
+		compute_window.title("Characteristics")
+		compute_window.mainloop()
+
+	def frame_date(self):
+		frame_date = tk.LabelFrame(compute_window, text = "Date")
+		frame_date.grid(column = 0, row = 0, columnspan = 1, rowspan = 1)
+
+	def start_date(self):
+		# Leer fecha de inicio
+		pass
+
+	def end_date(self):
+		# Leer fecha de finalizacion
+		pass
+
+	def select_propagators(self):
+		# Comprueba que propagadores hay
+		import output_data
+		actual_available = output_data.Check_data(self.index, self.object_name.name, \
+		STK_dir, Orb_dir)	
+		available_predict = actual_available.predict
+		available_pyephem = actual_available.pyephem
+		available_pyorbital = actual_available.pyorbital
+		available_orbitron = actual_available.orbitron
+		available_STK = actual_available.STK
+
+	def reboot_routine(self):
+		# Reiniciar simulacion
+		pass
 
 class About():
 	
@@ -1123,6 +1154,9 @@ class About():
 
 if __name__ == '__main__':
 	
+	def compute():
+		Compute()
+
 	def folders():
 		
 		Folders()
@@ -1142,6 +1176,7 @@ if __name__ == '__main__':
 	root.config(menu=menu)
 	filemenu = tk.Menu(menu)
 	
+	menu.add_command(label = "Compute", command = compute)
 	menu.add_cascade(label = "Preferences", menu = filemenu)
 	menu.add_cascade(label = "Help!")
 	menu.add_command(label = "About", command = about)
