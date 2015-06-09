@@ -70,7 +70,7 @@ class Read_STK_data:
         
         for row in NORAD_database:
                 
-            if satellite.lower() in row[2].strip().lower():
+            if satellite in row[2]:
                 number = row[0]
                 # Rutina para autocompletar los numberos.
                 if len(number) == 4:
@@ -113,19 +113,22 @@ class Read_STK_data:
         self.STK_simulation_time = []
         self.STK_alt_satellite = []
         self.STK_az_satellite = []
-        
-#        offset = self.return_offset()
 
-        offset = 7200
+        # Creo que el indice esta mal, por eso me daba fallos antes.
 
         i = 0
         gaps = 1
 
         index_list = []
+        index_list.append(1)
+
         from csv import reader
         open_index = open(script_dir + '/results/STK/' + family)
         read_index = reader(open_index)
         for row in read_index:
+            print row[0]
+            print row[1]
+
             i = i + 1
             try:
                 valor = row[0][0]
@@ -140,23 +143,10 @@ class Read_STK_data:
         for row in read_sims:
             j = j + 1
             try:
-                if j >= index_list[index] and j < (index_list[index + 1] - 2):
+                if j >= index_list[index]:
                     valor = int((float(row[0]) - 2440587.5)*86400)
-                    valor = valor - offset
                     self.STK_simulation_time.append(valor)
                     self.STK_az_satellite.append((row[1]))
                     self.STK_alt_satellite.append((row[2]))
             except IndexError:
                 pass
-            
-        print self.STK_simulation_time[0]
-        print self.STK_simulation_time[1]
-            
-    def return_offset(self):
-        
-        import datetime
-        
-        offset = int(datetime.datetime.now().strftime("%s"))\
-         - int(datetime.datetime.utcnow().strftime("%s"))  
-        
-        return offset
