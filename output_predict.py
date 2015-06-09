@@ -24,24 +24,24 @@ class Read_predict_data:
 
     def __init__(self, index_satellite):
 
-        import os
+        from os import getcwd, chdir
 
         index_satellite = index_satellite + 1
-        directorio_script = os.getcwd()
+        directorio_script = getcwd()
 
         # predict routine
         self.open_predict(directorio_script)
         self.open_files_predict(index_satellite)
 
-        os.chdir(directorio_script)
+        chdir(directorio_script)
 
     def open_predict(self, directorio_script):
 
-        import os
+        from os import chdir, listdir, getcwd
 
-        os.chdir(directorio_script + '/results/predict')
+        chdir(directorio_script + '/results/predict')
 
-        self.files_predict = os.listdir(os.getcwd())
+        self.files_predict = listdir(getcwd())
         self.files_predict.sort()
     
     def open_files_predict(self, index_satellite):
@@ -56,16 +56,6 @@ class Read_predict_data:
         self.predict_az_satellite = []
 
         import csv
-        
-        # offset
-        # localtime = utc_time + offset
-        # offset = local_time - utc_time
-        
-#         import datetime
-#         
-#         offset = int(datetime.datetime.now().strftime("%s"))\
-#          - int(datetime.datetime.utcnow().strftime("%s"))    
-
         with open(name) as tsv:
             for line in csv.reader(tsv, delimiter = "\t"):
                 if float(line[1]) >= 0:
