@@ -69,32 +69,29 @@ class Solve_coordinates:
 
 	def __init__(self, lista_elementos, lista_prueba, lista_prueba2):
 
-		self.satellites_number = len(lista_elementos)
+		satellites_number = len(lista_elementos)
 		self.get_location()
 		
 		# Provide data to pyephem_routine
 		for i in range(len(lista_elementos)):
 			j = i + 1
 			try:
-				self.pyorbital_routine(lista_elementos[i], lista_prueba[i], lista_prueba2[i], i)
+				self.pyorbital_routine(lista_elementos[i], lista_prueba[i], lista_prueba2[i], i, satellites_number)
 			except NotImplementedError:
 				print "pyorbital - Simulation [%d/%d] error!" %(j, len(lista_elementos))
 				print "Deep space satellite - Propagation not available"
 			i = i + 1
 
-	def pyorbital_routine(self, satellite_name, line1, line2, i):
+	def pyorbital_routine(self, satellite_name, tle_line1, tle_line2, i, satellites_number):
 
 		import sys
 		import pyorbital.orbital
 		import datetime
 
-		satellite = pyorbital.orbital.Orbital(satellite_name, line1 = line1, line2 = line2)
+		satellite = pyorbital.orbital.Orbital(satellite_name, tle_file = None, line1 = tle_line1, line2 = tle_line2)
 		
 		start_time = int(sys.argv[2])
 		end_time = int(sys.argv[3])
-
-		print "El tiempo de inicio es %d" %(start_time)
-		print "El tiempo de finalizacion es %d" %(end_time)
 
 		iterations = end_time - start_time
 		iterations = iterations - 1
@@ -110,12 +107,14 @@ class Solve_coordinates:
 
 		n2 = start_time
 
+		j = 0
+
 		for j in range(iterations):
 			import datetime
 			n2 = n2 + 1
-                        
-			timeN = datetime.datetime.fromtimestamp(n2)
-                        
+
+			timeN = datetime.datetime.utcfromtimestamp(n2)
+
 			azN, altN = satellite.get_observer_look(timeN, lon, lat, ele)
 
 			if altN > 0:
@@ -123,8 +122,9 @@ class Solve_coordinates:
 
 			j = j + 1
 
+
 		i = i + 1
-		print "PyOrbital - Simulation [%s/%d] done!" %(i, self.satellites_number)
+		print "PyOrbital - Simulation [%s/%d] done!" %(i, satellites_number)
 
 	def output_data(self, name, time, alt, az):
 
